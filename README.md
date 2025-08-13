@@ -2,7 +2,7 @@
 
 A modern, high-performance album art grid component for foobar2000 v2 (64-bit) that displays your music library in a customizable grid layout similar to Spotify, Apple Music, and other modern music players.
 
-![Album Art Grid Screenshot](screenshot.png)
+![Album Art Grid Screenshot](album-art-grid-screenshot.png)
 
 ![Version](https://img.shields.io/badge/version-8.0.0-blue)
 ![foobar2000](https://img.shields.io/badge/foobar2000-v2.x%20(64--bit)-green)
