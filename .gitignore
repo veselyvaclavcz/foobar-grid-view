@@ -1,0 +1,68 @@
+# Build outputs
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.dll.manifest
+*.dll.recipe
+*.iobj
+*.ipdb
+*.log
+*.tlog
+*.lastbuildstate
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+
+# Build directories
+Debug/
+Release/
+x64/
+x86/
+build/
+bin/
+obj/
+
+# Component packages
+*.fb2k-component
+*.zip
+*.7z
+
+# Temporary files
+*.tmp
+*.temp
+~*
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test files
+test/
+tests/
+testing/
+
+# Documentation build
+docs/_build/
+docs/_static/
+docs/_templates/
