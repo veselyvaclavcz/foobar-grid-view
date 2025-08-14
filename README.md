@@ -1,295 +1,139 @@
-# Foobar Grid View - Album Art Grid Component
+# Album Art Grid Component for foobar2000
 
-A modern, high-performance album art grid component for foobar2000 v2 (64-bit) that displays your music library in a customizable grid layout similar to Spotify, Apple Music, and other modern music players.
+A high-performance album art grid view component for foobar2000 music player with extensive customization options.
 
-![Album Art Grid Screenshot](album-art-grid-screenshot.png)
+![Version](https://img.shields.io/badge/version-9.4.0-blue)
+![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey)
+![foobar2000](https://img.shields.io/badge/foobar2000-v2.0+-green)
 
-![Version](https://img.shields.io/badge/version-8.2.0-blue)
-![foobar2000](https://img.shields.io/badge/foobar2000-v2.x%20(64--bit)-green)
-![Platform](https://img.shields.io/badge/platform-Windows%2064--bit-lightgrey)
-![License](https://img.shields.io/badge/license-MIT-orange)
-
-## 📋 Table of Contents
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage Guide](#usage-guide)
-- [Configuration](#configuration)
-- [Building from Source](#building-from-source)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-
-## ✨ Features
+## Features
 
 ### 🎨 Visual Display
-- **High-quality album artwork** - Automatic thumbnail generation with bicubic interpolation
-- **Smooth scrolling** - Optimized lazy loading for thousands of albums
-- **Dark mode support** - Scrollbars automatically match foobar2000's dark/light theme
-- **Theme integration** - Automatically matches your foobar2000 color scheme
-- **Customizable grid sizes** - From 60px to 250px per item
-- **Progressive loading** - Images load smoothly in the background
-- **Visual feedback** - Loading indicators, hover effects, and selection highlighting
+- **High-quality album art rendering** with bicubic interpolation
+- **Auto-fill mode** - automatically adjusts grid to container width
+- **Dynamic column adjustment** (3-10 columns) via Ctrl+Mouse Wheel
+- **Dark mode support** with theme-aware UI elements
+- **Smart tooltips** - only shown when text labels are hidden
 
-### 🎯 Multi-Select Support
-- **Ctrl+Click** - Toggle individual item selection
-- **Shift+Click** - Select range of items
-- **Ctrl+A** - Select all items
-- **Drag selection** - Coming soon
-- Play multiple selected albums at once
+### 📚 Organization
+- **13 Grouping Modes**: Folder, Directory, Album, Artist, Album Artist, Artist/Album, Performer, Composer, Genre, Year, Label, Rating, Comment
+- **11 Sorting Options**: Name, Artist, Album, Year, Genre, Date Modified, Total Size, Track Count, Rating, Path, Random/Shuffle
+- **Flexible combination** - group by one criterion, sort by another
 
-### 📝 Advanced Text Display
-- **Full Unicode support** - Properly displays characters like č, š, ž, ™, ©, 中文, 日本語, etc.
-- **Multi-line text** - Configure 1-3 lines of text per item
-- **Word wrapping** - Long names wrap naturally
-- **Track count display** - Optional "(n tracks)" indicator
-- **Smart ellipsis** - Text truncates cleanly when needed
+### 🎯 Interaction
+- **Fixed selection alignment** - click accuracy guaranteed
+- **Multi-selection support** with Shift+Click and Ctrl+Click
+- **Double-click to play**
+- **Context menu** with play, add to playlist, and configuration options
+- **Layout edit mode integration** - proper cut/copy/paste support
 
-### 📁 Organization Options
+### ⚙️ Customization
+- **Text display options** - 1 to 3 lines of text
+- **Show/hide track counts**
+- **Font integration** - uses foobar2000's font preferences
+- **Persistent settings** - remembers your preferences
 
-#### Grouping Modes
-- **By Folder** (default) - Groups by parent folder name
-- **By Album** - Groups by album metadata
-- **By Artist** - Groups by artist metadata
+## Installation
 
-#### Sorting Options
-- **By Name** - Alphabetical A-Z
-- **By Date** - Newest files first
-- **By Track Count** - Most tracks first
+1. Download `foo_albumart_grid_v94.dll` from the [Releases](https://github.com/yourusername/foo_albumart_grid/releases) page
+2. Close foobar2000 if it's running
+3. Copy the DLL file to your foobar2000 components folder:
+   - Typically: `C:\Program Files\foobar2000\components\`
+   - Or use: foobar2000 > File > Preferences > Components > Install...
+4. Restart foobar2000
+5. Add the component to your layout:
+   - View > Layout > Edit Layout
+   - Right-click in layout editor > Replace UI Element... > Album Art Grid
 
-### ⚡ Performance Features
-- **Lazy loading** - Only loads visible artwork
-- **Smart caching** - Keeps recently viewed thumbnails in memory
-- **Auto-refresh** - Detects library changes
-- **Large library support** - Tested with 10,000+ albums
-- **Memory efficient** - Automatic cache cleanup
+## Usage
 
-## 📦 Requirements
-
-- **foobar2000 v2.0 or later** (64-bit version only)
-- **Windows 7 or later** (64-bit)
-- **Visual C++ 2022 Redistributables** (usually already installed)
-- At least 100MB free RAM for optimal performance
-
-## 🚀 Installation
-
-### Method 1: Direct Download (Recommended)
-1. Download `foo_albumart_grid.dll` from the [Releases](https://github.com/veselyvaclavcz/foobar-grid-view/releases) page
-2. Copy the file to one of these locations:
-   - `%APPDATA%\foobar2000-v2\user-components-x64\` (recommended)
-   - `[foobar2000 installation folder]\components\`
-3. Restart foobar2000
-4. The component will appear in the available UI elements
-
-### Method 2: Install via foobar2000
-1. Download `foo_albumart_grid.fb2k-component` from [Releases](https://github.com/veselyvaclavcz/foobar-grid-view/releases)
-2. Double-click the file (it should open in foobar2000)
-3. Click "Apply" in the components dialog
-4. Restart foobar2000 when prompted
-
-### Adding to Your Layout
-1. Go to `View → Layout → Edit Layout`
-2. Right-click where you want the grid to appear
-3. Select either:
-   - `Replace UI Element` (to replace existing element)
-   - `Add New UI Element` (to add in a splitter)
-4. Choose **"Album Art Grid"** from the list
-5. Click OK and enjoy your grid view!
-
-## 📖 Usage Guide
-
-### Keyboard Shortcuts
-| Shortcut | Action |
-|----------|--------|
-| **F5** | Refresh grid |
-| **Ctrl+A** | Select all items |
-| **Ctrl+Click** | Toggle item selection |
-| **Shift+Click** | Range selection |
-| **Ctrl+Mouse Wheel** | Resize grid |
-| **Delete** | Remove selected from playlist (when applicable) |
-
-### Mouse Controls
-| Action | Result |
-|--------|--------|
-| **Single Click** | Select item |
-| **Double Click** | Play item(s) |
-| **Right Click** | Open context menu |
-| **Mouse Wheel** | Scroll vertically |
-| **Ctrl+Wheel** | Resize grid dynamically |
-| **Hover** | Highlight item |
+### Basic Controls
+- **Ctrl + Mouse Wheel**: Adjust number of columns (3-10)
+- **Double-click**: Play album/folder
+- **Right-click**: Open context menu for options
+- **Shift + Click**: Select range
+- **Ctrl + Click**: Toggle individual selection
 
 ### Context Menu Options
 
-#### Playback Options
-- **Play** - Play selected items
-- **Add to Current Playlist** - Append to active playlist
-- **Add to New Playlist** - Create new playlist with selection
+#### Grouping
+Choose how to organize your music:
+- By Folder (full path)
+- By Directory (parent folder name)
+- By Album, Artist, Album Artist, etc.
+- By metadata (Genre, Year, Label, Rating)
+
+#### Sorting
+Order your groups by:
+- Alphabetical (Name, Artist, Album)
+- Chronological (Year, Date Modified)
+- Size metrics (Total Size, Track Count)
+- Random shuffle
 
 #### Display Options
-- **Group**
-  - By Folder (fastest, default)
-  - By Album (with artist info)
-  - By Artist (all albums by artist)
-  
-- **Sort**
-  - By Name (alphabetical)
-  - By Date (newest first)
-  - By Track Count (most tracks first)
-  
-- **Size**
-  - Small (80px)
-  - Medium (100px)
-  - Normal (120px)
-  - Large (150px)
-  - Extra Large (200px)
-  
-- **Text Lines**
-  - Single Line (classic view)
-  - Two Lines (balanced)
-  - Three Lines (maximum info)
+- Columns: 3 to 10
+- Text Lines: 1 to 3
+- Show/Hide text labels
+- Show/Hide track counts
 
-#### Other Options
-- **Show Labels** - Toggle text on/off
-- **Show Track Count** - Display number of tracks
-- **Select All** - Select everything
-- **Refresh** - Reload library
+## Technical Details
 
-## ⚙️ Configuration
+### Requirements
+- foobar2000 v2.0 or newer
+- Windows x64
+- Visual C++ 2022 Redistributables
 
-The component saves its configuration automatically. Settings include:
-- Grid size
-- Grouping mode
-- Sort order
-- Text display preferences
-- Number of text lines
+### Build Information
+- SDK: foobar2000 SDK v2 (2025-03-07)
+- Compiler: Microsoft Visual C++ 2022
+- C++ Standard: C++17
+- Dependencies: GDI+, Windows Common Controls
 
-Configuration is stored in your foobar2000 profile and persists between sessions.
+### Building from Source
 
-## 🔨 Building from Source
-
-### Prerequisites
-- Visual Studio 2022 (Community Edition or higher) or Build Tools
-- Windows SDK 10.0.19041.0 or later
-- foobar2000 SDK (included in repository)
-
-### Build Steps
-```batch
-# Clone the repository
-git clone https://github.com/veselyvaclavcz/foobar-grid-view.git
-cd foobar-grid-view
-
-# Run the build script
-BUILD_V8.bat
-
-# The compiled foo_albumart_grid.dll will be in the root directory
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/foo_albumart_grid.git
 ```
 
-### Project Structure
-```
-foobar-grid-view/
-├── SDK-2025-03-07/          # foobar2000 SDK
-│   ├── foobar2000/          # Core SDK files
-│   └── pfc/                 # PFC utility library
-├── grid_v8.cpp              # Main source code (latest version)
-├── BUILD_V8.bat             # Build script
-├── README.md                # This file
-├── LICENSE                  # MIT License
-└── foo_albumart_grid.dll    # Compiled component
+2. Download foobar2000 SDK and place in `SDK-2025-03-07` folder
+
+3. Open Visual Studio 2022 x64 Native Tools Command Prompt
+
+4. Run the build script:
+```bash
+BUILD_V94_FINAL.bat
 ```
 
-## 🐛 Troubleshooting
+## Changelog
 
-### Component doesn't appear in UI Element list
-- Ensure you're using foobar2000 v2.x 64-bit
-- Check that the DLL is in the correct components folder
-- Try reinstalling Visual C++ 2022 Redistributables
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and improvements.
 
-### Crashes on startup
-- Remove any older versions of the component
-- Check for conflicting components
-- Verify your foobar2000 installation is not corrupted
+## Known Issues
 
-### Album art not loading
-- Ensure your music files have embedded artwork
-- Check that album art files are in the same folder as music
-- Try refreshing with F5
+- Custom pattern grouping temporarily removed (implementation complexity)
+- Playlist-based grouping not available (architectural limitation)
 
-### Performance issues
-- Reduce grid size for better performance
-- Disable text display if not needed
-- Consider grouping by folder (fastest mode)
+## Contributing
 
-### Text encoding issues
-- The component uses UTF-8 internally
-- Ensure your tags are properly encoded
-- Update to the latest version (v8.0+)
+Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
 
-## 🤝 Contributing
+## License
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+This project is based on the foobar2000 SDK and follows its licensing terms.
 
-### Development Guidelines
-- Follow the existing code style
-- Test with large libraries (5000+ albums)
-- Ensure backward compatibility
-- Update documentation for new features
+## Credits
 
-## 📜 Version History
+- Created with assistance from Anthropic's Claude AI
+- Based on original concepts by marc2003
+- Built with foobar2000 SDK by Peter Pawlowski
 
-- **v8.2.0** (Current)
-  - Dark mode support for scrollbars
-  - Automatic theme detection using foobar2000's API
-  - Scrollbars now match Windows dark/light theme
-  - Requires Windows 10 1809+ for best dark mode support
+## Support
 
-- **v8.0.0**
-  - Multi-select support with Ctrl/Shift+Click
-  - Fixed Unicode text encoding
-  - Multi-line text support (1-3 lines)
-  - Improved context menu
-
-- **v7.0.0**
-  - Auto-load on startup
-  - Progressive image loading
-  - Sort options (name/date/count)
-
-- **v6.0.0**
-  - Major performance optimizations
-  - Folder grouping mode
-  - Lazy loading implementation
-
-- **v5.0.0**
-  - First version with actual album art
-  - Theme color integration
-  - Configuration persistence
-
-- **v4.0.0**
-  - UI element implementation
-  - Context menu support
-
-- **v1.0.0 - v3.0.0**
-  - Initial development versions
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Peter Pawlowski** and the foobar2000 team for the amazing player and SDK
-- **Anthropic's Claude** for development assistance
-- **The foobar2000 community** for inspiration and feedback
-- Original inspiration from Spotify and Apple Music grid views
-
-## 📮 Contact & Support
-
-- **Issues**: [GitHub Issues](https://github.com/veselyvaclavcz/foobar-grid-view/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/veselyvaclavcz/foobar-grid-view/discussions)
+For issues, questions, or suggestions, please:
+- Open an issue on [GitHub](https://github.com/yourusername/foo_albumart_grid/issues)
+- Visit the [foobar2000 forum thread](#) (if applicable)
 
 ---
 
-**⚠️ Important Notes:**
-- This component is for foobar2000 v2.x 64-bit ONLY
-- Will NOT work with 32-bit versions or foobar2000 v1.x
-- Requires Windows 7 or later (64-bit)
-
-**Made with ❤️ for the foobar2000 community**
+**Note**: This component is a third-party extension for foobar2000 and is not officially affiliated with or endorsed by foobar2000 or Resolute Ltd.
