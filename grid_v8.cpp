@@ -1,13 +1,16 @@
-// Enhanced Album Art Grid v8 with Multi-select and Better Text
+// Enhanced Album Art Grid v8 with Dark Mode Support
 #define FOOBAR2000_TARGET_VERSION 80
 #define _WIN32_WINNT 0x0600
 
 #include "SDK-2025-03-07/foobar2000/SDK/foobar2000.h"
+#include "SDK-2025-03-07/foobar2000/SDK/coreDarkMode.h"
+#include "SDK-2025-03-07/foobar2000/helpers/DarkMode.h"
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
 #include <gdiplus.h>
 #include <shlwapi.h>
+#include <uxtheme.h>
 #include <vector>
 #include <map>
 #include <set>
@@ -21,12 +24,14 @@
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "uxtheme.lib")
 
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "8.0.0",
-    "Album Art Grid v8 for foobar2000 v2\n"
+    "8.2.0",
+    "Album Art Grid v8.2 for foobar2000 v2\n"
+    "Dark mode support for scrollbars\n"
     "Multi-select support (Ctrl+Click, Shift+Click)\n"
     "Better text handling with multi-line support\n"
     "Fixed Unicode text encoding\n"
@@ -128,6 +133,7 @@ private:
     int m_hover_index;
     service_ptr_t<ui_element_instance_callback> m_callback;
     grid_config m_config;
+    fb2k::CCoreDarkModeHooks m_dark;
     bool m_tracking;
     
     // Visible range for lazy loading
@@ -183,6 +189,18 @@ public:
             core_api::get_my_instance(),
             this
         );
+        
+        // Apply dark mode to window and controls
+        if (m_hwnd) {
+            // Use foobar2000's dark mode hooks
+            m_dark.AddDialogWithControls(m_hwnd);
+            
+            // Additionally, if we're in dark mode, try to apply theme to scrollbar
+            if (m_dark) {  // Check if dark mode is enabled using our hooks
+                // Force Windows to use dark scrollbars by setting appropriate theme
+                SetWindowTheme(m_hwnd, L"DarkMode_Explorer", nullptr);
+            }
+        }
         
         // Start loading after a short delay
         SetTimer(m_hwnd, TIMER_LOAD, 100, NULL);

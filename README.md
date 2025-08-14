@@ -4,7 +4,7 @@ A modern, high-performance album art grid component for foobar2000 v2 (64-bit) t
 
 ![Album Art Grid Screenshot](album-art-grid-screenshot.png)
 
-![Version](https://img.shields.io/badge/version-8.0.0-blue)
+![Version](https://img.shields.io/badge/version-8.2.0-blue)
 ![foobar2000](https://img.shields.io/badge/foobar2000-v2.x%20(64--bit)-green)
 ![Platform](https://img.shields.io/badge/platform-Windows%2064--bit-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-orange)
@@ -24,6 +24,7 @@ A modern, high-performance album art grid component for foobar2000 v2 (64-bit) t
 ### 🎨 Visual Display
 - **High-quality album artwork** - Automatic thumbnail generation with bicubic interpolation
 - **Smooth scrolling** - Optimized lazy loading for thousands of albums
+- **Dark mode support** - Scrollbars automatically match foobar2000's dark/light theme
 - **Theme integration** - Automatically matches your foobar2000 color scheme
 - **Customizable grid sizes** - From 60px to 250px per item
 - **Progressive loading** - Images load smoothly in the background
@@ -234,7 +235,13 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## 📜 Version History
 
-- **v8.0.0** (Current)
+- **v8.2.0** (Current)
+  - Dark mode support for scrollbars
+  - Automatic theme detection using foobar2000's API
+  - Scrollbars now match Windows dark/light theme
+  - Requires Windows 10 1809+ for best dark mode support
+
+- **v8.0.0**
   - Multi-select support with Ctrl/Shift+Click
   - Fixed Unicode text encoding
   - Multi-line text support (1-3 lines)

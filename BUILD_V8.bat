@@ -19,7 +19,7 @@ link /DLL /OUT:foo_albumart_grid.dll ^
     "%SDK_PATH%\foobar2000\SDK\x64\Release\foobar2000_SDK.lib" ^
     "%SDK_PATH%\pfc\x64\Release\pfc.lib" ^
     "%SDK_PATH%\foobar2000\shared\shared-x64.lib" ^
-    kernel32.lib user32.lib gdi32.lib gdiplus.lib comctl32.lib shell32.lib ole32.lib shlwapi.lib ^
+    kernel32.lib user32.lib gdi32.lib gdiplus.lib comctl32.lib shell32.lib ole32.lib shlwapi.lib uxtheme.lib ^
     /NODEFAULTLIB:LIBCMT
 
 if exist foo_albumart_grid.dll (
