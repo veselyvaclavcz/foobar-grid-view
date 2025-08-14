@@ -1,0 +1,45 @@
+[UPDATE] Album Art Grid v9.5.0 - Artist Image Support Added!
+
+Hi everyone,
+
+Quick update to the Album Art Grid component - version 9.5.0 is now available with a frequently requested feature!
+
+🎤 What's New in v9.5.0:
+
+ARTIST IMAGE SUPPORT
+The component now intelligently displays artist images when you're browsing by artist! When you select any of these grouping modes:
+• By Artist
+• By Album Artist
+• By Artist/Album
+• By Performer
+• By Composer
+
+The grid will:
+→ First try to display the artist's image
+→ Automatically fall back to album cover if no artist image exists
+→ Work with both embedded artist images and your configured artist image folders
+
+This makes browsing your music collection by artist much more visually intuitive - you'll see artist photos instead of random album covers when grouping by artist.
+
+📥 Download:
+GitHub: https://github.com/veselyvaclavcz/foobar-grid-view
+Direct: foo_albumart_grid_v95.dll
+
+📋 Quick Installation:
+1. Close foobar2000
+2. Copy foo_albumart_grid_v95.dll to your components folder
+3. Restart foobar2000
+4. Your existing settings will be preserved
+
+💡 Usage Tip:
+The menu now shows 🎤 emoji next to grouping modes that support artist images, making it easy to see which modes will use this feature.
+
+🔧 Technical Note:
+This feature uses foobar2000's built-in artist image support (album_art_ids::artist), so it will automatically work with however you have artist images configured in your setup.
+
+All existing features from v9.4 remain unchanged - this is purely an additive update focused on improving the visual experience when browsing by artist.
+
+Thanks to everyone who suggested this feature! Let me know if you encounter any issues.
+
+---
+Note: If you're upgrading from v9.4, this is a drop-in replacement - all your settings will be preserved.

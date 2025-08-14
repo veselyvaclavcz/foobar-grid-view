@@ -2,11 +2,16 @@
 
 A high-performance album art grid view component for foobar2000 music player with extensive customization options.
 
-![Version](https://img.shields.io/badge/version-9.4.0-blue)
+![Version](https://img.shields.io/badge/version-9.5.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey)
 ![foobar2000](https://img.shields.io/badge/foobar2000-v2.0+-green)
 
 ## Features
+
+### 🎤 NEW in v9.5: Artist Image Support
+- **Smart image selection** - displays artist images when grouping by artist
+- **Automatic fallback** - shows album art if no artist image available
+- **Works with** embedded images and folder-based artist images
 
 ### 🎨 Visual Display
 - **High-quality album art rendering** with bicubic interpolation
@@ -35,7 +40,7 @@ A high-performance album art grid view component for foobar2000 music player wit
 
 ## Installation
 
-1. Download `foo_albumart_grid_v94.dll` from the [Releases](https://github.com/yourusername/foo_albumart_grid/releases) page
+1. Download `foo_albumart_grid_v95.dll` from the [Releases](https://github.com/veselyvaclavcz/foobar-grid-view/releases) page
 2. Close foobar2000 if it's running
 3. Copy the DLL file to your foobar2000 components folder:
    - Typically: `C:\Program Files\foobar2000\components\`
@@ -93,7 +98,7 @@ Order your groups by:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/foo_albumart_grid.git
+git clone https://github.com/veselyvaclavcz/foobar-grid-view.git
 ```
 
 2. Download foobar2000 SDK and place in `SDK-2025-03-07` folder
@@ -102,7 +107,7 @@ git clone https://github.com/yourusername/foo_albumart_grid.git
 
 4. Run the build script:
 ```bash
-BUILD_V94_FINAL.bat
+BUILD_V95_FROM_94.bat
 ```
 
 ## Changelog

@@ -1,5 +1,38 @@
 # Album Art Grid Component - Changelog
 
+## Version 9.5.0 - Artist Image Support (2025-01-14)
+
+### New Feature
+
+#### Artist Image Display 🎤
+- **Smart Image Selection**: Component now displays artist images when using artist-based grouping modes
+- **Supported Grouping Modes**:
+  - By Artist
+  - By Album Artist  
+  - By Artist/Album
+  - By Performer
+  - By Composer
+- **Automatic Fallback**: If no artist image is found, seamlessly falls back to album cover art
+- **Works With**: Both embedded artist images and folder-based artist images configured in foobar2000
+- **Visual Indicators**: Menu items show 🎤 emoji to indicate which modes support artist images
+
+### Technical Details
+- Uses foobar2000's `album_art_ids::artist` for artist image retrieval
+- Graceful error handling ensures no blank spaces when images are missing
+- No performance impact - same efficient loading as before
+
+### All Features from v9.4
+- 13 grouping modes
+- 11 sorting options  
+- Auto-fill mode with dynamic sizing
+- Ctrl+Mouse Wheel column control (3-10)
+- High-quality image rendering
+- Smart tooltips (only when text hidden)
+- Dynamic text display (1-3 lines)
+- Full dark mode support
+
+---
+
 ## Version 9.4.0 - Enhanced Sorting (Final Release)
 
 ### Major Improvements
