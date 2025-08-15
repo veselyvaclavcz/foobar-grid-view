@@ -1,0 +1,54 @@
+[b]Album Art Grid v9.7.0 Released - Enhanced Badge Edition[/b]
+
+Quick update based on user feedback - the track count badge system has been improved!
+
+[b]What's New in v9.7.0:[/b]
+• [color=#00AA00]IMPROVED:[/color] Track count badge is now ALWAYS visible when enabled
+• [color=#00AA00]CLEANER:[/color] Removed duplicate track count from text labels
+• Badge appears consistently in top-right corner of album art
+• Badge uses your exact UI font settings for perfect consistency
+• Simplified display - no more duplicate information
+
+[b]How it Works:[/b]
+• When "Show track count" is enabled → Badge always appears on album art
+• Text labels now show only album/folder names (no count duplication)
+• Tooltip behavior unchanged (appears when hovering over images with labels hidden)
+
+[b]Previous Features (Still Included):[/b]
+• Artist image support for artist-based groupings (v9.5)
+• 13 grouping modes and 11 sorting options
+• Auto-fill mode with Ctrl+Mouse Wheel (3-10 columns)
+• High-quality image rendering
+• Full dark mode support
+
+[b]Download:[/b]
+[url=https://github.com/veselyvaclavcz/foobar-grid-view/releases]GitHub Releases Page[/url]
+Direct: foo_albumart_grid_v97.fb2k-component
+
+[b]Installation:[/b]
+1. Download foo_albumart_grid_v97.fb2k-component
+2. In foobar2000: File → Preferences → Components → Install...
+3. Select the .fb2k-component file (or drag & drop it)
+4. Restart foobar2000 when prompted
+
+[b]Configuration:[/b]
+Right-click on the component → Settings:
+• "Show track count" → Displays badge on all album art
+• "Show labels" → Shows/hides text labels below album art
+
+[b]Why This Change?[/b]
+Users reported that with 2-line labels, the track count at the end was often cut off and invisible. The badge solution ensures the count is always visible while keeping labels clean and uncluttered.
+
+[b]Known Issues:[/b]
+• None reported yet for v9.7.0
+
+[b]Source Code:[/b]
+Available on [url=https://github.com/veselyvaclavcz/foobar-grid-view]GitHub[/url]
+
+[b]Support:[/b]
+Please report any issues or suggestions in this thread or on the GitHub issues page.
+
+Thanks for the feedback that led to this improvement!
+
+---
+[size=85][i]Created with assistance from Anthropic's Claude AI[/i][/size]

@@ -1,5 +1,32 @@
 # Album Art Grid Component - Changelog
 
+## Version 9.7.0 - Enhanced Badge Edition (2025-01-15)
+
+### Improvements Based on User Feedback
+- **Track Count Badge Always Visible**: Badge now appears whenever "Show track count" is enabled, not just when labels are hidden
+- **Cleaner Labels**: Removed duplicate track count from text labels since badge is always visible
+- **Consistent Display**: Badge uses exact UI font for perfect consistency with other UI elements
+- **Simplified Tooltip**: Tooltip behavior reverted to original (only shows when labels are hidden)
+
+### Why This Change?
+Users reported that with 2-line labels, the track count at the end was often cut off and invisible. The badge solution ensures the count is always visible while keeping labels clean and uncluttered.
+
+---
+
+## Version 9.6.0 - Track Count Badge Edition (2025-01-15)
+
+### New Features
+- **Track Count Badge**: Displays track count as a badge in top-right corner of album art when labels are hidden
+- **Theme-Aware Colors**: Badge automatically uses foobar2000's dark/light mode colors
+- **Dynamic Font Sizing**: Badge scales with system font settings for consistency
+
+### Technical Improvements
+- Badge rendering integrated with existing draw pipeline
+- Proper font management using foobar2000's UI font system
+- fb2k-component package format for easier installation
+
+---
+
 ## Version 9.5.0 - Artist Image Support (2025-01-14)
 
 ### New Feature
