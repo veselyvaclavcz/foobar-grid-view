@@ -41,12 +41,11 @@ A high-performance album art grid view component for foobar2000 music player wit
 ## Installation
 
 1. Download `foo_albumart_grid_v95.dll` from the [Releases](https://github.com/veselyvaclavcz/foobar-grid-view/releases) page
-2. Close foobar2000 if it's running
-3. Copy the DLL file to your foobar2000 components folder:
-   - Typically: `C:\Program Files\foobar2000\components\`
-   - Or use: foobar2000 > File > Preferences > Components > Install...
-4. Restart foobar2000
-5. Add the component to your layout:
+2. Install the component using one of these methods:
+   - **Recommended**: Use foobar2000 > File > Preferences > Components > Install... (you can also drag-n-drop the file here)
+   - Or manually copy the DLL file to your foobar2000 components folder
+3. Restart foobar2000
+4. Add the component to your layout:
    - View > Layout > Edit Layout
    - Right-click in layout editor > Replace UI Element... > Album Art Grid
 
