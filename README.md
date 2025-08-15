@@ -2,13 +2,18 @@
 
 A high-performance album art grid view component for foobar2000 music player with extensive customization options.
 
-![Version](https://img.shields.io/badge/version-9.5.0-blue)
+![Version](https://img.shields.io/badge/version-9.7.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey)
 ![foobar2000](https://img.shields.io/badge/foobar2000-v2.0+-green)
 
 ## Features
 
-### 🎤 NEW in v9.5: Artist Image Support
+### 🏷️ NEW in v9.7: Enhanced Badge System
+- **Track count badge** - always visible on album art when enabled
+- **Cleaner labels** - no duplicate information in text
+- **Perfect font consistency** - badge uses exact UI font settings
+
+### 🎤 Artist Image Support (v9.5)
 - **Smart image selection** - displays artist images when grouping by artist
 - **Automatic fallback** - shows album art if no artist image available
 - **Works with** embedded images and folder-based artist images
@@ -40,10 +45,10 @@ A high-performance album art grid view component for foobar2000 music player wit
 
 ## Installation
 
-1. Download `foo_albumart_grid_v95.dll` from the [Releases](https://github.com/veselyvaclavcz/foobar-grid-view/releases) page
-2. Install the component using one of these methods:
-   - **Recommended**: Use foobar2000 > File > Preferences > Components > Install... (you can also drag-n-drop the file here)
-   - Or manually copy the DLL file to your foobar2000 components folder
+1. Download `foo_albumart_grid_v97.fb2k-component` from the [Releases](https://github.com/veselyvaclavcz/foobar-grid-view/releases) page
+2. Install the component:
+   - In foobar2000: File > Preferences > Components > Install...
+   - Select the `.fb2k-component` file (or drag-n-drop it into the Components window)
 3. Restart foobar2000
 4. Add the component to your layout:
    - View > Layout > Edit Layout
