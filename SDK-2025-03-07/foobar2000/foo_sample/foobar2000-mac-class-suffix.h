@@ -1,1 +1,0 @@
-#define FOOBAR2000_MAC_CLASS_SUFFIX _foo_sample

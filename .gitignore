@@ -5,6 +5,7 @@
 *.exp
 *.lib
 *.exe
+*.dll
 
 # Visual Studio
 .vs/
@@ -13,10 +14,6 @@
 *.sln
 *.vcxproj
 *.vcxproj.filters
-
-# SDK (should be downloaded separately)
-SDK-2025-03-07/
-SDK/
 
 # Temporary files
 *.tmp
@@ -38,3 +35,13 @@ Debug/
 Release/
 x64/
 x86/
+
+# Old versions
+*_v94.*
+*_v95.*
+*_v96.*
+*_v97.*
+grid_v8*
+
+# Keep the latest component
+!foo_albumart_grid_v98.fb2k-component
