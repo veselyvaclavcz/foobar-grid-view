@@ -1621,23 +1621,39 @@ public:
                     // In playlist view, don't clear the playlist - just play the selected items
                     if (playlist != pfc::infinite_size) {
                         if (m_config.view == grid_config::VIEW_PLAYLIST) {
-                            // In playlist view: find the first track from selected items and play it
-                            // Don't clear the playlist since we're viewing it!
-                            if (!real_indices_to_process.empty() && m_items[real_indices_to_process[0]]->tracks.get_count() > 0) {
-                                // Find the position of the first track in the playlist
-                                metadb_handle_ptr first_track = m_items[real_indices_to_process[0]]->tracks[0];
+                            // In playlist view: find all tracks from selected albums and play from first match
+                            // Collect all tracks from selected items
+                            metadb_handle_list all_selected_tracks;
+                            for (size_t real_idx : real_indices_to_process) {
+                                all_selected_tracks.add_items(m_items[real_idx]->tracks);
+                            }
+                            
+                            if (all_selected_tracks.get_count() > 0) {
+                                // Find the first position in playlist of any of the selected tracks
                                 t_size playlist_count = pm->playlist_get_item_count(playlist);
+                                t_size first_match_position = pfc::infinite_size;
+                                
                                 for (t_size i = 0; i < playlist_count; i++) {
-                                    metadb_handle_ptr track;
-                                    if (pm->playlist_get_item_handle(track, playlist, i)) {
-                                        if (track == first_track) {
-                                            // Found it - play from this position
-                                            pm->set_playing_playlist(playlist);
-                                            static_api_ptr_t<playback_control> pc;
-                                            pc->play_start(playback_control::track_command_play);
+                                    metadb_handle_ptr playlist_track;
+                                    if (pm->playlist_get_item_handle(playlist_track, playlist, i)) {
+                                        // Check if this playlist track is in our selected tracks
+                                        for (t_size j = 0; j < all_selected_tracks.get_count(); j++) {
+                                            if (playlist_track == all_selected_tracks[j]) {
+                                                first_match_position = i;
+                                                break;
+                                            }
+                                        }
+                                        if (first_match_position != pfc::infinite_size) {
                                             break;
                                         }
                                     }
+                                }
+                                
+                                // If we found a matching track, play from that position
+                                if (first_match_position != pfc::infinite_size) {
+                                    pm->set_playing_playlist(playlist);
+                                    // Use playlist_execute_default_action to play from specific position
+                                    pm->playlist_execute_default_action(playlist, first_match_position);
                                 }
                             }
                         } else {
@@ -1657,8 +1673,14 @@ public:
                 case grid_config::DOUBLECLICK_ADD_TO_CURRENT: {
                     // Add to current playlist
                     if (playlist != pfc::infinite_size) {
+                        metadb_handle_list tracks_to_add;
                         for (size_t real_idx : real_indices_to_process) {
-                            pm->playlist_add_items(playlist, m_items[real_idx]->tracks, bit_array_false());
+                            if (real_idx < m_items.size() && m_items[real_idx]->tracks.get_count() > 0) {
+                                tracks_to_add.add_items(m_items[real_idx]->tracks);
+                            }
+                        }
+                        if (tracks_to_add.get_count() > 0) {
+                            pm->playlist_add_items(playlist, tracks_to_add, bit_array_false());
                         }
                     }
                     break;
@@ -1666,12 +1688,19 @@ public:
                 
                 case grid_config::DOUBLECLICK_ADD_TO_NEW: {
                     // Create new playlist and add items
-                    t_size new_playlist = pm->create_playlist("New Playlist", pfc::infinite_size, pfc::infinite_size);
-                    if (new_playlist != pfc::infinite_size) {
-                        for (size_t real_idx : real_indices_to_process) {
-                            pm->playlist_add_items(new_playlist, m_items[real_idx]->tracks, bit_array_false());
+                    metadb_handle_list tracks_to_add;
+                    for (size_t real_idx : real_indices_to_process) {
+                        if (real_idx < m_items.size() && m_items[real_idx]->tracks.get_count() > 0) {
+                            tracks_to_add.add_items(m_items[real_idx]->tracks);
                         }
-                        pm->set_active_playlist(new_playlist);
+                    }
+                    
+                    if (tracks_to_add.get_count() > 0) {
+                        t_size new_playlist = pm->create_playlist("New Playlist", pfc::infinite_size, pfc::infinite_size);
+                        if (new_playlist != pfc::infinite_size) {
+                            pm->playlist_add_items(new_playlist, tracks_to_add, bit_array_false());
+                            pm->set_active_playlist(new_playlist);
+                        }
                     }
                     break;
                 }
@@ -1848,26 +1877,76 @@ public:
         switch (cmd) {
             case 1: // Play
                 if (playlist != pfc::infinite_size && !m_selected_indices.empty()) {
-                    pm->playlist_clear(playlist);
-                    for (int sel_index : m_selected_indices) {
-                        auto* item = get_item_at(sel_index);
-                        if (item) {
-                            pm->playlist_add_items(playlist, item->tracks, bit_array_false());
+                    if (m_config.view == grid_config::VIEW_PLAYLIST) {
+                        // In playlist view: don't clear playlist, find all tracks from selected albums
+                        // and play from the first matching track in the playlist
+                        
+                        // Collect all tracks from selected items
+                        metadb_handle_list all_selected_tracks;
+                        for (int sel_index : m_selected_indices) {
+                            auto* item = get_item_at(sel_index);
+                            if (item) {
+                                all_selected_tracks.add_items(item->tracks);
+                            }
                         }
+                        
+                        if (all_selected_tracks.get_count() > 0) {
+                            // Find the first position in playlist of any of the selected tracks
+                            t_size playlist_count = pm->playlist_get_item_count(playlist);
+                            t_size first_match_position = pfc::infinite_size;
+                            
+                            for (t_size i = 0; i < playlist_count; i++) {
+                                metadb_handle_ptr playlist_track;
+                                if (pm->playlist_get_item_handle(playlist_track, playlist, i)) {
+                                    // Check if this playlist track is in our selected tracks
+                                    for (t_size j = 0; j < all_selected_tracks.get_count(); j++) {
+                                        if (playlist_track == all_selected_tracks[j]) {
+                                            first_match_position = i;
+                                            break;
+                                        }
+                                    }
+                                    if (first_match_position != pfc::infinite_size) {
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // If we found a matching track, play from that position
+                            if (first_match_position != pfc::infinite_size) {
+                                pm->set_playing_playlist(playlist);
+                                // Use playlist_execute_default_action to play from specific position
+                                pm->playlist_execute_default_action(playlist, first_match_position);
+                            }
+                        }
+                    } else {
+                        // In library view: clear playlist and add selected items as before
+                        pm->playlist_clear(playlist);
+                        for (int sel_index : m_selected_indices) {
+                            auto* item = get_item_at(sel_index);
+                            if (item) {
+                                pm->playlist_add_items(playlist, item->tracks, bit_array_false());
+                            }
+                        }
+                        pm->set_playing_playlist(playlist);
+                        static_api_ptr_t<playback_control> pc;
+                        pc->play_start();
                     }
-                    pm->set_playing_playlist(playlist);
-                    static_api_ptr_t<playback_control> pc;
-                    pc->play_start();
                 }
                 break;
                 
             case 2: // Add to current playlist
                 if (playlist != pfc::infinite_size && !m_selected_indices.empty()) {
+                    // Copy all tracks before adding to avoid invalidation during refresh
+                    metadb_handle_list tracks_to_add;
                     for (int sel_index : m_selected_indices) {
                         auto* item = get_item_at(sel_index);
-                        if (item) {
-                            pm->playlist_add_items(playlist, item->tracks, bit_array_false());
+                        if (item && item->tracks.get_count() > 0) {
+                            tracks_to_add.add_items(item->tracks);
                         }
+                    }
+                    // Now add all tracks at once - this prevents multiple refreshes
+                    if (tracks_to_add.get_count() > 0) {
+                        pm->playlist_add_items(playlist, tracks_to_add, bit_array_false());
                     }
                 }
                 break;
@@ -1875,22 +1954,28 @@ public:
             case 3: // Add to new playlist
                 if (!m_selected_indices.empty()) {
                     pfc::string8 playlist_name = "Album Art Grid Selection";
-                    if (m_selected_indices.size() == 1) {
-                        auto* item = get_item_at(*m_selected_indices.begin());
-                        if (item) {
-                            playlist_name = item->display_name;
-                        }
-                    }
-                    t_size new_playlist = pm->create_playlist(
-                        playlist_name.c_str(),
-                        pfc::infinite_size,
-                        pfc::infinite_size
-                    );
+                    metadb_handle_list tracks_to_add;
+                    
+                    // Copy all tracks and get name before creating playlist
                     for (int sel_index : m_selected_indices) {
                         auto* item = get_item_at(sel_index);
                         if (item) {
-                            pm->playlist_add_items(new_playlist, item->tracks, bit_array_false());
+                            if (m_selected_indices.size() == 1) {
+                                playlist_name = item->display_name;
+                            }
+                            if (item->tracks.get_count() > 0) {
+                                tracks_to_add.add_items(item->tracks);
+                            }
                         }
+                    }
+                    
+                    if (tracks_to_add.get_count() > 0) {
+                        t_size new_playlist = pm->create_playlist(
+                            playlist_name.c_str(),
+                            pfc::infinite_size,
+                            pfc::infinite_size
+                        );
+                        pm->playlist_add_items(new_playlist, tracks_to_add, bit_array_false());
                     }
                 }
                 break;
