@@ -1,6 +1,6 @@
 # Album Art Grid Component for foobar2000
 
-**Version 9.8.9** - A visual grid component that displays album artwork from your music library in foobar2000.
+**Version 9.8.10** - A visual grid component that displays album artwork from your music library in foobar2000.
 
 ## Features
 
@@ -29,7 +29,7 @@
 
 ## Installation
 
-1. Download `foo_albumart_grid_v989.fb2k-component`
+1. Download `foo_albumart_grid_v98.fb2k-component`
 2. Double-click the file to install in foobar2000
 3. Or manually copy to your foobar2000 components folder
 
@@ -52,7 +52,13 @@ Right-click in the grid to access:
 
 ## Version History
 
-### v9.8.9 (Latest) - Critical Bug Fixes
+### v9.8.10 (Latest) - Critical Crash Fixes
+- Fixed: Crash when using "Add to Current Playlist" multiple times
+- Fixed: Race condition during playlist refresh operations
+- Fixed: Menu Play now preserves playlist in playlist view mode
+- Fixed: Menu Play searches for corresponding tracks in playlist (matches double-click)
+
+### v9.8.9 - Bug Fixes
 - Fixed: Double-click in Playlist view no longer clears the playlist
 - Fixed: Double-click on filtered items now plays the correct album
 - Fixed: Hover tooltips now show correct items when search filter is active
@@ -95,12 +101,12 @@ Right-click in the grid to access:
 ### Build Instructions
 1. Clone this repository
 2. Ensure Visual Studio Build Tools are installed
-3. Run `BUILD_V98_SEARCH.bat`
+3. Run `BUILD_V98_PLAYLIST.bat`
 4. The compiled component will be created as `foo_albumart_grid_v98.fb2k-component`
 
 ### Source Files
-- `grid_v98_playlist_fixed.cpp` - Main component source
-- `BUILD_V98_SEARCH.bat` - Build script
+- `grid_v98_playlist_fixed.cpp` - Main component source (with all fixes)
+- `BUILD_V98_PLAYLIST.bat` - Build script
 - `SDK-2025-03-07/` - Required foobar2000 SDK
 
 ## Technical Details
@@ -112,8 +118,7 @@ Right-click in the grid to access:
 
 ## Known Issues
 
-- Search currently filters by partial text match (case-insensitive)
-- Some keyboard shortcuts may conflict with foobar2000's built-in shortcuts
+- None currently reported in v9.8.10
 
 ## Contributing
 
