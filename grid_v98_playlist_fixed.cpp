@@ -30,13 +30,17 @@
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "9.8.9",
-    "Album Art Grid v9.8.9 - Critical Bug Fixes\n"
-    "FIXES in v9.8.9:\n"
+    "9.8.10",
+    "Album Art Grid v9.8.10 - Critical Crash Fixes\n"
+    "FIXES in v9.8.10:\n"
+    "- Fixed: Crash when using 'Add to Current Playlist' multiple times\n"
+    "- Fixed: Race condition during playlist refresh operations\n"
+    "- Fixed: Menu Play now preserves playlist in playlist view mode\n"
+    "- Fixed: Menu Play searches for tracks in playlist (like double-click)\n"
+    "From v9.8.9:\n"
     "- Fixed: Double-click in Playlist view no longer clears the playlist\n"
     "- Fixed: Double-click on filtered items now plays the correct album\n"
     "- Fixed: Hover tooltips now show correct items when search filter is active\n"
-    "- Fixed: Added 'Playlist is empty' message for empty playlists\n"
     "NEW in v9.8.8:\n"
     "- Search box with real-time filtering (Ctrl+Shift+S)\n"
     "From v9.8.2:\n"
