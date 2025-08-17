@@ -30,13 +30,15 @@
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "9.8.8",
-    "Album Art Grid v9.8.8 - Search Box Improvements\n"
+    "9.8.9",
+    "Album Art Grid v9.8.9 - Critical Bug Fixes\n"
+    "FIXES in v9.8.9:\n"
+    "- Fixed: Double-click in Playlist view no longer clears the playlist\n"
+    "- Fixed: Double-click on filtered items now plays the correct album\n"
+    "- Fixed: Hover tooltips now show correct items when search filter is active\n"
+    "- Fixed: Added 'Playlist is empty' message for empty playlists\n"
     "NEW in v9.8.8:\n"
-    "- Search box text is cleared when closing (starts fresh each time)\n"
-    "- Ctrl+Shift+S toggle works reliably from both grid and search box\n"
-    "- Focus handling improved for consistent shortcut response\n"
-    "- Real-time filtering in album name, artist, genre fields\n"
+    "- Search box with real-time filtering (Ctrl+Shift+S)\n"
     "From v9.8.2:\n"
     "- Configurable double-click behavior via submenu\n"
     "- Choose: Play, Add to Current Playlist, or Add to New Playlist\n"
@@ -1293,7 +1295,16 @@ public:
                 DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
                 DEFAULT_QUALITY, DEFAULT_PITCH, TEXT("Segoe UI"));
             SelectObject(memdc, status_font);
-            DrawText(memdc, TEXT("Loading library..."), -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+            
+            // Show appropriate message based on view mode
+            const TCHAR* message = TEXT("Loading library...");
+            if (m_config.view == grid_config::VIEW_PLAYLIST) {
+                message = TEXT("Playlist is empty");
+            } else if (!m_search_text.is_empty()) {
+                message = TEXT("No items match your search");
+            }
+            
+            DrawText(memdc, message, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
             DeleteObject(status_font);
         }
         
@@ -1584,32 +1595,61 @@ public:
             t_size playlist = pm->get_active_playlist();
             
             // Determine which items to process (selected items or just the double-clicked one)
-            std::vector<int> indices_to_process;
+            std::vector<size_t> real_indices_to_process;
             if (!m_selected_indices.empty() && 
                 m_selected_indices.find(index) != m_selected_indices.end()) {
-                // Process all selected items
+                // Process all selected items - convert display indices to real indices
                 for (int sel_index : m_selected_indices) {
-                    if (sel_index < (int)m_items.size()) {
-                        indices_to_process.push_back(sel_index);
+                    if (sel_index < (int)item_count) {
+                        size_t real_idx = get_real_index(sel_index);
+                        if (real_idx < m_items.size()) {
+                            real_indices_to_process.push_back(real_idx);
+                        }
                     }
                 }
             } else {
-                // Process only the double-clicked item
-                indices_to_process.push_back(index);
+                // Process only the double-clicked item - convert display index to real index
+                size_t real_idx = get_real_index(index);
+                if (real_idx < m_items.size()) {
+                    real_indices_to_process.push_back(real_idx);
+                }
             }
             
             // Execute the configured double-click action
             switch (m_config.doubleclick) {
                 case grid_config::DOUBLECLICK_PLAY: {
-                    // Clear playlist and play
+                    // In playlist view, don't clear the playlist - just play the selected items
                     if (playlist != pfc::infinite_size) {
-                        pm->playlist_clear(playlist);
-                        for (int idx : indices_to_process) {
-                            pm->playlist_add_items(playlist, m_items[idx]->tracks, bit_array_false());
+                        if (m_config.view == grid_config::VIEW_PLAYLIST) {
+                            // In playlist view: find the first track from selected items and play it
+                            // Don't clear the playlist since we're viewing it!
+                            if (!real_indices_to_process.empty() && m_items[real_indices_to_process[0]]->tracks.get_count() > 0) {
+                                // Find the position of the first track in the playlist
+                                metadb_handle_ptr first_track = m_items[real_indices_to_process[0]]->tracks[0];
+                                t_size playlist_count = pm->playlist_get_item_count(playlist);
+                                for (t_size i = 0; i < playlist_count; i++) {
+                                    metadb_handle_ptr track;
+                                    if (pm->playlist_get_item_handle(track, playlist, i)) {
+                                        if (track == first_track) {
+                                            // Found it - play from this position
+                                            pm->set_playing_playlist(playlist);
+                                            static_api_ptr_t<playback_control> pc;
+                                            pc->play_start(playback_control::track_command_play);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            // In library view: clear playlist and add items as before
+                            pm->playlist_clear(playlist);
+                            for (size_t real_idx : real_indices_to_process) {
+                                pm->playlist_add_items(playlist, m_items[real_idx]->tracks, bit_array_false());
+                            }
+                            pm->set_playing_playlist(playlist);
+                            static_api_ptr_t<playback_control> pc;
+                            pc->play_start();
                         }
-                        pm->set_playing_playlist(playlist);
-                        static_api_ptr_t<playback_control> pc;
-                        pc->play_start();
                     }
                     break;
                 }
@@ -1617,8 +1657,8 @@ public:
                 case grid_config::DOUBLECLICK_ADD_TO_CURRENT: {
                     // Add to current playlist
                     if (playlist != pfc::infinite_size) {
-                        for (int idx : indices_to_process) {
-                            pm->playlist_add_items(playlist, m_items[idx]->tracks, bit_array_false());
+                        for (size_t real_idx : real_indices_to_process) {
+                            pm->playlist_add_items(playlist, m_items[real_idx]->tracks, bit_array_false());
                         }
                     }
                     break;
@@ -1628,8 +1668,8 @@ public:
                     // Create new playlist and add items
                     t_size new_playlist = pm->create_playlist("New Playlist", pfc::infinite_size, pfc::infinite_size);
                     if (new_playlist != pfc::infinite_size) {
-                        for (int idx : indices_to_process) {
-                            pm->playlist_add_items(new_playlist, m_items[idx]->tracks, bit_array_false());
+                        for (size_t real_idx : real_indices_to_process) {
+                            pm->playlist_add_items(new_playlist, m_items[real_idx]->tracks, bit_array_false());
                         }
                         pm->set_active_playlist(new_playlist);
                     }
@@ -1973,9 +2013,12 @@ public:
             InvalidateRect(m_hwnd, NULL, FALSE);
             
             // Update tooltip - only show when labels are hidden (original behavior)
-            if (m_tooltip && !m_config.show_text && index >= 0 && index < (int)m_items.size()) {
+            if (m_tooltip && !m_config.show_text && index >= 0 && index < (int)get_item_count()) {
                 // Show tooltip with full text only when labels are hidden
-                auto& item = m_items[index];
+                // Convert display index to real index when filtering
+                size_t real_idx = get_real_index(index);
+                if (real_idx >= m_items.size()) return 0;
+                auto& item = m_items[real_idx];
                 pfc::string8 tooltip_text = item->display_name;
                 // Don't add track count to tooltip since it's visible in badge
                 

@@ -1,6 +1,6 @@
 # Album Art Grid Component for foobar2000
 
-A visual grid component that displays album artwork from your music library in foobar2000.
+**Version 9.8.9** - A visual grid component that displays album artwork from your music library in foobar2000.
 
 ## Features
 
@@ -29,7 +29,7 @@ A visual grid component that displays album artwork from your music library in f
 
 ## Installation
 
-1. Download `foo_albumart_grid_v98.fb2k-component`
+1. Download `foo_albumart_grid_v989.fb2k-component`
 2. Double-click the file to install in foobar2000
 3. Or manually copy to your foobar2000 components folder
 
@@ -52,7 +52,13 @@ Right-click in the grid to access:
 
 ## Version History
 
-### v9.8.8 (Latest)
+### v9.8.9 (Latest) - Critical Bug Fixes
+- Fixed: Double-click in Playlist view no longer clears the playlist
+- Fixed: Double-click on filtered items now plays the correct album
+- Fixed: Hover tooltips now show correct items when search filter is active
+- Added: "Playlist is empty" message for empty playlists
+
+### v9.8.8
 - Search box now clears when closed
 - Improved focus handling for reliable keyboard shortcuts
 
