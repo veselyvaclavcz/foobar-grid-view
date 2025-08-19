@@ -1,6 +1,6 @@
 # Album Art Grid Component for foobar2000
 
-**Version 9.8.10** - A visual grid component that displays album artwork from your music library in foobar2000.
+**Version 9.9.0** - A visual grid component that displays album artwork from your music library in foobar2000.
 
 ## Features
 
@@ -11,6 +11,15 @@
 - **Dark Mode Support**: Follows foobar2000's theme settings
 
 ### Interactive Features
+- **Flexible Column Control** (v9.9.0):
+  - Support for 1-20 columns (previously limited to 3-10)
+  - Adjust columns via mouse wheel (Ctrl+Scroll) or context menu
+  - Synchronized limits between all control methods
+- **Track Sorting for Playlists** (v9.9.0):
+  - Sort tracks by Track Number (default)
+  - Sort tracks by Title (alphabetical)
+  - No Sorting option (preserve original order)
+  - Applies to all playlist operations (double-click, menu actions)
 - **Configurable Double-Click Actions**:
   - Play album
   - Add to current playlist
@@ -29,7 +38,7 @@
 
 ## Installation
 
-1. Download `foo_albumart_grid_v98.fb2k-component`
+1. Download `foo_albumart_grid_v99.fb2k-component`
 2. Double-click the file to install in foobar2000
 3. Or manually copy to your foobar2000 components folder
 
@@ -42,17 +51,30 @@
 
 ### Keyboard Shortcuts
 - `Ctrl+Shift+S`: Toggle search/filter box
+- `Ctrl+Mouse Wheel`: Adjust number of columns (1-20)
 - `Double-Click`: Perform configured action (Play/Add)
 
 ### Configuration
 Right-click in the grid to access:
+- **Columns**: Choose from 1-20 columns for the grid display
+- **Track Sorting**: Configure how tracks are sorted when added to playlists
 - **Double-Click Action**: Configure what happens when you double-click an album
-- **Switch View**: Toggle between Media Library and Playlist views
+- **View Mode**: Toggle between Media Library and Playlist views
 - **Search**: Open the search/filter box
 
 ## Version History
 
-### v9.8.10 (Latest) - Critical Crash Fixes
+### v9.9.0 (Latest) - Flexible Columns & Track Sorting
+- **New**: Unlimited column flexibility (1-20 columns instead of 3-10)
+- **New**: Track sorting options for playlist operations
+  - By Track Number (default)
+  - By Title (alphabetical)
+  - No Sorting (preserve original order)
+- **New**: Track Sorting submenu in context menu
+- **Enhanced**: Mouse wheel and menu column controls now synchronized
+- **Enhanced**: All playlist operations now respect track sorting preference
+
+### v9.8.10 - Critical Crash Fixes
 - Fixed: Crash when using "Add to Current Playlist" multiple times
 - Fixed: Race condition during playlist refresh operations
 - Fixed: Menu Play now preserves playlist in playlist view mode
@@ -101,13 +123,16 @@ Right-click in the grid to access:
 ### Build Instructions
 1. Clone this repository
 2. Ensure Visual Studio Build Tools are installed
-3. Run `BUILD_V98_PLAYLIST.bat`
-4. The compiled component will be created as `foo_albumart_grid_v98.fb2k-component`
+3. Run `BUILD_V99_FINAL_FIXED.bat`
+4. The compiled component will be created as `foo_albumart_grid_v99.fb2k-component`
 
 ### Source Files
-- `grid_v98_playlist_fixed.cpp` - Main component source (with all fixes)
-- `BUILD_V98_PLAYLIST.bat` - Build script
+- `grid_v99_minimal.cpp` - Main component source (v9.9.0 with all features)
+- `BUILD_V99_FINAL_FIXED.bat` - Build script for v9.9.0
 - `SDK-2025-03-07/` - Required foobar2000 SDK
+- `component_client.cpp` - Component entry point from SDK
+- `helpers_minimal.cpp` - Helper functions for SDK compatibility
+- `initquit_service.cpp` - GDI+ initialization service
 
 ## Technical Details
 
