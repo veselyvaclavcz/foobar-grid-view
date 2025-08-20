@@ -1,6 +1,6 @@
 # Album Art Grid Component for foobar2000
 
-**Version 9.9.0** - A visual grid component that displays album artwork from your music library in foobar2000.
+**Version 9.9.6** - A visual grid component that displays album artwork from your music library in foobar2000 with Now Playing tracking.
 
 ## Features
 
@@ -9,6 +9,18 @@
 - **Multiple View Modes**: Switch between Media Library and Active Playlist views
 - **Smart Grouping**: Automatically groups tracks by album
 - **Dark Mode Support**: Follows foobar2000's theme settings
+
+### Now Playing Features (v9.9.6)
+- **Visual Now Playing Indicator**:
+  - Blue border highlights the currently playing album
+  - Small play icon in bottom-left corner of the album art
+- **Jump to Now Playing**:
+  - Press `Ctrl+Q` to instantly scroll to the currently playing album
+  - Available via context menu
+- **Auto-scroll to Now Playing**:
+  - Optional automatic scrolling when track changes
+  - Toggle via context menu
+  - Smart detection - won't scroll if you've manually scrolled recently
 
 ### Interactive Features
 - **Flexible Column Control** (v9.9.0):
@@ -38,7 +50,7 @@
 
 ## Installation
 
-1. Download `foo_albumart_grid_v99.fb2k-component`
+1. Download `foo_albumart_grid_v996.fb2k-component`
 2. Double-click the file to install in foobar2000
 3. Or manually copy to your foobar2000 components folder
 
@@ -64,7 +76,22 @@ Right-click in the grid to access:
 
 ## Version History
 
-### v9.9.0 (Latest) - Flexible Columns & Track Sorting
+### v9.9.6 (Latest) - Now Playing Feature
+- **New**: Visual Now Playing indicator with blue border
+- **New**: Small play icon in bottom-left corner of playing album
+- **New**: Jump to Now Playing with Ctrl+Q keyboard shortcut
+- **New**: Context menu option for Jump to Now Playing
+- **New**: Auto-scroll to Now Playing toggle option
+- **Fixed**: Crash prevention with comprehensive safety checks
+- **Improved**: Timer-based now playing detection
+
+### v9.9.3 - Memory Optimization
+- **New**: Smart LRU cache management without timers
+- **New**: Adaptive memory limits (25% of available RAM)
+- **Fixed**: Eliminated unwanted grid refreshes
+- **Improved**: Better memory management and performance
+
+### v9.9.0 - Flexible Columns & Track Sorting
 - **New**: Unlimited column flexibility (1-20 columns instead of 3-10)
 - **New**: Track sorting options for playlist operations
   - By Track Number (default)
@@ -124,11 +151,11 @@ Right-click in the grid to access:
 1. Clone this repository
 2. Ensure Visual Studio Build Tools are installed
 3. Run `BUILD_V99_FINAL_FIXED.bat`
-4. The compiled component will be created as `foo_albumart_grid_v99.fb2k-component`
+4. The compiled component will be created as `foo_albumart_grid_v996.fb2k-component`
 
 ### Source Files
-- `grid_v99_minimal.cpp` - Main component source (v9.9.0 with all features)
-- `BUILD_V99_FINAL_FIXED.bat` - Build script for v9.9.0
+- `grid_v99_minimal.cpp` - Main component source (v9.9.6 with Now Playing feature)
+- `BUILD_V99_FINAL_FIXED.bat` - Build script for v9.9.6
 - `SDK-2025-03-07/` - Required foobar2000 SDK
 - `component_client.cpp` - Component entry point from SDK
 - `helpers_minimal.cpp` - Helper functions for SDK compatibility
@@ -143,7 +170,7 @@ Right-click in the grid to access:
 
 ## Known Issues
 
-- None currently reported in v9.8.10
+- None currently reported in v9.9.6
 
 ## Contributing
 

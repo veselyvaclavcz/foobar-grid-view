@@ -1,6 +1,6 @@
 @echo off
 echo ============================================
-echo Album Art Grid v9.9.0 - Final Fixed Build
+echo Album Art Grid v9.9.6 - Now Playing Build
 echo ============================================
 echo.
 
@@ -76,13 +76,13 @@ if exist "foo_albumart_grid_v99.dll" (
     mkdir "component_package"
     copy "foo_albumart_grid_v99.dll" "component_package\foo_albumart_grid.dll" >nul
     
-    powershell -Command "Compress-Archive -Path 'component_package\*' -DestinationPath 'foo_albumart_grid_v99.zip' -Force"
-    move /y "foo_albumart_grid_v99.zip" "foo_albumart_grid_v99.fb2k-component" >nul
+    powershell -Command "Compress-Archive -Path 'component_package\*' -DestinationPath 'foo_albumart_grid_v996.zip' -Force"
+    move /y "foo_albumart_grid_v996.zip" "foo_albumart_grid_v996.fb2k-component" >nul
     rd /s /q "component_package"
     
     echo.
     echo ============================================
-    echo SUCCESS! Component built: foo_albumart_grid_v99.fb2k-component
+    echo SUCCESS! Component built: foo_albumart_grid_v996.fb2k-component
     echo ============================================
 ) else (
     echo Build failed!
