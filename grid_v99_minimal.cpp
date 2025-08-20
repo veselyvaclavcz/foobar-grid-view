@@ -425,17 +425,34 @@ public:
     }
     
     ~album_grid_instance() {
-        // Clear all thumbnails and items
+        // CRITICAL: Unregister callbacks FIRST to prevent race conditions
+        // This must happen before any cleanup to avoid callbacks during destruction
+        try {
+            static_api_ptr_t<playlist_manager> pm;
+            pm->unregister_callback(this);
+        } catch(...) {
+            // Ignore errors during shutdown
+        }
+        
+        // Kill all timers if window exists
+        if (m_hwnd && IsWindow(m_hwnd)) {
+            KillTimer(m_hwnd, TIMER_LOAD);
+            KillTimer(m_hwnd, TIMER_PROGRESSIVE);
+            KillTimer(m_hwnd, TIMER_NOW_PLAYING);
+            
+            // Clear window data pointer to prevent any pending messages from accessing this object
+            SetWindowLongPtr(m_hwnd, GWLP_USERDATA, 0);
+            
+            DestroyWindow(m_hwnd);
+            m_hwnd = NULL;
+        }
+        
+        // Clear all data after window is destroyed
         m_items.clear();
         thumbnail_cache::clear_all();
         
-        // Unregister playlist callbacks
-        static_api_ptr_t<playlist_manager> pm;
-        pm->unregister_callback(this);
-        
-        if (m_hwnd && IsWindow(m_hwnd)) {
-            DestroyWindow(m_hwnd);
-        }
+        // Release now playing handle
+        m_now_playing.release();
     }
     
     void initialize_window(HWND parent) {
@@ -534,9 +551,13 @@ public:
                 case WM_KEYDOWN: return instance->on_keydown(wp);
                 case WM_COMMAND: return instance->on_command(LOWORD(wp), HIWORD(wp));
                 case WM_DESTROY: {
+                    // Kill all timers
                     KillTimer(hwnd, TIMER_LOAD);
                     KillTimer(hwnd, TIMER_PROGRESSIVE);
                     KillTimer(hwnd, TIMER_NOW_PLAYING);
+                    
+                    // Clear the window data pointer to prevent any pending messages
+                    SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
                     return 0;
                 }
             }
@@ -2788,12 +2809,16 @@ public:
         // Don't check if window is not ready or items are empty
         if (!m_hwnd || m_items.empty()) return;
         
-        static_api_ptr_t<playback_control> pc;
-        metadb_handle_ptr track;
-        if (pc->get_now_playing(track)) {
-            update_now_playing(track);
-        } else {
-            update_now_playing(nullptr);
+        try {
+            static_api_ptr_t<playback_control> pc;
+            metadb_handle_ptr track;
+            if (pc->get_now_playing(track)) {
+                update_now_playing(track);
+            } else {
+                update_now_playing(nullptr);
+            }
+        } catch(...) {
+            // Ignore errors during shutdown
         }
     }
     

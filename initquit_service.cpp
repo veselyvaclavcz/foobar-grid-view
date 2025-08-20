@@ -15,7 +15,7 @@ public:
         Gdiplus::GdiplusStartupInput gdiplusStartupInput;
         Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
         
-        console::print("Album Art Grid v9.9.0 initialized");
+        console::print("Album Art Grid v9.9.6 initialized");
     }
     
     void on_quit() override {
@@ -25,7 +25,7 @@ public:
             m_gdiplusToken = 0;
         }
         
-        console::print("Album Art Grid v9.9.0 shutdown");
+        console::print("Album Art Grid v9.9.6 shutdown");
     }
 };
 
