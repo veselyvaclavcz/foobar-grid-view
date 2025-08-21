@@ -1,6 +1,6 @@
 # Album Art Grid Component for foobar2000
 
-**Version 9.9.8 ENHANCED** - A visual grid component that displays album artwork from your music library in foobar2000 with Now Playing tracking and enhanced features.
+**Version 9.9.9 FINAL** - A visual grid component that displays album artwork from your music library in foobar2000 with critical shutdown crash fixes and all enhanced features.
 
 ## Features
 
@@ -10,14 +10,20 @@
 - **Smart Grouping**: Automatically groups tracks by album
 - **Dark Mode Support**: Follows foobar2000's theme settings
 
-### Status Bar Integration (v9.9.8)
+### Critical Fixes (v9.9.9)
+- **Shutdown/Sleep Crash Protection**: Fixed crashes when Windows shuts down or goes to sleep
+- **Access Violation Fixes**: Resolved memory access violations during component shutdown
+- **Improved Callback Handling**: Protected callback unregistration prevents race conditions
+- **Thread-Safe Shutdown**: Atomic flags ensure safe cleanup during exit
+
+### Status Bar Integration
 - **Status Bar Fields**:
   - `%albumart_grid_count%` - Number of albums in current view
   - `%albumart_grid_view%` - Current view mode ("Library" or "Playlist")
   - `%albumart_grid_info%` - Combined info (e.g., "Library: 150 albums")
 - **Real-time Updates**: Status bar automatically updates when view changes
 
-### Enhanced Display (v9.9.8)
+### Enhanced Display
 - **Multi-disc Album Support**:
   - Shows actual album names instead of generic [CD1], [CD2] labels
   - Reads metadata from multi-disc collections
@@ -73,7 +79,7 @@
 
 ## Installation
 
-1. Download `foo_albumart_grid_v998_ENHANCED.fb2k-component`
+1. Download `foo_albumart_grid_v999_FINAL.fb2k-component`
 2. Double-click the file to install in foobar2000
 3. Or manually copy to your foobar2000 components folder
 
@@ -113,7 +119,16 @@ Example status bar format:
 
 ## Version History
 
-### v9.9.8 ENHANCED (Latest) - Status Bar, Multi-disc fixes, Label formats
+### v9.9.9 FINAL (Latest) - Critical Shutdown Crash Fixes
+- **CRITICAL**: Fixed crashes during Windows shutdown/sleep
+- **CRITICAL**: Fixed access violations on foobar2000 exit
+- **New**: Thread-safe shutdown handling with atomic flags
+- **New**: Protected window message processing during shutdown
+- **Improved**: Callback registration moved to window creation
+- **Improved**: Safer destructor with immediate shutdown flags
+- **Includes**: All features from v9.9.8
+
+### v9.9.8 ENHANCED - Status Bar, Multi-disc fixes, Label formats
 - **New**: Status bar titleformat fields (`%albumart_grid_count%`, `%albumart_grid_view%`, `%albumart_grid_info%`)
 - **New**: Multi-disc album metadata reading (shows album names instead of [CD1], [CD2])
 - **New**: Label format options (Album only vs Artist - Album)
@@ -192,8 +207,9 @@ Example status bar format:
 4. The compiled component will be created as `foo_albumart_grid_v998_ENHANCED.fb2k-component`
 
 ### Source Files
-- `grid_v998_enhanced.cpp` - Main component source (v9.9.8 ENHANCED)
-- `BUILD_V998_ENHANCED.bat` - Build script for v9.9.8
+- `grid_v999_final.cpp` - Main component source (v9.9.9 FINAL)
+- `initquit_v999.cpp` - Initialization service with shutdown protection
+- `BUILD_V999_FINAL_CLEAN.bat` - Build script for v9.9.9
 - `SDK-2025-03-07/` - Required foobar2000 SDK
 - `component_client.cpp` - Component entry point from SDK
 - `helpers_minimal.cpp` - Helper functions for SDK compatibility
@@ -208,8 +224,8 @@ Example status bar format:
 
 ## Known Issues
 
-- Dark mode selection colors could be improved (planned for v9.9.9)
-- None currently reported for core functionality in v9.9.8
+- Dark mode selection colors could be improved (planned for future release)
+- Previous shutdown/sleep crashes have been fixed in v9.9.9
 
 ## Contributing
 
