@@ -1,0 +1,84 @@
+====================================================================
+ALBUM ART GRID v9.9.8 - ENHANCED VERSION
+====================================================================
+
+ÚSPĚŠNĚ ZKOMPILOVÁNO!
+Component: foo_albumart_grid_v998_ENHANCED.fb2k-component
+
+====================================================================
+NOVÉ FUNKCE VE VERZI 9.9.8:
+====================================================================
+
+1. STATUS BAR PODPORA (z v9.9.7)
+   - %albumart_grid_count% - počet alb
+   - %albumart_grid_view% - "Library" nebo "Playlist"
+   - %albumart_grid_info% - "Library: X albums" nebo "Playlist: X albums"
+
+2. VYLEPŠENÉ ZOBRAZENÍ MULTI-DISC ALB
+   - Automaticky načítá metadata alba místo zobrazení [CD1], [CD2]
+   - Pokud metadata nejsou dostupná, použije se název složky jako fallback
+   - Funguje pro seskupení podle složky
+
+3. VOLBA FORMÁTU LABELU
+   - Nová volba v kontextovém menu: View > Label Format
+   - Album Only - zobrazí pouze název alba
+   - Artist - Album - zobrazí "Interpret - Album"
+   - Nastavení se automaticky ukládá
+
+4. PLAY IN NEW PLAYLIST
+   - Nová volba v kontextovém menu pro vybrané položky
+   - Vytvoří nový playlist a okamžitě začne přehrávat
+   - Rozdíl oproti "Add to New Playlist" které jen vytvoří playlist bez přehrávání
+
+====================================================================
+INSTALACE:
+====================================================================
+
+1. Zavřete foobar2000
+2. Zkopírujte foo_albumart_grid_v998_ENHANCED.fb2k-component do instalační složky foobar2000
+3. Nebo použijte "Install..." v Preferences > Components
+4. Restartujte foobar2000
+
+====================================================================
+JAK POUŽÍVAT STATUS BAR:
+====================================================================
+
+Jděte do: Preferences > Display > Default User Interface > Status Bar
+
+Příklady formátování:
+
+Zobrazení počtu alb vpravo:
+%codec% %bitrate%kbps %samplerate%Hz %channels% | %playback_time%[ / %length%] | %albumart_grid_info%
+
+Jednoduchý formát:
+Přehrává se: %artist% - %title% | Grid: %albumart_grid_count% albums
+
+Minimální:
+%playback_time% / %length% | Albums: %albumart_grid_count%
+
+====================================================================
+JAK ZMĚNIT FORMÁT LABELU:
+====================================================================
+
+1. Klikněte pravým tlačítkem v okně Album Art Grid
+2. Vyberte: View > Label Format
+3. Zvolte mezi:
+   - Album Only - zobrazí pouze název alba
+   - Artist - Album - zobrazí "Interpret - Album"
+
+====================================================================
+OPRAVENÉ PROBLÉMY:
+====================================================================
+
+✓ Multi-disc alba nyní zobrazují správné názvy z metadat
+✓ Status bar pole se automaticky aktualizují při změnách
+✓ Formát labelu se ukládá mezi sezeními
+✓ Crash při vypnutí (již opraveno v předchozích verzích)
+
+====================================================================
+ZNÁMÉ PROBLÉMY:
+====================================================================
+
+- Barvy výběru pro dark mode ještě nejsou vylepšeny (plánováno pro v9.9.9)
+
+====================================================================

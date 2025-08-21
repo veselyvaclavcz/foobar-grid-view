@@ -1,6 +1,6 @@
 # Album Art Grid Component for foobar2000
 
-**Version 9.9.6** - A visual grid component that displays album artwork from your music library in foobar2000 with Now Playing tracking.
+**Version 9.9.8 ENHANCED** - A visual grid component that displays album artwork from your music library in foobar2000 with Now Playing tracking and enhanced features.
 
 ## Features
 
@@ -9,6 +9,29 @@
 - **Multiple View Modes**: Switch between Media Library and Active Playlist views
 - **Smart Grouping**: Automatically groups tracks by album
 - **Dark Mode Support**: Follows foobar2000's theme settings
+
+### Status Bar Integration (v9.9.8)
+- **Status Bar Fields**:
+  - `%albumart_grid_count%` - Number of albums in current view
+  - `%albumart_grid_view%` - Current view mode ("Library" or "Playlist")
+  - `%albumart_grid_info%` - Combined info (e.g., "Library: 150 albums")
+- **Real-time Updates**: Status bar automatically updates when view changes
+
+### Enhanced Display (v9.9.8)
+- **Multi-disc Album Support**:
+  - Shows actual album names instead of generic [CD1], [CD2] labels
+  - Reads metadata from multi-disc collections
+  - Falls back to folder names when metadata unavailable
+- **Label Format Options**:
+  - Album Only: Shows just the album name
+  - Artist - Album: Shows "Artist - Album" format
+  - Setting persists between sessions
+- **Hover Text Enhancement**: Respects selected label format setting
+
+### Advanced Context Menu (v9.9.8)
+- **Play in New Playlist**: Creates new playlist and starts playing immediately
+- **View > Label Format**: Toggle between display formats
+- **Enhanced Options**: Better organization of menu items
 
 ### Now Playing Features (v9.9.6)
 - **Visual Now Playing Indicator**:
@@ -50,7 +73,7 @@
 
 ## Installation
 
-1. Download `foo_albumart_grid_v996.fb2k-component`
+1. Download `foo_albumart_grid_v998_ENHANCED.fb2k-component`
 2. Double-click the file to install in foobar2000
 3. Or manually copy to your foobar2000 components folder
 
@@ -72,18 +95,33 @@ Right-click in the grid to access:
 - **Track Sorting**: Configure how tracks are sorted when added to playlists
 - **Double-Click Action**: Configure what happens when you double-click an album
 - **View Mode**: Toggle between Media Library and Playlist views
+- **Label Format**: Choose between "Album Only" or "Artist - Album" display
 - **Search**: Open the search/filter box
+
+### Status Bar Setup (v9.9.8)
+To use the new status bar fields:
+1. Go to Preferences > Display > Default User Interface > Status Bar
+2. Add any of these fields to your format string:
+   - `%albumart_grid_count%` - Shows number of albums
+   - `%albumart_grid_view%` - Shows current view mode
+   - `%albumart_grid_info%` - Shows combined information
+
+Example status bar format:
+```
+%codec% %bitrate%kbps | %playback_time%[ / %length%] | %albumart_grid_info%
+```
 
 ## Version History
 
-### v9.9.6 (Latest) - Now Playing Feature
-- **New**: Visual Now Playing indicator with blue border
-- **New**: Small play icon in bottom-left corner of playing album
-- **New**: Jump to Now Playing with Ctrl+Q keyboard shortcut
-- **New**: Context menu option for Jump to Now Playing
-- **New**: Auto-scroll to Now Playing toggle option
-- **Fixed**: Crash prevention with comprehensive safety checks
-- **Improved**: Timer-based now playing detection
+### v9.9.8 ENHANCED (Latest) - Status Bar, Multi-disc fixes, Label formats
+- **New**: Status bar titleformat fields (`%albumart_grid_count%`, `%albumart_grid_view%`, `%albumart_grid_info%`)
+- **New**: Multi-disc album metadata reading (shows album names instead of [CD1], [CD2])
+- **New**: Label format options (Album only vs Artist - Album)
+- **New**: Hover text respects label format setting
+- **New**: "Play in New Playlist" option in context menu
+- **Enhanced**: Better multi-disc album handling with metadata fallbacks
+- **Enhanced**: Improved context menu organization
+- **Fixed**: All previous stability issues maintained
 
 ### v9.9.3 - Memory Optimization
 - **New**: Smart LRU cache management without timers
@@ -150,16 +188,16 @@ Right-click in the grid to access:
 ### Build Instructions
 1. Clone this repository
 2. Ensure Visual Studio Build Tools are installed
-3. Run `BUILD_V99_FINAL_FIXED.bat`
-4. The compiled component will be created as `foo_albumart_grid_v996.fb2k-component`
+3. Run `BUILD_V998_ENHANCED.bat`
+4. The compiled component will be created as `foo_albumart_grid_v998_ENHANCED.fb2k-component`
 
 ### Source Files
-- `grid_v99_minimal.cpp` - Main component source (v9.9.6 with Now Playing feature)
-- `BUILD_V99_FINAL_FIXED.bat` - Build script for v9.9.6
+- `grid_v998_enhanced.cpp` - Main component source (v9.9.8 ENHANCED)
+- `BUILD_V998_ENHANCED.bat` - Build script for v9.9.8
 - `SDK-2025-03-07/` - Required foobar2000 SDK
 - `component_client.cpp` - Component entry point from SDK
 - `helpers_minimal.cpp` - Helper functions for SDK compatibility
-- `initquit_service.cpp` - GDI+ initialization service
+- `initquit_v997.cpp` - GDI+ initialization service
 
 ## Technical Details
 
@@ -170,7 +208,8 @@ Right-click in the grid to access:
 
 ## Known Issues
 
-- None currently reported in v9.9.6
+- Dark mode selection colors could be improved (planned for v9.9.9)
+- None currently reported for core functionality in v9.9.8
 
 ## Contributing
 
