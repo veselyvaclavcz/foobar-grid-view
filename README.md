@@ -1,244 +1,89 @@
-# Album Art Grid Component for foobar2000
+# Album Art Grid for foobar2000
 
-**Version 9.9.9 FINAL** - A visual grid component that displays album artwork from your music library in foobar2000 with critical shutdown crash fixes and all enhanced features.
+A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Features
+## Version 10.0.1 (2025-08-22)
 
-### Core Features
-- **Album Art Grid Display**: Shows album covers in a customizable grid layout
-- **Multiple View Modes**: Switch between Media Library and Active Playlist views
-- **Smart Grouping**: Automatically groups tracks by album
-- **Dark Mode Support**: Follows foobar2000's theme settings
+### Download
+- **[foo_albumart_grid_v10_full.fb2k-component](foo_albumart_grid_v10_full.fb2k-component)** - Ready to install component
+- **[foo_albumart_grid.dll](foo_albumart_grid.dll)** - DLL only (for manual installation)
 
-### Critical Fixes (v9.9.9)
-- **Shutdown/Sleep Crash Protection**: Fixed crashes when Windows shuts down or goes to sleep
-- **Access Violation Fixes**: Resolved memory access violations during component shutdown
-- **Improved Callback Handling**: Protected callback unregistration prevents race conditions
-- **Thread-Safe Shutdown**: Atomic flags ensure safe cleanup during exit
+### Installation
+1. Close foobar2000 if running
+2. Double-click the `.fb2k-component` file
+3. Click "Yes" or "Apply" when prompted to install
+4. Restart foobar2000
+5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
 
-### Status Bar Integration
-- **Status Bar Fields**:
-  - `%albumart_grid_count%` - Number of albums in current view
-  - `%albumart_grid_view%` - Current view mode ("Library" or "Playlist")
-  - `%albumart_grid_info%` - Combined info (e.g., "Library: 150 albums")
-- **Real-time Updates**: Status bar automatically updates when view changes
-
-### Enhanced Display
-- **Multi-disc Album Support**:
-  - Shows actual album names instead of generic [CD1], [CD2] labels
-  - Reads metadata from multi-disc collections
-  - Falls back to folder names when metadata unavailable
-- **Label Format Options**:
-  - Album Only: Shows just the album name
-  - Artist - Album: Shows "Artist - Album" format
-  - Setting persists between sessions
-- **Hover Text Enhancement**: Respects selected label format setting
-
-### Advanced Context Menu (v9.9.8)
-- **Play in New Playlist**: Creates new playlist and starts playing immediately
-- **View > Label Format**: Toggle between display formats
-- **Enhanced Options**: Better organization of menu items
-
-### Now Playing Features (v9.9.6)
-- **Visual Now Playing Indicator**:
-  - Blue border highlights the currently playing album
-  - Small play icon in bottom-left corner of the album art
-- **Jump to Now Playing**:
-  - Press `Ctrl+Q` to instantly scroll to the currently playing album
-  - Available via context menu
-- **Auto-scroll to Now Playing**:
-  - Optional automatic scrolling when track changes
-  - Toggle via context menu
-  - Smart detection - won't scroll if you've manually scrolled recently
-
-### Interactive Features
-- **Flexible Column Control** (v9.9.0):
-  - Support for 1-20 columns (previously limited to 3-10)
-  - Adjust columns via mouse wheel (Ctrl+Scroll) or context menu
-  - Synchronized limits between all control methods
-- **Track Sorting for Playlists** (v9.9.0):
-  - Sort tracks by Track Number (default)
-  - Sort tracks by Title (alphabetical)
-  - No Sorting option (preserve original order)
-  - Applies to all playlist operations (double-click, menu actions)
-- **Configurable Double-Click Actions**:
-  - Play album
-  - Add to current playlist
-  - Add to new playlist
-- **Real-time Search/Filter** (v9.8.8):
-  - Press `Ctrl+Shift+S` to toggle search box
-  - Filter albums by artist, album name, or genre
-  - Real-time filtering as you type
-  - Search box automatically clears when closed
-- **Context Menu**: Right-click for quick actions and configuration
-
-### Visual Features
-- **Optimized Rendering**: Efficient GDI+ image handling
-- **Automatic Refresh**: Updates when library or playlist changes
-- **Responsive Layout**: Adjusts grid based on window size
-
-## Installation
-
-1. Download `foo_albumart_grid_v999_FINAL.fb2k-component`
-2. Double-click the file to install in foobar2000
-3. Or manually copy to your foobar2000 components folder
-
-## Usage
-
-### Adding to Layout
-1. In foobar2000, go to View → Layout → Configure
-2. Right-click in your layout
-3. Choose "Add New UI Element" → "Album Art Grid"
+### Features
+- **Album Art Display**: Shows album covers in a responsive grid
+- **Dual View Modes**: Switch between Media Library and Current Playlist views
+- **Grouping Options** (13 modes):
+  - Album, Artist, Artist-Album, Genre, Year, Label
+  - Composer, Performer, Album Artist, Directory
+  - Comment, Rating, Folder
+- **Sorting Options** (11 modes):
+  - Name, Date, Track Count, Artist, Album
+  - Year, Genre, Path, Size, Rating, Random
+- **Interactive Features**:
+  - Search/filter with real-time results (Ctrl+Shift+S)
+  - Configurable columns (1-20, adjust with Ctrl+Scroll)
+  - Double-click actions (Play, Add to playlist)
+  - Right-click context menu
+  - Track count badges
+  - Now Playing indicator with blue border
+  - Jump to Now Playing (Ctrl+Q)
+- **Performance**:
+  - Optimized memory usage (128MB cache limit)
+  - Lazy loading for smooth scrolling
+  - Prefetching for seamless navigation
+- **Status Bar Integration**:
+  - `%albumart_grid_count%` - Number of albums
+  - `%albumart_grid_view%` - Current view mode
+  - `%albumart_grid_info%` - Combined info
 
 ### Keyboard Shortcuts
-- `Ctrl+Shift+S`: Toggle search/filter box
-- `Ctrl+Mouse Wheel`: Adjust number of columns (1-20)
-- `Double-Click`: Perform configured action (Play/Add)
+- `Ctrl+Shift+S` - Focus search box
+- `Ctrl+Mouse Wheel` - Adjust column count
+- `Ctrl+Q` - Jump to now playing
+- `Enter` - Play selected album
+- `Delete` - Remove from playlist (playlist view only)
 
-### Configuration
-Right-click in the grid to access:
-- **Columns**: Choose from 1-20 columns for the grid display
-- **Track Sorting**: Configure how tracks are sorted when added to playlists
-- **Double-Click Action**: Configure what happens when you double-click an album
-- **View Mode**: Toggle between Media Library and Playlist views
-- **Label Format**: Choose between "Album Only" or "Artist - Album" display
-- **Search**: Open the search/filter box
+### What's New in v10.0.1
+- **Fixed**: Component loading errors ("No version information")
+- **Fixed**: Crashes during shutdown/sleep
+- **Fixed**: Memory leaks and excessive RAM usage (reduced from 512MB to 128MB)
+- **Fixed**: Access violations during component shutdown
+- **Improved**: Thread safety and stability
+- **Added**: Proper version resource information
 
-### Status Bar Setup (v9.9.8)
-To use the new status bar fields:
-1. Go to Preferences > Display > Default User Interface > Status Bar
-2. Add any of these fields to your format string:
-   - `%albumart_grid_count%` - Shows number of albums
-   - `%albumart_grid_view%` - Shows current view mode
-   - `%albumart_grid_info%` - Shows combined information
+### Requirements
+- foobar2000 v2.0 or later (64-bit)
+- Windows 10/11
 
-Example status bar format:
-```
-%codec% %bitrate%kbps | %playback_time%[ / %length%] | %albumart_grid_info%
-```
+### Source Code
+The component includes the following source files:
+- `grid_v999_final.cpp` - Main grid implementation
+- `initquit_v999_fixed.cpp` - Initialization and shutdown handling
+- `component_version.rc` - Version resource information
 
-## Version History
+### Building from Source
+Requires:
+- Visual Studio 2022 Build Tools
+- foobar2000 SDK (2025-03-07)
+- Windows SDK 10.0.26100.0
 
-### v9.9.9 FINAL (Latest) - Critical Shutdown Crash Fixes
-- **CRITICAL**: Fixed crashes during Windows shutdown/sleep
-- **CRITICAL**: Fixed access violations on foobar2000 exit
-- **New**: Thread-safe shutdown handling with atomic flags
-- **New**: Protected window message processing during shutdown
-- **Improved**: Callback registration moved to window creation
-- **Improved**: Safer destructor with immediate shutdown flags
-- **Includes**: All features from v9.9.8
+### Known Issues
+- None reported in v10.0.1
 
-### v9.9.8 ENHANCED - Status Bar, Multi-disc fixes, Label formats
-- **New**: Status bar titleformat fields (`%albumart_grid_count%`, `%albumart_grid_view%`, `%albumart_grid_info%`)
-- **New**: Multi-disc album metadata reading (shows album names instead of [CD1], [CD2])
-- **New**: Label format options (Album only vs Artist - Album)
-- **New**: Hover text respects label format setting
-- **New**: "Play in New Playlist" option in context menu
-- **Enhanced**: Better multi-disc album handling with metadata fallbacks
-- **Enhanced**: Improved context menu organization
-- **Fixed**: All previous stability issues maintained
+### Support
+Report issues at: https://github.com/veselyvaclavcz/foobar-grid-view/issues
 
-### v9.9.3 - Memory Optimization
-- **New**: Smart LRU cache management without timers
-- **New**: Adaptive memory limits (25% of available RAM)
-- **Fixed**: Eliminated unwanted grid refreshes
-- **Improved**: Better memory management and performance
+### Credits
+Created with assistance from Anthropic's Claude AI
 
-### v9.9.0 - Flexible Columns & Track Sorting
-- **New**: Unlimited column flexibility (1-20 columns instead of 3-10)
-- **New**: Track sorting options for playlist operations
-  - By Track Number (default)
-  - By Title (alphabetical)
-  - No Sorting (preserve original order)
-- **New**: Track Sorting submenu in context menu
-- **Enhanced**: Mouse wheel and menu column controls now synchronized
-- **Enhanced**: All playlist operations now respect track sorting preference
-
-### v9.8.10 - Critical Crash Fixes
-- Fixed: Crash when using "Add to Current Playlist" multiple times
-- Fixed: Race condition during playlist refresh operations
-- Fixed: Menu Play now preserves playlist in playlist view mode
-- Fixed: Menu Play searches for corresponding tracks in playlist (matches double-click)
-
-### v9.8.9 - Bug Fixes
-- Fixed: Double-click in Playlist view no longer clears the playlist
-- Fixed: Double-click on filtered items now plays the correct album
-- Fixed: Hover tooltips now show correct items when search filter is active
-- Added: "Playlist is empty" message for empty playlists
-
-### v9.8.8
-- Search box now clears when closed
-- Improved focus handling for reliable keyboard shortcuts
-
-### v9.8.7
-- Fixed focus issues with search shortcuts
-- Improved toggle behavior
-
-### v9.8.6
-- Changed search shortcut to `Ctrl+Shift+S` (avoids conflicts)
-- Made search a proper toggle (open/close with same shortcut)
-
-### v9.8.5
-- Initial search/filter functionality
-- Real-time filtering of albums
-
-### v9.8.2
-- Added configurable double-click actions
-- Added Double-Click Action submenu
-
-### v9.8.1
-- Enhanced playlist view support
-- Auto-refresh on playlist changes
-
-### v9.8.0
-- Initial release with core grid functionality
-
-## Building from Source
-
-### Prerequisites
-- Visual Studio 2022 Build Tools or Community Edition
-- foobar2000 SDK (included in SDK-2025-03-07 folder)
-- Windows SDK
-
-### Build Instructions
-1. Clone this repository
-2. Ensure Visual Studio Build Tools are installed
-3. Run `BUILD_V998_ENHANCED.bat`
-4. The compiled component will be created as `foo_albumart_grid_v998_ENHANCED.fb2k-component`
-
-### Source Files
-- `grid_v999_final.cpp` - Main component source (v9.9.9 FINAL)
-- `initquit_v999.cpp` - Initialization service with shutdown protection
-- `BUILD_V999_FINAL_CLEAN.bat` - Build script for v9.9.9
-- `SDK-2025-03-07/` - Required foobar2000 SDK
-- `component_client.cpp` - Component entry point from SDK
-- `helpers_minimal.cpp` - Helper functions for SDK compatibility
-- `initquit_v997.cpp` - GDI+ initialization service
-
-## Technical Details
-
-- **Language**: C++17
-- **SDK Version**: foobar2000 SDK 2025-03-07
-- **Target Version**: foobar2000 v2.0+
-- **Dependencies**: Windows GDI+, foobar2000 SDK
-
-## Known Issues
-
-- Dark mode selection colors could be improved (planned for future release)
-- Previous shutdown/sleep crashes have been fixed in v9.9.9
-
-## Contributing
-
-Feel free to submit issues or pull requests for bug fixes and improvements.
-
-## License
-
-This component is provided as-is for use with foobar2000.
-
-## Author
-
-Developed for the foobar2000 community.
+### License
+Public Domain
 
 ---
-
-For support or questions, please open an issue on GitHub.
+*Tested with foobar2000 v2.1.6 x64*
