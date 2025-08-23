@@ -2,18 +2,18 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.2 (2025-08-23)
+## Version 10.0.3 (2025-08-23)
 
 ### Download
-- **[Release v10.0.2](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[Release v10.0.3](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
 - **[foo_albumart_grid.dll](foo_albumart_grid.dll)** - DLL only (for manual installation)
 
-### Latest Changes (v10.0.2)
-- **CRITICAL FIX**: Resolved image loading issues affecting some users
-- **Fixed**: Double GDI+ initialization that could conflict with other components
-- **Fixed**: Improved compatibility on various system configurations
-- **Enhanced**: Better error logging for debugging image loading problems
-- **Maintained**: All features from v10.0.1 and earlier versions
+### Latest Changes (v10.0.3)
+- **CRITICAL FIX**: Fixed metadata extraction errors that prevented album art from loading
+- **Fixed**: Problematic library paths no longer break the entire album view
+- **Improved**: Better error handling when processing library items
+- **Enhanced**: Graceful fallback to folder names when metadata extraction fails
+- **Maintained**: All features from v10.0.2 including GDI+ fixes and v10.0.1 stability improvements
 
 ### Installation
 1. Close foobar2000 if running
