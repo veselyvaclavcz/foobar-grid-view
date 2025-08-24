@@ -2,25 +2,41 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.3 (2025-08-23)
+## Version 10.0.5 (2025-08-24)
 
 ### Download
-- **[Release v10.0.3](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid.dll](foo_albumart_grid.dll)** - DLL only (for manual installation)
+- **[Release v10.0.5](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_5_shutdown_fix.fb2k-component](foo_albumart_grid_v10_0_5_shutdown_fix.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.3)
-- **CRITICAL FIX**: Fixed metadata extraction errors that prevented album art from loading
-- **Fixed**: Problematic library paths no longer break the entire album view
-- **Improved**: Better error handling when processing library items
-- **Enhanced**: Graceful fallback to folder names when metadata extraction fails
-- **Maintained**: All features from v10.0.2 including GDI+ fixes and v10.0.1 stability improvements
+### Latest Changes (v10.0.5) - CRITICAL SHUTDOWN FIX
+- **🔥 CRITICAL FIX**: Fixed crash during foobar2000 shutdown in `uPrintCrashInfo_OnEvent` 
+- **🔥 CRITICAL FIX**: Fixed memory corruption during version switching
+- **🛡️ SECURITY**: Added atomic shutdown flags to prevent access during cleanup
+- **🛡️ SECURITY**: Implemented critical section protection during shutdown sequence
+- **🔧 IMPROVED**: Enhanced thread-safe resource cleanup (GDI+, helpers, events)  
+- **🔧 IMPROVED**: Protected all helper functions against shutdown access
+- **📦 NEW**: Safe installation script with mandatory foobar2000 restart
+- **📖 NEW**: Complete technical documentation of the shutdown fix
+- **✅ MAINTAINED**: All features from v10.0.4 including 4 display labels and crash protection
 
-### Installation
-1. Close foobar2000 if running
-2. Double-click the `.fb2k-component` file
+### Installation (v10.0.5)
+**⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
+
+#### Option A: Safe Installation (Recommended)
+1. Run `INSTALL_V10_0_5_SAFE.bat` 
+2. Script will close foobar2000 automatically if running
+3. Follow prompts to complete installation  
+4. Verify "Album Art Grid v10.0.5 initialized" appears in foobar2000 console
+
+#### Option B: Manual Installation
+1. **CLOSE foobar2000 completely** (very important!)
+2. Double-click `foo_albumart_grid_v10_0_5_shutdown_fix.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
-4. Restart foobar2000
+4. **Restart foobar2000** (mandatory for v10.0.5 to load correctly)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
+
+#### Version Switching Warning
+**Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
 
 ### Features
 - **Album Art Display**: Shows album covers in a responsive grid
@@ -68,11 +84,14 @@ A component that displays album artwork in a customizable grid layout for foobar
 - foobar2000 v2.0 or later (64-bit)
 - Windows 10/11
 
-### Source Code
+### Source Code (v10.0.5)
 The component includes the following source files:
-- `grid_v999_final.cpp` - Main grid implementation
-- `initquit_v999_fixed.cpp` - Initialization and shutdown handling
-- `component_version.rc` - Version resource information
+- `grid_v10_0_5_shutdown_fix.cpp` - Main grid implementation with v10.0.5 version
+- `initquit_v10_0_5.cpp` - Enhanced initialization and shutdown handling with critical sections
+- `helpers_minimal_v10_0_5.cpp` - Protected helper functions with atomic shutdown flags
+- `BUILD_V10_0_5_SHUTDOWN_FIX.bat` - Build script for v10.0.5
+- `INSTALL_V10_0_5_SAFE.bat` - Safe installation script
+- `VERSION_SWITCHING_FIX.md` - Technical documentation of shutdown fixes
 
 ### Building from Source
 Requires:
@@ -80,8 +99,10 @@ Requires:
 - foobar2000 SDK (2025-03-07)
 - Windows SDK 10.0.26100.0
 
-### Known Issues
-- None reported in v10.0.1
+### Known Issues  
+- None reported in v10.0.5
+- v10.0.5 FIXES the critical shutdown crash from previous versions
+- v10.0.5 FIXES memory corruption during version switching
 
 ### Support
 Report issues at: https://github.com/veselyvaclavcz/foobar-grid-view/issues
