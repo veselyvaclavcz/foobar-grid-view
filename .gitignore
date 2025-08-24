@@ -15,6 +15,10 @@
 *.vcxproj
 *.vcxproj.filters
 
+# SDK folder (download separately)
+SDK-2025-03-07/
+SDK/
+
 # Temporary files
 *.tmp
 *.bak
@@ -29,6 +33,11 @@ Desktop.ini
 *.zip
 *.rar
 *.7z
+
+# Build and installation scripts
+*.bat
+*.cmd
+*.ps1
 
 # Test/debug builds
 Debug/
