@@ -2,38 +2,36 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.5 (2025-08-24)
+## Version 10.0.6 (2025-08-24)
 
 ### Download
-- **[Release v10.0.5](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_5_shutdown_fix.fb2k-component](foo_albumart_grid_v10_0_5_shutdown_fix.fb2k-component)** - Component package
+- **[Release v10.0.6](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_6.fb2k-component](foo_albumart_grid_v10_0_6.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.5) - CRITICAL SHUTDOWN FIX
-- **🔥 CRITICAL FIX**: Fixed crash during foobar2000 shutdown in `uPrintCrashInfo_OnEvent` 
-- **🔥 CRITICAL FIX**: Fixed memory corruption during version switching
-- **🛡️ SECURITY**: Added atomic shutdown flags to prevent access during cleanup
-- **🛡️ SECURITY**: Implemented critical section protection during shutdown sequence
-- **🔧 IMPROVED**: Enhanced thread-safe resource cleanup (GDI+, helpers, events)  
-- **🔧 IMPROVED**: Protected all helper functions against shutdown access
-- **📦 NEW**: Safe installation script with mandatory foobar2000 restart
-- **📖 NEW**: Complete technical documentation of the shutdown fix
-- **✅ MAINTAINED**: All features from v10.0.4 including 4 display labels and crash protection
+### Latest Changes (v10.0.6) - CRITICAL CALLBACK FIX
+- **🔥 CRITICAL FIX**: Fixed ALL m_callback validity checks to prevent access violation crashes
+- **🔥 CRITICAL FIX**: Fixed crash at address 0x0000000100000003 during shutdown
+- **🛡️ PROTECTED**: Added validity checks at 7 critical locations (lines 799, 1763, 1808-1812, 2789, 2976)
+- **🛡️ SECURITY**: Prevents uCallStackTracker destructor crashes
+- **🔧 IMPROVED**: Comprehensive callback validation throughout the component
+- **✅ STABLE**: Fully resolves shutdown crashes reported in v10.0.5
+- **✅ MAINTAINED**: All features from previous versions including 4 display labels
 
-### Installation (v10.0.5)
+### Previous v10.0.5 Changes
+- Added atomic shutdown flags and critical section protection
+- Enhanced thread-safe resource cleanup
+- Protected helper functions against shutdown access
+
+### Installation (v10.0.6)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
-#### Option A: Safe Installation (Recommended)
-1. Run `INSTALL_V10_0_5_SAFE.bat` 
-2. Script will close foobar2000 automatically if running
-3. Follow prompts to complete installation  
-4. Verify "Album Art Grid v10.0.5 initialized" appears in foobar2000 console
-
-#### Option B: Manual Installation
+#### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_5_shutdown_fix.fb2k-component` 
+2. Double-click `foo_albumart_grid_v10_0_6.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
-4. **Restart foobar2000** (mandatory for v10.0.5 to load correctly)
+4. **Restart foobar2000** (mandatory for proper initialization)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
+6. Verify "Album Art Grid v10.0.6 initialized - Critical crash fix applied" appears in console
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
