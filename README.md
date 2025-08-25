@@ -2,17 +2,24 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.7 (2025-08-25)
+## Version 10.0.8 (2025-08-25)
 
 ### Download
-- **[Release v10.0.7](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_7_CLEAN.fb2k-component](foo_albumart_grid_v10_0_7_CLEAN.fb2k-component)** - Component package
+- **[Release v10.0.8](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_8_COMPLETE.fb2k-component](foo_albumart_grid_v10_0_8_COMPLETE.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.7) - LINE 800 CRASH FIX
-- **🔥 CRITICAL FIX**: Fixed line 800 crash - added m_callback validity check before query_font_ex()
-- **🔧 FIXED**: Resolved persistent crash at offset 11CF4h reported by multiple users
-- **✅ VERIFIED**: All console messages correctly report v10.0.7
-- **✅ STABLE**: Based on working v10.0.6 source with targeted crash fix
+### Latest Changes (v10.0.8) - COMPREHENSIVE CRASH FIXES
+- **🔥 CRITICAL FIXES**: Added callback validity checks at ALL potential crash points:
+  - Line 800: Fixed crash before `query_font_ex()` call
+  - Line 1531: Fixed `GetWindowTextW()` for proper wchar_t handling
+  - Line 1768: Added check before `query_std_color()` call
+  - Lines 2807, 2999: Added checks before `on_min_max_info_change()` calls
+- **✅ VERIFIED**: All identified crash scenarios now protected
+- **✅ STABLE**: Comprehensive fix for all callback-related crashes
+
+### Previous v10.0.7 Changes
+- Fixed line 800 crash - added m_callback validity check before query_font_ex()
+- Resolved persistent crash at offset 11CF4h reported by multiple users
 
 ### Previous v10.0.6 Changes
 - Fixed ALL m_callback validity checks to prevent access violation crashes
@@ -25,16 +32,16 @@ A component that displays album artwork in a customizable grid layout for foobar
 - Enhanced thread-safe resource cleanup
 - Protected helper functions against shutdown access
 
-### Installation (v10.0.7)
+### Installation (v10.0.8)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
 #### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_7_CLEAN.fb2k-component` 
+2. Double-click `foo_albumart_grid_v10_0_8_COMPLETE.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
 4. **Restart foobar2000** (mandatory for proper initialization)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
-6. Verify "Album Art Grid v10.0.7 initialized - Line 800 crash fix applied" appears in console
+6. Verify "Album Art Grid v10.0.8 initialized - All critical fixes applied" appears in console
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
@@ -85,14 +92,11 @@ A component that displays album artwork in a customizable grid layout for foobar
 - foobar2000 v2.0 or later (64-bit)
 - Windows 10/11
 
-### Source Code (v10.0.5)
+### Source Code (v10.0.8)
 The component includes the following source files:
-- `grid_v10_0_5_shutdown_fix.cpp` - Main grid implementation with v10.0.5 version
-- `initquit_v10_0_5.cpp` - Enhanced initialization and shutdown handling with critical sections
-- `helpers_minimal_v10_0_5.cpp` - Protected helper functions with atomic shutdown flags
-- `BUILD_V10_0_5_SHUTDOWN_FIX.bat` - Build script for v10.0.5
-- `INSTALL_V10_0_5_SAFE.bat` - Safe installation script
-- `VERSION_SWITCHING_FIX.md` - Technical documentation of shutdown fixes
+- `grid_v10_0_8_simple.cpp` - Main grid implementation with comprehensive callback fixes
+- `initquit_v10_0_8.cpp` - Initialization and shutdown handling
+- `foo_albumart_grid_v10_0_8_COMPLETE.fb2k-component` - Ready-to-install component package
 
 ### Building from Source
 Requires:
@@ -101,9 +105,9 @@ Requires:
 - Windows SDK 10.0.26100.0
 
 ### Known Issues  
-- None reported in v10.0.5
-- v10.0.5 FIXES the critical shutdown crash from previous versions
-- v10.0.5 FIXES memory corruption during version switching
+- None reported in v10.0.8
+- v10.0.8 FIXES all identified callback-related crashes
+- v10.0.8 includes comprehensive protection against access violations
 
 ### Support
 Report issues at: https://github.com/veselyvaclavcz/foobar-grid-view/issues
