@@ -2,36 +2,39 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.6 (2025-08-24)
+## Version 10.0.7 (2025-08-25)
 
 ### Download
-- **[Release v10.0.6](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_6.fb2k-component](foo_albumart_grid_v10_0_6.fb2k-component)** - Component package
+- **[Release v10.0.7](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_7_CLEAN.fb2k-component](foo_albumart_grid_v10_0_7_CLEAN.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.6) - CRITICAL CALLBACK FIX
-- **🔥 CRITICAL FIX**: Fixed ALL m_callback validity checks to prevent access violation crashes
-- **🔥 CRITICAL FIX**: Fixed crash at address 0x0000000100000003 during shutdown
-- **🛡️ PROTECTED**: Added validity checks at 7 critical locations (lines 799, 1763, 1808-1812, 2789, 2976)
-- **🛡️ SECURITY**: Prevents uCallStackTracker destructor crashes
-- **🔧 IMPROVED**: Comprehensive callback validation throughout the component
-- **✅ STABLE**: Fully resolves shutdown crashes reported in v10.0.5
-- **✅ MAINTAINED**: All features from previous versions including 4 display labels
+### Latest Changes (v10.0.7) - LINE 800 CRASH FIX
+- **🔥 CRITICAL FIX**: Fixed line 800 crash - added m_callback validity check before query_font_ex()
+- **🔧 FIXED**: Resolved persistent crash at offset 11CF4h reported by multiple users
+- **✅ VERIFIED**: All console messages correctly report v10.0.7
+- **✅ STABLE**: Based on working v10.0.6 source with targeted crash fix
+
+### Previous v10.0.6 Changes
+- Fixed ALL m_callback validity checks to prevent access violation crashes
+- Fixed crash at address 0x0000000100000003 during shutdown
+- Added validity checks at 7 critical locations
+- Prevents uCallStackTracker destructor crashes
 
 ### Previous v10.0.5 Changes
 - Added atomic shutdown flags and critical section protection
 - Enhanced thread-safe resource cleanup
 - Protected helper functions against shutdown access
 
-### Installation (v10.0.6)
+### Installation (v10.0.7)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
 #### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_6.fb2k-component` 
+2. Double-click `foo_albumart_grid_v10_0_7_CLEAN.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
 4. **Restart foobar2000** (mandatory for proper initialization)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
-6. Verify "Album Art Grid v10.0.6 initialized - Critical crash fix applied" appears in console
+6. Verify "Album Art Grid v10.0.7 initialized - Line 800 crash fix applied" appears in console
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
