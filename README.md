@@ -2,29 +2,30 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.10 SAFE (2025-08-27)
+## Version 10.0.11 FINAL (2025-08-27)
 
 ### Download
-- **[Release v10.0.10 SAFE](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_10_safe.fb2k-component](foo_albumart_grid_v10_0_10_safe.fb2k-component)** - Component package
+- **[Release v10.0.11 FINAL](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_11_FINAL.fb2k-component](foo_albumart_grid_v10_0_11_FINAL.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.10 SAFE) - COMPREHENSIVE CRASH PROTECTION
-- **🔥 CRITICAL RECURSION FIX**: Fixed infinite recursion crashes at foo_albumart_grid+207C8h
-  - Safe runtime stub implementations prevent interface resolution loops
-  - Thread-local depth tracking prevents deep recursion in call stack tracker
-  - Resolved persistent crashes in foobar2000_get_interface function
-- **🔒 USE-AFTER-FREE PROTECTION**: Fixed playlist callback crashes at offset 0x1162C
-  - Added atomic `m_is_destroying` flag to prevent use-after-free scenarios
-  - Protected all 15 playlist callback methods with destruction checks
-  - Safe callback handling during UI destruction sequence
-- **🛡️ ALBUM ART LOADING PROTECTION**: Fixed crashes in album art manager functions
-  - Protected `load_visible_artwork()` function with atomic checks
-  - Safe handling of album_art_manager_v2::open operations
-  - Exception protection during artwork loading operations
-- **✅ ALL v10.0.9 FEATURES MAINTAINED**:
+### Latest Changes (v10.0.11 FINAL) - GLOBAL SHUTDOWN PROTECTION
+- **🛡️ GLOBAL SHUTDOWN PROTECTION SYSTEM**: Revolutionary approach to prevent ALL window closing crashes
+  - Centralized shutdown manager with atomic flags
+  - Safe virtual call wrappers with SEH exception handling
+  - Protected all critical paths including offsets 1181Ch and 11824h
+  - Thread-safe instance tracking and cleanup
+- **⚡ AUTO-ADJUSTING PERFORMANCE**: Dynamic configuration based on available RAM
+  - 8GB+ RAM: 512MB cache, 20 item prefetch, 50 item buffer
+  - 16GB+ RAM: 1024MB cache, 35 item prefetch, 75 item buffer
+  - 32GB+ RAM: 2048MB cache, 50 item prefetch, 100 item buffer
+- **🔧 COMPREHENSIVE FIXES FROM v10.0.10**:
+  - Fixed infinite recursion crashes at foo_albumart_grid+207C8h
+  - Fixed use-after-free crashes in playlist callbacks at 0x1162C
+  - Protected album art loading operations
+- **✅ ALL PREVIOUS FEATURES MAINTAINED**:
   - F9FCh memory corruption fix during shutdown
   - "Open in Folder" context menu feature
-  - All previous callback validity fixes from v10.0.8
+  - All callback validity fixes from v10.0.8
 
 ### Previous v10.0.7 Changes
 - Fixed line 800 crash - added m_callback validity check before query_font_ex()
@@ -41,16 +42,16 @@ A component that displays album artwork in a customizable grid layout for foobar
 - Enhanced thread-safe resource cleanup
 - Protected helper functions against shutdown access
 
-### Installation (v10.0.10 SAFE)
+### Installation (v10.0.11 FINAL)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
 #### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_10_safe.fb2k-component` 
+2. Double-click `foo_albumart_grid_v10_0_11_FINAL.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
 4. **Restart foobar2000** (mandatory for proper initialization)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
-6. Verify "Album Art Grid v10.0.10 SAFE initialized - comprehensive crash protection" appears in console
+6. Verify "Album Art Grid v10.0.11 initialized - Global shutdown protection active" appears in console
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
@@ -101,12 +102,12 @@ A component that displays album artwork in a customizable grid layout for foobar
 - foobar2000 v2.0 or later (64-bit)
 - Windows 10/11
 
-### Source Code (v10.0.10 SAFE)
+### Source Code (v10.0.11 FINAL)
 The component includes the following source files:
-- `grid_v10_0_10_FINAL.cpp` - Main grid implementation with comprehensive crash protection
-- `initquit_v10_0_10_final.cpp` - Initialization and shutdown handling with atomic protection
-- `runtime_stubs_safe.cpp` - Safe runtime stub implementations to prevent recursion
-- `foo_albumart_grid_v10_0_10_safe.fb2k-component` - Ready-to-install component package
+- `grid_v10_0_11_FINAL.cpp` - Main grid implementation with global shutdown protection
+- `initquit_v10_0_10_final.cpp` - Initialization and shutdown handling with v10.0.11 updates
+- `stdafx.cpp` - Precompiled header support
+- `foo_albumart_grid_v10_0_11_FINAL.fb2k-component` - Ready-to-install component package
 
 ### Building from Source
 Requires:
@@ -115,11 +116,11 @@ Requires:
 - Windows SDK 10.0.26100.0
 
 ### Known Issues  
-- None reported in v10.0.10 SAFE
-- v10.0.10 SAFE FIXES infinite recursion crashes at foo_albumart_grid+207C8h
-- v10.0.10 SAFE FIXES use-after-free crashes in playlist callbacks at offset 0x1162C
-- v10.0.10 SAFE includes comprehensive atomic protection for all critical operations
-- v10.0.10 SAFE maintains all v10.0.9 features including F9FCh memory fix and "Open in Folder"
+- None reported in v10.0.11 FINAL
+- v10.0.11 FINAL FIXES all window closing crashes with global protection system
+- v10.0.11 FINAL FIXES crashes at offsets 1181Ch and 11824h
+- v10.0.11 FINAL includes auto-adjusting performance based on system RAM
+- v10.0.11 FINAL maintains all previous fixes and features from v10.0.10
 
 ### Support
 Report issues at: https://github.com/veselyvaclavcz/foobar-grid-view/issues
