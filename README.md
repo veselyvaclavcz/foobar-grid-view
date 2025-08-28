@@ -2,13 +2,22 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.12 (2025-08-28)
+## Version 10.0.13 (2025-08-28) - LIBRARY VIEWER INTEGRATION
 
 ### Download
-- **[Release v10.0.12](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_12_WORKING.fb2k-component](foo_albumart_grid_v10_0_12_WORKING.fb2k-component)** - Component package
+- **[Release v10.0.13](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component](foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.12) - MULTI-INSTANCE FIX
+### Latest Changes (v10.0.13) - LIBRARY VIEWER INTEGRATION
+- **🔧 LIBRARY MENU INTEGRATION**: Component now appears in foobar2000's Library menu system
+  - Added `library_viewer` service registration for proper Library menu integration
+  - Component appears in "Installed media library viewers" list in preferences
+  - Enhanced ui_element with `KFlagSupportsBump` and `KFlagHavePopupCommand` flags
+  - Added `bump()` method for window activation from library menu
+  - Dual-approach implementation ensures compatibility with foobar2000's library system
+- **✅ Maintains ALL v10.0.12 Features**: All multi-instance fixes and stability improvements preserved
+
+### Previous Changes (v10.0.12) - MULTI-INSTANCE FIX
 - **🔧 CRITICAL FIX: Multiple grid instances can now be opened**
   - Fixed regression from v10.0.11 that prevented opening more than one grid instance
   - Shutdown protection now only activates on foobar2000 exit, not when closing individual grids
@@ -54,16 +63,17 @@ A component that displays album artwork in a customizable grid layout for foobar
 - Enhanced thread-safe resource cleanup
 - Protected helper functions against shutdown access
 
-### Installation (v10.0.12)
+### Installation (v10.0.13)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
 #### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_12_WORKING.fb2k-component` 
+2. Double-click `foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
 4. **Restart foobar2000** (mandatory for proper initialization)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
-6. Verify "Album Art Grid v10.0.12 initialized - Multi-instance support enabled" appears in console
+6. Verify "Album Art Grid v10.0.13 initialized - Library Viewer Integration" appears in console
+7. **NEW**: Check Library → Preferences → Media Library → Installed media library viewers to see "Album Art Grid"
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
@@ -114,12 +124,13 @@ A component that displays album artwork in a customizable grid layout for foobar
 - foobar2000 v2.0 or later (64-bit)
 - Windows 10/11
 
-### Source Code (v10.0.11 FINAL)
+### Source Code (v10.0.13)
 The component includes the following source files:
-- `grid_v10_0_11_FINAL.cpp` - Main grid implementation with global shutdown protection
-- `initquit_v10_0_10_final.cpp` - Initialization and shutdown handling with v10.0.11 updates
+- `grid_v10_0_13_library.cpp` - Main grid implementation with library viewer integration
+- `initquit_v10_0_13.cpp` - Initialization and shutdown handling with v10.0.13 updates
+- `library_viewer_impl.cpp` - Library viewer service implementation for Library menu integration
 - `stdafx.cpp` - Precompiled header support
-- `foo_albumart_grid_v10_0_11_FINAL.fb2k-component` - Ready-to-install component package
+- `foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component` - Ready-to-install component package
 
 ### Building from Source
 Requires:
@@ -128,11 +139,11 @@ Requires:
 - Windows SDK 10.0.26100.0
 
 ### Known Issues  
-- None reported in v10.0.11 FINAL
-- v10.0.11 FINAL FIXES all window closing crashes with global protection system
-- v10.0.11 FINAL FIXES crashes at offsets 1181Ch and 11824h
-- v10.0.11 FINAL includes auto-adjusting performance based on system RAM
-- v10.0.11 FINAL maintains all previous fixes and features from v10.0.10
+- None reported in v10.0.13
+- v10.0.13 maintains all stability fixes from v10.0.12 and earlier versions
+- Library viewer integration working as designed (appears in preferences list)
+- All window closing crashes fixed with comprehensive protection system
+- Multi-instance support fully functional
 
 ### Support
 Report issues at: https://github.com/veselyvaclavcz/foobar-grid-view/issues
