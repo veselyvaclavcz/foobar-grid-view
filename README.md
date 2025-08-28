@@ -2,13 +2,25 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.11 FINAL (2025-08-27)
+## Version 10.0.12 (2025-08-28)
 
 ### Download
-- **[Release v10.0.11 FINAL](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_11_FINAL.fb2k-component](foo_albumart_grid_v10_0_11_FINAL.fb2k-component)** - Component package
+- **[Release v10.0.12](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_12_WORKING.fb2k-component](foo_albumart_grid_v10_0_12_WORKING.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.11 FINAL) - GLOBAL SHUTDOWN PROTECTION
+### Latest Changes (v10.0.12) - MULTI-INSTANCE FIX
+- **🔧 CRITICAL FIX: Multiple grid instances can now be opened**
+  - Fixed regression from v10.0.11 that prevented opening more than one grid instance
+  - Shutdown protection now only activates on foobar2000 exit, not when closing individual grids
+  - Users can now open/close multiple grid panels without needing to restart
+- **🐛 Additional Crash Fixes**:
+  - Fixed crash at offset 1196Ch in callback_run during shutdown
+  - Fixed version string incorrectly reporting as "10.0.2" in console
+  - Added null pointer checks in main_thread_callback
+  - Safe thumbnail creation with proper error handling
+- **✅ Maintains all fixes from v10.0.11**
+
+### Previous v10.0.11 Changes - GLOBAL SHUTDOWN PROTECTION
 - **🛡️ GLOBAL SHUTDOWN PROTECTION SYSTEM**: Revolutionary approach to prevent ALL window closing crashes
   - Centralized shutdown manager with atomic flags
   - Safe virtual call wrappers with SEH exception handling
@@ -42,16 +54,16 @@ A component that displays album artwork in a customizable grid layout for foobar
 - Enhanced thread-safe resource cleanup
 - Protected helper functions against shutdown access
 
-### Installation (v10.0.11 FINAL)
+### Installation (v10.0.12)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
 #### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_11_FINAL.fb2k-component` 
+2. Double-click `foo_albumart_grid_v10_0_12_WORKING.fb2k-component` 
 3. Click "Yes" or "Apply" when prompted to install
 4. **Restart foobar2000** (mandatory for proper initialization)
 5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
-6. Verify "Album Art Grid v10.0.11 initialized - Global shutdown protection active" appears in console
+6. Verify "Album Art Grid v10.0.12 initialized - Multi-instance support enabled" appears in console
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
