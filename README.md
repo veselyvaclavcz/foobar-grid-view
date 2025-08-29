@@ -2,13 +2,32 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.13 (2025-08-28) - LIBRARY VIEWER INTEGRATION
+## Version 10.0.15 (2025-08-29) - SMART LETTER JUMP NAVIGATION
 
 ### Download
-- **[Release v10.0.13](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component](foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component)** - Component package
+- **[Release v10.0.15](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_15.fb2k-component](foo_albumart_grid_v10_0_15.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.13) - LIBRARY VIEWER INTEGRATION
+### Latest Changes (v10.0.15) - SMART LETTER JUMP NAVIGATION
+- **🎯 INTELLIGENT LETTER JUMP NAVIGATION**: Press A-Z or 0-9 to quickly navigate your library
+  - **Smart Jump Logic**: Jumps based on what's actually displayed
+    - When showing "Artist - Album" → jumps by Artist name
+    - When showing "Album" only → jumps by Album name
+    - When showing "Folder Name" → jumps by Folder name
+  - **Cycle Through Matches**: Press the same letter again to jump to next item with same starting letter
+  - **Visual Feedback**: Automatically selects jumped-to item for clear visibility
+  - **Non-intrusive**: Only activates with plain key press (no Ctrl/Alt/Shift modifiers)
+  - **Wrap-around**: After last match, cycles back to first match
+- **✅ Maintains ALL previous features and fixes from v10.0.14**
+
+### Previous Changes (v10.0.14) - CRASH-FREE SHUTDOWN
+- **🛡️ SMART SHUTDOWN PROTECTION**: Prevents crashes without blocking multi-instance support
+  - Instance-specific shutdown detection (no global flags)
+  - SEH exception handling for GDI+ shutdown
+  - Fixed function naming issues (initiate_app_shutdown)
+  - Proper component packaging (.fb2k-component format)
+
+### Previous Changes (v10.0.13) - LIBRARY VIEWER INTEGRATION
 - **🔧 LIBRARY MENU INTEGRATION**: Component now appears in foobar2000's Library menu system
   - Added `library_viewer` service registration for proper Library menu integration
   - Component appears in "Installed media library viewers" list in preferences
