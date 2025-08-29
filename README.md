@@ -2,13 +2,28 @@
 
 A component that displays album artwork in a customizable grid layout for foobar2000.
 
-## Version 10.0.15 (2025-08-29) - SMART LETTER JUMP NAVIGATION
+## Version 10.0.16 (2025-08-29) - UNICODE DISPLAY & CRASH FIX
 
 ### Download
-- **[Release v10.0.15](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
-- **[foo_albumart_grid_v10_0_15.fb2k-component](foo_albumart_grid_v10_0_15.fb2k-component)** - Component package
+- **[Release v10.0.16](https://github.com/veselyvaclavcz/foobar-grid-view/releases/latest)** - Download from GitHub Releases
+- **[foo_albumart_grid_v10_0_16_CLEAN.fb2k-component](foo_albumart_grid_v10_0_16_CLEAN.fb2k-component)** - Component package
 
-### Latest Changes (v10.0.15) - SMART LETTER JUMP NAVIGATION
+### Latest Changes (v10.0.16) - UNICODE DISPLAY & CRASH FIX
+- **🌐 UNICODE CHARACTER DISPLAY FIX**: Fixed display of Unicode characters (Chinese, Japanese, Korean, etc.)
+  - **Proper UTF-8 to UTF-16 conversion**: Uses `MultiByteToWideChar` for accurate text conversion
+  - **Native Unicode rendering**: Replaced `DrawText` with `DrawTextW` for proper Unicode support
+  - **Character compatibility**: Chinese characters like "難得有情人 CD1" now display correctly in labels
+- **🛡️ ENHANCED CRASH PROTECTION**: Additional shutdown crash prevention
+  - **main_thread_callback crash fix**: Enhanced `safe_virtual_call` wrapper with main window validity checks
+  - **Callback protection**: Additional exception handling during shutdown sequences
+  - **Improved stability**: Better protection against callback_run crashes during application exit
+- **🔧 UNIQUE COMPONENT IDENTITY**: New GUIDs prevent conflicts with previous versions
+  - **UI Element GUID**: `{6B7C5F91-AC4E-5D96-B903-8D4EAC6F3B21}`
+  - **Library Viewer GUID**: `{9B4D6C8F-AF5E-4B7C-C2F4-8E5F0C6A4F32}`
+  - **Clean installation**: No conflicts with existing Album Art Grid installations
+- **✅ Maintains ALL features from v10.0.15**: Smart letter jump navigation and all previous functionality preserved
+
+### Previous Changes (v10.0.15) - SMART LETTER JUMP NAVIGATION
 - **🎯 INTELLIGENT LETTER JUMP NAVIGATION**: Press A-Z or 0-9 to quickly navigate your library
   - **Smart Jump Logic**: Jumps based on what's actually displayed
     - When showing "Artist - Album" → jumps by Artist name
@@ -82,17 +97,19 @@ A component that displays album artwork in a customizable grid layout for foobar
 - Enhanced thread-safe resource cleanup
 - Protected helper functions against shutdown access
 
-### Installation (v10.0.13)
+### Installation (v10.0.16)
 **⚠️ IMPORTANT: Use the safe installation method to prevent crashes**
 
 #### Recommended Installation
 1. **CLOSE foobar2000 completely** (very important!)
-2. Double-click `foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component` 
-3. Click "Yes" or "Apply" when prompted to install
-4. **Restart foobar2000** (mandatory for proper initialization)
-5. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
-6. Verify "Album Art Grid v10.0.13 initialized - Library Viewer Integration" appears in console
-7. **NEW**: Check Library → Preferences → Media Library → Installed media library viewers to see "Album Art Grid"
+2. **Remove any existing Album Art Grid versions** if experiencing conflicts
+3. Double-click `foo_albumart_grid_v10_0_16_CLEAN.fb2k-component` 
+4. Click "Yes" or "Apply" when prompted to install
+5. **Restart foobar2000** (mandatory for proper initialization)
+6. Add "Album Art Grid" to your layout (View → Layout → Edit Layout)
+7. Verify "Album Art Grid v10.0.16 initialized - Unicode & Crash Fix" appears in console
+8. **Test Unicode**: Verify Chinese/Japanese/Korean characters display correctly in album labels
+9. **Library Integration**: Check Library → Preferences → Media Library → Installed media library viewers to see "Album Art Grid"
 
 #### Version Switching Warning
 **Never replace component files while foobar2000 is running** - this causes memory corruption and crashes. Always use the safe installation script or manually close foobar2000 first.
@@ -143,13 +160,13 @@ A component that displays album artwork in a customizable grid layout for foobar
 - foobar2000 v2.0 or later (64-bit)
 - Windows 10/11
 
-### Source Code (v10.0.13)
+### Source Code (v10.0.16)
 The component includes the following source files:
-- `grid_v10_0_13_library.cpp` - Main grid implementation with library viewer integration
-- `initquit_v10_0_13.cpp` - Initialization and shutdown handling with v10.0.13 updates
-- `library_viewer_impl.cpp` - Library viewer service implementation for Library menu integration
+- `grid_v10_0_16.cpp` - Main grid implementation with Unicode display and crash fixes
+- `initquit_v10_0_16.cpp` - Initialization and shutdown handling with enhanced crash protection
+- `library_viewer_impl_v10_0_16.cpp` - Library viewer service implementation with unique GUIDs
 - `stdafx.cpp` - Precompiled header support
-- `foo_albumart_grid_v10_0_13_LIBRARY.fb2k-component` - Ready-to-install component package
+- `foo_albumart_grid_v10_0_16_CLEAN.fb2k-component` - Ready-to-install component package
 
 ### Building from Source
 Requires:
@@ -158,11 +175,14 @@ Requires:
 - Windows SDK 10.0.26100.0
 
 ### Known Issues  
-- None reported in v10.0.13
-- v10.0.13 maintains all stability fixes from v10.0.12 and earlier versions
+- None reported in v10.0.16
+- v10.0.16 maintains all stability fixes from v10.0.15 and earlier versions
+- Unicode character display fully functional for all languages
+- Enhanced crash protection prevents main_thread_callback crashes
 - Library viewer integration working as designed (appears in preferences list)
 - All window closing crashes fixed with comprehensive protection system
 - Multi-instance support fully functional
+- Smart letter jump navigation working perfectly
 
 ### Support
 Report issues at: https://github.com/veselyvaclavcz/foobar-grid-view/issues
