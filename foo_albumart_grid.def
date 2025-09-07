@@ -1,3 +1,2 @@
-LIBRARY foo_albumart_grid
 EXPORTS
     foobar2000_get_interface

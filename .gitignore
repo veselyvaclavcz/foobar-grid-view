@@ -1,56 +1,92 @@
 # Build outputs
+build/
 *.obj
 *.pdb
 *.ilk
-*.exp
-*.lib
 *.exe
 *.dll
+*.lib
+*.exp
+*.res
 
 # Visual Studio
 .vs/
-*.user
 *.suo
-*.sln
-*.vcxproj
+*.user
+*.userosscache
+*.sln.docstates
 *.vcxproj.filters
+*.vcxproj.user
+*.VC.db
+*.VC.opendb
+ipch/
 
-# SDK folder (download separately)
-SDK-2025-03-07/
-SDK/
+# Component builds
+*.fb2k-component
 
 # Temporary files
 *.tmp
-*.bak
-*.swp
-*~
+*.temp
+~*
 
-# Windows
+# Logs
+*.log
+logs/
+
+# Archive (old versions)
+archive_old_versions/
+
+# Test outputs
+tests/output/
+tests/results/
+
+# OS files
 Thumbs.db
-Desktop.ini
+.DS_Store
+desktop.ini
 
-# Archive files
-*.zip
-*.rar
-*.7z
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+*.code-workspace
 
-# Build and installation scripts
+# SDK (if locally stored)
+foobar2000_SDK/
+sdk/
+
+# Build scripts (bat/cmd files) - exclude all build automation scripts
 *.bat
 *.cmd
-*.ps1
 
-# Test/debug builds
-Debug/
+# Build/compile scripts (PowerShell and Python) - exclude most but keep main build script
+build_*.ps1
+compile*.ps1
+run*.ps1
+build*.py
+compile*.py
+
+# Keep main build script for library viewer
+!build_with_library_viewer.ps1
+
+# Archive and documentation clutter
+archive/
+docs/temp/
+*_BACKUP/
+*BACKUP*/
+BACKUP_*/
 Release/
-x64/
-x86/
+crash_analysis/
+temp_*.cpp
+temp_*.zip
+nul
 
-# Old versions
-*_v94.*
-*_v95.*
-*_v96.*
-*_v97.*
-grid_v8*
+# Keep main source file
+!temp_fixed_base_v10_0_18.cpp
 
-# Keep the latest component
-!foo_albumart_grid_v98.fb2k-component
+# Component outputs (keep main releases only)
+foo_albumart_grid_v*.fb2k-component
+
+# Claude AI files
+.claude/
