@@ -25,7 +25,7 @@ public:
         
         if (status == Gdiplus::Ok && m_gdiplusToken != 0) {
             console::print("Album Art Grid v10.0.4 initialized");
-            console::print("Path error handling protection enabled");
+            console::print("Menu fix and crash protection enabled");
         } else {
             console::print("Album Art Grid v10.0.4: GDI+ initialization failed");
             m_gdiplusToken = 0;

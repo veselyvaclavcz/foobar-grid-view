@@ -24,10 +24,10 @@ public:
         Gdiplus::Status status = Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
         
         if (status == Gdiplus::Ok && m_gdiplusToken != 0) {
-            console::print("Album Art Grid v10.0.11 initialized - Global shutdown protection active");
+            console::print("Album Art Grid v10.0.12 initialized - Global shutdown protection active");
             console::print("F9FCh memory fix and thread-safe cache enabled");
         } else {
-            console::print("Album Art Grid v10.0.11: GDI+ initialization failed");
+            console::print("Album Art Grid v10.0.12: GDI+ initialization failed");
             m_gdiplusToken = 0;
         }
     }

@@ -21,24 +21,21 @@ build/
 *.VC.opendb
 ipch/
 
-# Component builds
+# Component builds - keep only FINAL version
 *.fb2k-component
+!foo_albumart_grid_v10_0_18_FINAL.fb2k-component
 
 # Temporary files
 *.tmp
 *.temp
+*.zip
 ~*
 
 # Logs
 *.log
-logs/
 
-# Archive (old versions)
-archive_old_versions/
-
-# Test outputs
-tests/output/
-tests/results/
+# Archive directory (contains all old versions and build scripts)
+archive/
 
 # OS files
 Thumbs.db
@@ -52,46 +49,16 @@ desktop.ini
 .idea/
 *.code-workspace
 
-# SDK (if locally stored)
-foobar2000_SDK/
-sdk/
-
-# Build scripts (bat/cmd files) - exclude all build automation scripts
+# Build scripts - keep only FINAL version
+build_*.ps1
+build_*.py
 *.bat
 *.cmd
+!build_v10_0_18_FINAL.ps1
 
-# Build/compile scripts (PowerShell and Python) - exclude most but keep main build script
-build_*.ps1
-compile*.ps1
-run*.ps1
-build*.py
-compile*.py
-
-# Keep main build script for library viewer
-!build_with_library_viewer.ps1
-
-# Archive and documentation clutter
-archive/
-docs/temp/
-*_BACKUP/
-*BACKUP*/
-BACKUP_*/
-Release/
-crash_analysis/
+# Temporary source files - keep only main source
 temp_*.cpp
-temp_*.zip
-nul
-
-# Keep main source file
 !temp_fixed_base_v10_0_18.cpp
-
-# Component outputs (keep main releases only)
-foo_albumart_grid_v*.fb2k-component
-
-# Keep the stable v10.0.18 release components
-!foo_albumart_grid_v10_0_18_WITH_LIBRARY_VIEWER.fb2k-component
-!foo_albumart_grid_v10_0_18_FIXED.fb2k-component
-!foo_albumart_grid_v10_0_18_FINAL.fb2k-component
 
 # Claude AI files
 .claude/

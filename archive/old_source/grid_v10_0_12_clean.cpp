@@ -3504,6 +3504,29 @@ public:
     ui_element_children_enumerator_ptr enumerate_children(ui_element_config::ptr cfg) override {
         return NULL;
     }
+    
+    // Add flags for popup command generation (allows appearance in menus)
+    t_uint32 get_flags() {
+        // KFlagHavePopupCommand = 1 << 1 from ui_element.h
+        return 1 << 1;  // KFlagHavePopupCommand
+    }
+    
+    // Popup command name for menus
+    void get_menu_command_name(pfc::string_base & out) {
+        out = "Album Art Grid";
+    }
+    
+    // Popup command description  
+    bool get_menu_command_description(pfc::string_base & out) {
+        out = "Shows the Album Art Grid window";
+        return true;
+    }
+    
+    // Support bump for activation
+    bool bump() {
+        // Try to activate existing instance
+        return false;
+    }
 };
 
 static service_factory_single_t<album_grid_ui_element> g_album_grid_ui_element_factory;
@@ -3521,4 +3544,24 @@ extern "C" {
         shutdown_protection::g_is_shutting_down = false;
         shutdown_protection::g_active_instances.clear();
     }
+}
+
+// Library viewer support - allow showing the Album Art Grid window from Library menu
+void show_album_art_grid_window() {
+    // Try to activate the main UI which should make the grid visible if already open
+    static_api_ptr_t<ui_control> ui_ctrl;
+    
+    console::print("[Album Art Grid v10.0.12] Activated from Library menu");
+    
+    // Activate the main UI - this will bring it to foreground
+    ui_ctrl->activate();
+    
+    // Note: We can't directly create a new instance of the grid window programmatically
+    // The user needs to add it to their layout through View -> Layout -> Edit Layout
+    // But we can make sure the main window is visible and activated
+}
+
+bool is_album_art_grid_window_visible() {
+    // Check if any instances are active
+    return !shutdown_protection::g_active_instances.empty();
 }
