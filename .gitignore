@@ -88,8 +88,9 @@ nul
 # Component outputs (keep main releases only)
 foo_albumart_grid_v*.fb2k-component
 
-# Keep the stable v10.0.18 release component
+# Keep the stable v10.0.18 release components
 !foo_albumart_grid_v10_0_18_WITH_LIBRARY_VIEWER.fb2k-component
+!foo_albumart_grid_v10_0_18_FIXED.fb2k-component
 
 # Claude AI files
 .claude/
