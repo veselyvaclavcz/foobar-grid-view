@@ -25,6 +25,7 @@ ipch/
 *.fb2k-component
 !foo_albumart_grid_v10_0_18_FINAL.fb2k-component
 !foo_albumart_grid_v10_0_18_MPV_FINAL_FIX.fb2k-component
+!foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component
 
 # Temporary files
 *.tmp
@@ -57,11 +58,13 @@ build_*.py
 *.cmd
 !build_v10_0_18_FINAL.ps1
 !build_v10_0_18_MPV_FINAL_FIX.ps1
+!build_v10_0_18_MPV_RETRY_FIX.ps1
 
 # Temporary source files - keep only main source
 temp_*.cpp
 !temp_fixed_base_v10_0_18.cpp
 !temp_fixed_base_v10_0_18_MPV_FINAL_FIX.cpp
+!temp_fixed_base_v10_0_18_MPV_RETRY_FIX.cpp
 
 # Claude AI files
 .claude/
