@@ -38,14 +38,22 @@
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "10.0.20 PERSISTENT BLACKLIST FIX",
-    "Album Art Grid v10.0.20 PERSISTENT BLACKLIST FIX - Enhanced Blacklist Persistence\n"
+    "10.0.21 EMOJI DISPLAY FIX",
+    "Album Art Grid v10.0.21 EMOJI DISPLAY FIX - Fixed Corrupted Characters\n"
     "\n"
-    "ENHANCED IN v10.0.20 PERSISTENT BLACKLIST FIX:\n"
-    "* ENHANCED: Persistent blacklist now SURVIVES component refreshes and operations\n"
-    "* ENHANCED: Thread-safe blacklist operations with critical_section protection\n"
-    "* ENHANCED: Enhanced blacklist key generation for better uniqueness\n"
-    "* ENHANCED: Blacklist data persists across all component lifecycle events\n"
+    "FIXED IN v10.0.21 EMOJI DISPLAY FIX:\n"
+    "* FIXED: Corrupted emoji characters (öY) replaced with standard symbols\n"
+    "* FIXED: Missing artwork now displays ♪ instead of corrupted UTF-8 bytes\n"
+    "* FIXED: Loading state shows ... instead of broken hourglass emoji\n"
+    "* FIXED: Folder view shows [ ] instead of broken folder emoji\n"
+    "\n"
+    "ENHANCED IN v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION:\n"
+    "* FIXED: Scrollbar performance with large collections (3000+ items) - no more UI hangs\n"  
+    "* REPLACED: Windows scrollbar with high-performance custom scrollbar implementation\n"
+    "* OPTIMIZED: Eliminated calculate_layout() calls during scrolling for massive speedup\n"
+    "* ENHANCED: Smooth scrolling with custom thumb dragging and mouse wheel support\n"
+    "* MAINTAINED: All v10.0.21 callback crash fixes and emoji display functionality\n"
+    "* MAINTAINED: All v10.0.20 persistent blacklist functionality fully preserved\n"
     "* DEFINITIVE: Complete elimination of infinite retry loops for missing artwork\n"
     "\n"
     "MAINTAINED FROM v10.0.19 MPV FINAL:\n"
@@ -919,6 +927,22 @@ struct grid_item {
     grid_item() : thumbnail(std::make_shared<thumbnail_data>()), newest_date(0), rating(0), total_size(0) {}
 };
 
+// v10.0.22 CUSTOM SCROLLBAR: High-performance scrollbar for large collections
+struct ScrollbarInfo {
+    bool visible;
+    bool dragging;
+    bool thumb_hover;       // Track mouse hover state for thumb
+    RECT rect;              // Scrollbar track rectangle
+    int range;              // Total scrollable range in pixels
+    int thumb_size;         // Height of thumb in pixels
+    int thumb_pos;          // Current top position of thumb
+    int drag_offset;        // Mouse offset when dragging started
+    
+    ScrollbarInfo() : visible(false), dragging(false), thumb_hover(false), range(0), thumb_size(20), thumb_pos(0), drag_offset(0) {
+        memset(&rect, 0, sizeof(rect));
+    }
+};
+
 // Grid UI element instance  
 class album_grid_instance : public ui_element_instance, public playlist_callback_single, public validated_object {
 private:
@@ -932,6 +956,7 @@ private:
     bool m_search_visible;  // Is search box visible
     bool m_auto_scroll_to_now_playing;  // Auto-scroll to now playing when track changes
     int m_scroll_pos;
+    int m_max_scroll;  // v10.0.22: Maximum scroll position for custom scrollbar
     std::set<int> m_selected_indices;  // Multi-select support
     int m_last_selected;  // For shift-select
     int m_hover_index;
@@ -965,6 +990,11 @@ private:
     
     // No more cleanup timers - using LRU instead
     
+    // v10.0.22 CUSTOM SCROLLBAR: Performance optimized scrollbar for large collections
+    ScrollbarInfo m_scrollbar;
+    HBRUSH m_scrollbar_brush;
+    HPEN m_scrollbar_pen;
+    
     // Letter jump navigation tracking
     char m_last_jump_letter;
     int m_last_jump_index;
@@ -972,10 +1002,11 @@ private:
 public:
     album_grid_instance(ui_element_config::ptr config, ui_element_instance_callback_ptr callback)
         : m_callback(callback), m_hwnd(NULL), m_parent(NULL), m_tooltip(NULL), m_search_box(NULL),
-          m_search_visible(false), m_auto_scroll_to_now_playing(false), m_scroll_pos(0), 
+          m_search_visible(false), m_auto_scroll_to_now_playing(false), m_scroll_pos(0), m_max_scroll(0),
           m_last_selected(-1), m_hover_index(-1), m_tooltip_index(-1), m_tracking(false),
           m_first_visible(0), m_last_visible(0), m_item_size(120), m_font_height(14),
           m_now_playing_index(-1), m_highlight_now_playing(true),
+          m_scrollbar_brush(NULL), m_scrollbar_pen(NULL),
           m_last_user_scroll(0), m_last_jump_letter(0), m_last_jump_index(-1) {
         m_config.load(config);
         
@@ -1007,13 +1038,17 @@ public:
             static_api_ptr_t<playlist_manager> pm;
             pm->unregister_callback(this);
             
-            // CRITICAL v10.0.18: Add small delay to ensure all pending callbacks complete
-            // This prevents race condition where callback is already scheduled but object gets destroyed
-            Sleep(10);  // 10ms delay to let pending callbacks finish
+            // CRITICAL v10.0.21: CALLBACK CRASH FIX - Extended delay for pending main thread callbacks
+            // The crash occurs because main_thread_callback::callback_run tries to access deallocated object
+            // We must ensure ALL pending callbacks complete before object destruction
+            
+            // Extended safety delay - increased from 10ms to 100ms for callback completion
+            // This allows enough time for any queued main_thread_callback::callback_run to complete
+            Sleep(100);  // Critical delay to prevent access to deallocated object
             
         } catch(...) {
-            // Ignore errors during shutdown - but still wait
-            Sleep(10);
+            // Even on callback cleanup failure, wait for safety delay
+            Sleep(100);  // Critical delay even on error
         }
         
         // Kill all timers if window exists
@@ -1032,6 +1067,16 @@ public:
         // Clear all data after window is destroyed
         m_items.clear();
         thumbnail_cache::clear_all();
+        
+        // v10.0.22 CUSTOM SCROLLBAR: Clean up scrollbar resources
+        if (m_scrollbar_brush) {
+            DeleteObject(m_scrollbar_brush);
+            m_scrollbar_brush = NULL;
+        }
+        if (m_scrollbar_pen) {
+            DeleteObject(m_scrollbar_pen);
+            m_scrollbar_pen = NULL;
+        }
         
         // Release now playing handle
         m_now_playing.release();
@@ -1059,7 +1104,7 @@ public:
         // Create window
         m_hwnd = CreateWindowEx(
             0, class_name, TEXT(""),
-            WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+            WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,  // v10.0.22: Removed WS_VSCROLL - using custom scrollbar only
             0, 0, 100, 100,
             parent, NULL,
             core_api::get_my_instance(),
@@ -1092,11 +1137,11 @@ public:
             // Use foobar2000's dark mode hooks
             m_dark.AddDialogWithControls(m_hwnd);
             
-            // Additionally, if we're in dark mode, try to apply theme to scrollbar
-            if (m_dark) {  // Check if dark mode is enabled using our hooks
-                // Force Windows to use dark scrollbars by setting appropriate theme
-                SetWindowTheme(m_hwnd, L"DarkMode_Explorer", nullptr);
-            }
+            // v10.0.22 CUSTOM SCROLLBAR: Initialize scrollbar brushes based on theme
+            update_scrollbar_theme();
+            
+            // Remove Windows scrollbar styling - we use custom scrollbar now
+            // SetWindowTheme(m_hwnd, L"DarkMode_Explorer", nullptr);
         }
         
         // Start loading after a short delay
@@ -1129,6 +1174,7 @@ public:
                 case WM_VSCROLL: return instance->on_vscroll(LOWORD(wp));
                 case WM_MOUSEWHEEL: return instance->on_mousewheel(GET_WHEEL_DELTA_WPARAM(wp), GET_KEYSTATE_WPARAM(wp));
                 case WM_LBUTTONDOWN: return instance->on_lbuttondown(GET_X_LPARAM(lp), GET_Y_LPARAM(lp), wp);
+                case WM_LBUTTONUP: return instance->on_lbuttonup(GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
                 case WM_LBUTTONDBLCLK: return instance->on_lbuttondblclk(GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
                 case WM_RBUTTONDOWN: return instance->on_rbuttondown(GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
                 case WM_MOUSEMOVE: return instance->on_mousemove(GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
@@ -1779,8 +1825,8 @@ public:
         // Check for now playing track
         check_now_playing();
         
-        // Update scrollbar and repaint
-        update_scrollbar();
+        // v10.0.22 CUSTOM SCROLLBAR: Update high-performance custom scrollbar
+        update_custom_scrollbar();
         InvalidateRect(m_hwnd, NULL, FALSE);
         } catch (...) {
             // Catch all exceptions during refresh to prevent shutdown crashes
@@ -2061,7 +2107,7 @@ public:
         // Apply filter and refresh
         apply_filter();
         m_scroll_pos = 0;  // Reset scroll to top
-        update_scrollbar();
+        update_custom_scrollbar();
         InvalidateRect(m_hwnd, NULL, FALSE);
     }
     
@@ -2372,6 +2418,8 @@ public:
         
         // Fill background with theme color
         // v10.0.8: Added callback validity check (line 1768 fix)
+        // v10.0.22: Scrollbar theme updated on window creation and size changes
+        
         t_ui_color color_back = RGB(30, 30, 30); // Default dark background
         if (m_callback.is_valid()) {
             color_back = m_callback->query_std_color(ui_color_background);
@@ -2441,9 +2489,10 @@ public:
         
         SetBkMode(memdc, TRANSPARENT);
         
-        // Draw items - centered in window
+        // Draw items - centered in window (reserve 10px for scrollbar)
+        int available_width = rc.right - 10;  // Reserve space for scrollbar
         int total_width = cols * m_item_size + (cols + 1) * PADDING;
-        int start_x = (rc.right - total_width) / 2;
+        int start_x = (available_width - total_width) / 2;
         if (start_x < 0) start_x = 0;
         
         for (int row = 0; row < visible_rows; row++) {
@@ -2494,6 +2543,11 @@ public:
             SelectObject(memdc, old_pen);
             SelectObject(memdc, old_brush);
             DeleteObject(edit_pen);
+        }
+        
+        // Draw custom scrollbar on top of everything
+        if (m_scrollbar.visible) {
+            draw_custom_scrollbar(memdc);
         }
         
         // Copy to screen
@@ -2606,11 +2660,11 @@ public:
             HFONT old_font = (HFONT)SelectObject(hdc, icon_font);
             
             if (item->thumbnail->loading) {
-                DrawText(hdc, TEXT("⏳"), -1, &placeholder_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+                DrawText(hdc, TEXT("..."), -1, &placeholder_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
             } else if (m_config.grouping == grid_config::GROUP_BY_FOLDER) {
-                DrawText(hdc, TEXT("📁"), -1, &placeholder_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+                DrawText(hdc, TEXT("[ ]"), -1, &placeholder_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
             } else {
-                DrawText(hdc, TEXT("🎵"), -1, &placeholder_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+                DrawText(hdc, TEXT("♪"), -1, &placeholder_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
             }
             
             SelectObject(hdc, old_font);
@@ -2779,6 +2833,36 @@ public:
     }
     
     LRESULT on_lbuttondown(int x, int y, WPARAM keys) {
+        // Check if click is on custom scrollbar
+        if (m_scrollbar.visible) {
+            POINT pt = {x, y};
+            if (PtInRect(&m_scrollbar.rect, pt)) {
+                // Check if click is on thumb
+                RECT thumb_rect = m_scrollbar.rect;
+                thumb_rect.top += m_scrollbar.thumb_pos;
+                thumb_rect.bottom = thumb_rect.top + m_scrollbar.thumb_size;
+                
+                if (PtInRect(&thumb_rect, pt)) {
+                    // Start thumb dragging
+                    m_scrollbar.dragging = true;
+                    m_scrollbar.drag_offset = y - (m_scrollbar.rect.top + m_scrollbar.thumb_pos);
+                    SetCapture(m_hwnd);
+                    return 0;
+                } else {
+                    // Click in track - page scroll
+                    int page_size = (m_scrollbar.rect.bottom - m_scrollbar.rect.top) - m_scrollbar.thumb_size;
+                    int new_pos = (y < m_scrollbar.rect.top + m_scrollbar.thumb_pos) ? 
+                                 max(0, m_scroll_pos - page_size * 2) :
+                                 m_scroll_pos + page_size * 2;
+                    
+                    m_scroll_pos = min(max(0, new_pos), m_max_scroll);
+                    update_custom_scrollbar();
+                    InvalidateRect(m_hwnd, NULL, FALSE);
+                    return 0;
+                }
+            }
+        }
+        
         // In edit mode, don't handle item selection - let the host handle element selection
         if (m_callback.is_valid() && m_callback->is_edit_mode_enabled()) {
             SetFocus(m_hwnd);  // Make sure we have focus for element selection
@@ -2816,6 +2900,15 @@ public:
             InvalidateRect(m_hwnd, NULL, FALSE);
         }
         SetFocus(m_hwnd);
+        return 0;
+    }
+    
+    LRESULT on_lbuttonup(int x, int y) {
+        if (m_scrollbar.dragging) {
+            m_scrollbar.dragging = false;
+            ReleaseCapture();
+            return 0;
+        }
         return 0;
     }
     
@@ -3457,7 +3550,7 @@ public:
             if (m_callback.is_valid()) {
                 m_callback->on_min_max_info_change();
             }
-            update_scrollbar();
+            update_custom_scrollbar();
             InvalidateRect(m_hwnd, NULL, FALSE);
         }
         
@@ -3465,6 +3558,22 @@ public:
     }
     
     LRESULT on_mousemove(int x, int y) {
+        // Handle scrollbar thumb dragging
+        if (m_scrollbar.dragging) {
+            int track_height = (m_scrollbar.rect.bottom - m_scrollbar.rect.top) - m_scrollbar.thumb_size;
+            int new_thumb_pos = max(0, min(track_height, y - m_scrollbar.rect.top - m_scrollbar.drag_offset));
+            
+            if (track_height > 0) {
+                int new_scroll_pos = (new_thumb_pos * m_max_scroll) / track_height;
+                if (new_scroll_pos != m_scroll_pos) {
+                    m_scroll_pos = new_scroll_pos;
+                    m_scrollbar.thumb_pos = new_thumb_pos;
+                    InvalidateRect(m_hwnd, NULL, FALSE);
+                }
+            }
+            return 0;
+        }
+        
         if (!m_tracking) {
             TRACKMOUSEEVENT tme = {};
             tme.cbSize = sizeof(tme);
@@ -3472,6 +3581,25 @@ public:
             tme.hwndTrack = m_hwnd;
             TrackMouseEvent(&tme);
             m_tracking = true;
+        }
+        
+        // Check scrollbar thumb hover like artist info
+        bool old_hover = m_scrollbar.thumb_hover;
+        m_scrollbar.thumb_hover = false;
+        
+        if (m_scrollbar.visible) {
+            RECT thumb_rect = m_scrollbar.rect;
+            thumb_rect.top = m_scrollbar.thumb_pos;
+            thumb_rect.bottom = thumb_rect.top + m_scrollbar.thumb_size;
+            
+            if (PtInRect(&thumb_rect, {x, y})) {
+                m_scrollbar.thumb_hover = true;
+            }
+        }
+        
+        // Redraw if hover state changed
+        if (old_hover != m_scrollbar.thumb_hover) {
+            InvalidateRect(m_hwnd, &m_scrollbar.rect, FALSE);
         }
         
         int index = hit_test(x, y);
@@ -3540,6 +3668,12 @@ public:
             InvalidateRect(m_hwnd, NULL, FALSE);
         }
         
+        // Reset scrollbar hover state like artist info
+        if (m_scrollbar.thumb_hover) {
+            m_scrollbar.thumb_hover = false;
+            InvalidateRect(m_hwnd, &m_scrollbar.rect, FALSE);
+        }
+        
         // Hide tooltip
         if (m_tooltip) {
             TOOLINFO ti = {};
@@ -3554,7 +3688,9 @@ public:
     }
     
     LRESULT on_size() {
-        update_scrollbar();
+        // v10.0.22: Update scrollbar theme colors when resizing (theme changes)
+        update_scrollbar_theme();
+        update_custom_scrollbar();
         InvalidateRect(m_hwnd, NULL, FALSE);
         return 0;
     }
@@ -3563,13 +3699,14 @@ public:
         RECT rc;
         GetClientRect(m_hwnd, &rc);
         
-        calculate_layout();  // Update m_item_size
+        // PERFORMANCE FIX: Skip expensive calculate_layout() - use cached values
         int text_height = calculate_text_height();
         int item_total_height = m_item_size + text_height;
         int cols = m_config.columns;
         size_t item_count = get_item_count();
         int rows = (item_count + cols - 1) / cols;
         int total_height = rows * (item_total_height + PADDING) + PADDING;
+        m_max_scroll = max(0, total_height - rc.bottom);
         
         int old_pos = m_scroll_pos;
         int line_height = 30;
@@ -3581,20 +3718,16 @@ public:
             case SB_PAGEUP: m_scroll_pos -= page_height; break;
             case SB_PAGEDOWN: m_scroll_pos += page_height; break;
             case SB_THUMBTRACK:
-            case SB_THUMBPOSITION: {
-                SCROLLINFO si = {};
-                si.cbSize = sizeof(si);
-                si.fMask = SIF_TRACKPOS;
-                GetScrollInfo(m_hwnd, SB_VERT, &si);
-                m_scroll_pos = si.nTrackPos;
-                break;
-            }
+            case SB_THUMBPOSITION: 
+                // Custom scrollbar handles thumb tracking directly, ignore Windows scrollbar
+                return 0;
         }
         
-        m_scroll_pos = max(0, min(m_scroll_pos, max(0, total_height - rc.bottom)));
+        m_scroll_pos = max(0, min(m_scroll_pos, m_max_scroll));
         
         if (m_scroll_pos != old_pos) {
-            SetScrollPos(m_hwnd, SB_VERT, m_scroll_pos, TRUE);
+            // v10.0.22: Use custom scrollbar instead of Windows scrollbar
+            update_custom_scrollbar();
             InvalidateRect(m_hwnd, NULL, FALSE);
         }
         
@@ -3650,7 +3783,7 @@ public:
                 if (m_callback.is_valid()) {
                     m_callback->on_min_max_info_change();
                 }
-                update_scrollbar();
+                update_custom_scrollbar();
                 InvalidateRect(m_hwnd, NULL, FALSE);
             }
         } else {
@@ -3663,6 +3796,176 @@ public:
         return 0;
     }
     
+    // v10.0.22 CUSTOM SCROLLBAR: Update theme colors for custom scrollbar
+    void update_scrollbar_theme() {
+        // Clean up old brushes
+        if (m_scrollbar_brush) {
+            DeleteObject(m_scrollbar_brush);
+            m_scrollbar_brush = NULL;
+        }
+        if (m_scrollbar_pen) {
+            DeleteObject(m_scrollbar_pen);
+            m_scrollbar_pen = NULL;
+        }
+        
+        // Use EXACT same colors as artist info for perfect matching 
+        bool dark_mode = false;
+        if (m_callback.is_valid()) {
+            t_ui_color back_color = m_callback->query_std_color(ui_color_background);
+            // Detect dark mode EXACTLY like artist_bio_v30_FIXED.cpp
+            int brightness = (GetRValue(back_color) + GetGValue(back_color) + GetBValue(back_color)) / 3;
+            dark_mode = (brightness < 128);
+        }
+        
+        // Use EXACT same hardcoded colors as artist_bio_v30_FIXED.cpp
+        COLORREF scrollbar_color = dark_mode ? RGB(60, 60, 60) : RGB(200, 200, 200);
+        m_scrollbar_brush = CreateSolidBrush(scrollbar_color);
+        m_scrollbar_pen = CreatePen(PS_SOLID, 1, scrollbar_color);
+    }
+    
+    // v10.0.22 CUSTOM SCROLLBAR: High-performance custom scrollbar (no Windows scrollbar)
+    void update_custom_scrollbar() {
+        RECT rc;
+        GetClientRect(m_hwnd, &rc);
+        
+        // PERFORMANCE FIX: Use cached layout values instead of recalculating
+        int text_height = calculate_text_height();
+        int item_total_height = m_item_size + text_height;
+        int cols = m_config.columns;
+        size_t item_count = get_item_count();
+        int rows = (item_count + cols - 1) / cols;
+        int total_height = rows * (item_total_height + PADDING) + PADDING;
+        
+        int visible_height = rc.bottom;
+        
+        // Show scrollbar if content exceeds visible area
+        m_scrollbar.visible = (total_height > visible_height);
+        
+        if (m_scrollbar.visible) {
+            // Set scrollbar position outside the grid area - at the right edge of window
+            m_scrollbar.rect.right = rc.right;
+            m_scrollbar.rect.left = m_scrollbar.rect.right - 10;
+            m_scrollbar.rect.top = 0;
+            m_scrollbar.rect.bottom = rc.bottom;
+            
+            // Calculate scrollbar range and thumb
+            m_scrollbar.range = total_height - visible_height;
+            if (m_scrollbar.range < 0) m_scrollbar.range = 0;
+            
+            int scrollbar_height = m_scrollbar.rect.bottom - m_scrollbar.rect.top;
+            m_scrollbar.thumb_size = max(20, (visible_height * scrollbar_height) / total_height);
+            
+            // Clamp scroll position
+            if (m_scroll_pos > m_scrollbar.range) {
+                m_scroll_pos = m_scrollbar.range;
+            }
+            if (m_scroll_pos < 0) {
+                m_scroll_pos = 0;
+            }
+            
+            // Calculate thumb position
+            if (m_scrollbar.range > 0) {
+                m_scrollbar.thumb_pos = m_scrollbar.rect.top + 
+                    ((scrollbar_height - m_scrollbar.thumb_size) * m_scroll_pos) / m_scrollbar.range;
+            } else {
+                m_scrollbar.thumb_pos = m_scrollbar.rect.top;
+            }
+        } else {
+            m_scroll_pos = 0;
+        }
+    }
+    
+    // v10.0.22 CUSTOM SCROLLBAR: Draw custom scrollbar (replaces Windows scrollbar)
+    void draw_custom_scrollbar(HDC hdc) {
+        if (!m_scrollbar.visible) return;
+        
+        // Get background color and detect dark mode exactly like artist info
+        t_ui_color bg = RGB(30, 30, 30);  // Default dark background
+        bool dark_mode = false;
+        if (m_callback.is_valid()) {
+            bg = m_callback->query_std_color(ui_color_background);
+            int brightness = (GetRValue(bg) + GetGValue(bg) + GetBValue(bg)) / 3;
+            dark_mode = (brightness < 128);
+        }
+        
+        // Use exact same track color as artist info - slightly darker than background
+        COLORREF track_color;
+        if (dark_mode) {
+            track_color = RGB(
+                GetRValue(bg) + 15,
+                GetGValue(bg) + 15,
+                GetBValue(bg) + 15
+            );
+        } else {
+            track_color = RGB(
+                max(0, GetRValue(bg) - 15),
+                max(0, GetGValue(bg) - 15),
+                max(0, GetBValue(bg) - 15)
+            );
+        }
+        
+        // Draw scrollbar track
+        HBRUSH track_brush = CreateSolidBrush(track_color);
+        FillRect(hdc, &m_scrollbar.rect, track_brush);
+        DeleteObject(track_brush);
+        
+        // Draw thumb - EXACT same as artist info with hover support!
+        RECT thumb_rect = m_scrollbar.rect;
+        thumb_rect.top = m_scrollbar.thumb_pos;
+        thumb_rect.bottom = thumb_rect.top + m_scrollbar.thumb_size;
+        
+        // Calculate thumb color based on background like artist info (normal vs hover)
+        COLORREF thumb_color;
+        if (dark_mode) {
+            if (m_scrollbar.thumb_hover) {
+                // Hover: background + 60
+                thumb_color = RGB(
+                    GetRValue(bg) + 60,
+                    GetGValue(bg) + 60,
+                    GetBValue(bg) + 60
+                );
+            } else {
+                // Normal: background + 40
+                thumb_color = RGB(
+                    GetRValue(bg) + 40,
+                    GetGValue(bg) + 40,
+                    GetBValue(bg) + 40
+                );
+            }
+        } else {
+            if (m_scrollbar.thumb_hover) {
+                // Hover: background - 60
+                thumb_color = RGB(
+                    max(0, GetRValue(bg) - 60),
+                    max(0, GetGValue(bg) - 60),
+                    max(0, GetBValue(bg) - 60)
+                );
+            } else {
+                // Normal: background - 40
+                thumb_color = RGB(
+                    max(0, GetRValue(bg) - 40),
+                    max(0, GetGValue(bg) - 40),
+                    max(0, GetBValue(bg) - 40)
+                );
+            }
+        }
+        // Try different approach - use filled Rectangle instead of FillRect + Rectangle
+        HBRUSH thumb_brush = CreateSolidBrush(thumb_color);
+        HPEN thumb_pen = CreatePen(PS_SOLID, 1, thumb_color);
+        
+        HBRUSH old_brush = (HBRUSH)SelectObject(hdc, thumb_brush);
+        HPEN old_pen = (HPEN)SelectObject(hdc, thumb_pen);
+        
+        // Draw filled rectangle (both fill and border in one operation)
+        Rectangle(hdc, thumb_rect.left, thumb_rect.top, thumb_rect.right, thumb_rect.bottom);
+        
+        SelectObject(hdc, old_pen);
+        SelectObject(hdc, old_brush);
+        DeleteObject(thumb_pen);
+        DeleteObject(thumb_brush);
+    }
+
+    // DEPRECATED: Old Windows scrollbar - replaced with high-performance custom scrollbar
     void update_scrollbar() {
         RECT rc;
         GetClientRect(m_hwnd, &rc);
@@ -4136,7 +4439,7 @@ private:
             
             // Update scroll position
             m_scroll_pos = target_scroll;
-            update_scrollbar();
+            update_custom_scrollbar();
             
             // Select the item for visual feedback
             m_selected_indices.clear();
@@ -4173,7 +4476,7 @@ private:
         
         // Update scroll position
         m_scroll_pos = target_scroll;
-        update_scrollbar();
+        update_custom_scrollbar();
         InvalidateRect(m_hwnd, NULL, FALSE);
         
         // Flash effect for visual feedback
@@ -4281,7 +4584,7 @@ public:
             // Try to activate existing UI element instance, or show message to user
             static_api_ptr_t<ui_control> ui_ctrl;
             
-            console::print("[Album Art Grid v10.0.20] Library viewer activated - PERSISTENT BLACKLIST FIX active");
+            console::print("[Album Art Grid v10.0.22] Library viewer activated - CUSTOM SCROLLBAR optimization active");
             console::printf("[Album Art Grid v10.0.20] Persistent blacklist has %zu items from previous sessions", 
                            persistent_blacklist::get_blacklist_size());
             
