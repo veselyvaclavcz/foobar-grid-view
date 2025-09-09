@@ -1,15 +1,16 @@
-# Album Art Grid for foobar2000 - Version 10.0.19
+# Album Art Grid for foobar2000 - Version 10.0.20
 
-## 🎉 Latest Release: v10.0.19 MPV FINAL FIXED
+## 🎉 Latest Release: v10.0.20 PERSISTENT BLACKLIST FIX
 
-**Download**: `foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component`
 
-### 🚀 NEW in v10.0.19 MPV FINAL
-- **✅ DEFINITIVE MPV FIX** - Album art requested ONLY ONCE per item - no retries ever
-- **✅ Permanent Blacklist** - Items without art are NEVER retried (eliminates foo_mpv libav errors)  
-- **✅ Smart Timer Logic** - Timer stops when no items need loading (not when all have images)
-- **✅ Zero Console Spam** - Completely eliminates repeated album art requests
-- **✅ Enhanced Stability** - All v10.0.18 shutdown crash fixes and library viewer integration maintained
+### 🚀 NEW in v10.0.20 PERSISTENT BLACKLIST FIX
+- **✅ PERSISTENT BLACKLIST** - Blacklist now SURVIVES component refreshes (global static storage)
+- **✅ ZERO RETRIES** - Items without artwork are NEVER retried until manual cache clear
+- **✅ THREAD SAFETY** - Thread-safe blacklist operations with critical_section protection
+- **✅ ENHANCED KEYS** - Enhanced blacklist key generation for better uniqueness
+- **✅ COMPLETE ELIMINATION** - Complete elimination of infinite retry loops
+- **✅ FULL COMPATIBILITY** - Maintains all v10.0.18 shutdown crash fixes and library viewer integration
 
 ## Project Overview
 
@@ -17,7 +18,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -168,7 +169,17 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.19 MPV FINAL (Current - September 2025) ✅
+### v10.0.20 PERSISTENT BLACKLIST FIX (Current - September 2025) ✅
+- **PERSISTENT BLACKLIST** - Blacklist now SURVIVES component refreshes using global static storage
+- **ZERO RETRIES** - Items without artwork are NEVER retried until manual blacklist clear
+- **THREAD SAFETY** - Thread-safe blacklist operations with critical_section synchronization
+- **ENHANCED KEYS** - Enhanced blacklist key generation for better item identification
+- **COMPLETE ELIMINATION** - Complete elimination of infinite retry loops that caused console spam
+- **FULL COMPATIBILITY** - Maintains all v10.0.18 shutdown crash fixes and library viewer integration
+- **DEFINITIVE SOLUTION** - This DEFINITIVELY ELIMINATES the infinite retry issue
+- **PRODUCTION READY** - Blacklist persists across all component operations and refreshes
+
+### v10.0.19 MPV FINAL (Previous - September 2025)
 - **DEFINITIVE MPV FIX** - Album art requested ONLY ONCE per item - no retries ever
 - **Permanent Blacklist** - Items without art are NEVER retried (eliminates foo_mpv libav errors)
 - **Smart Timer Logic** - Timer stops when no items need loading (not when all have images)
