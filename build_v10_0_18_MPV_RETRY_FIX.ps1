@@ -1,6 +1,6 @@
 # PowerShell build script for v10.0.18 MPV RETRY FIX - Stop Infinite Album Art Retry Attempts
 Write-Host "===========================================" -ForegroundColor Green
-Write-Host "Building v10.0.18 MPV RETRY FIX - Stop Infinite Album Art Retry Attempts" -ForegroundColor Green
+Write-Host "Building v10.0.19 MPV FINAL - Definitive Album Art Loading Fix" -ForegroundColor Green
 Write-Host "CRITICAL: Fixed infinite retry attempts that cause mpv libav errors" -ForegroundColor Green
 Write-Host "===========================================" -ForegroundColor Green
 Write-Host ""
@@ -38,7 +38,7 @@ $compileArgs = @(
     "/I$SDK_PATH\foobar2000\SDK",
     "/I$SDK_PATH\pfc",
     "/Fo:build\",
-    "temp_fixed_base_v10_0_18_MPV_RETRY_FIX.cpp"
+    "temp_fixed_base_v10_0_19_MPV_FINAL_FIXED.cpp"
 )
 
 & "$VSDIR\bin\Hostx64\x64\cl.exe" @compileArgs
@@ -60,7 +60,7 @@ $linkArgs = @(
     "/LIBPATH:`"$VSDIR\lib\x64`"",
     "/LIBPATH:`"$WINKIT\Lib\$WINKITVER\um\x64`"",
     "/LIBPATH:`"$WINKIT\Lib\$WINKITVER\ucrt\x64`"",
-    "build\temp_fixed_base_v10_0_18_MPV_RETRY_FIX.obj",
+    "build\temp_fixed_base_v10_0_19_MPV_FINAL_FIXED.obj",
     "`"$SDK_PATH\foobar2000\foobar2000_component_client\x64\Release\foobar2000_component_client.lib`"",
     "`"$SDK_PATH\x64\Release\foobar2000_SDK.lib`"",
     "`"$SDK_PATH\x64\Release\pfc.lib`"",
@@ -83,12 +83,12 @@ if (Test-Path "build\foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.dll") {
     Copy-Item "build\foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.dll" "foo_albumart_grid.dll"
     
     Compress-Archive -Path "foo_albumart_grid.dll" -DestinationPath "foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.zip" -Force
-    Move-Item "foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.zip" "foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component" -Force
+    Move-Item "foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.zip" "foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component" -Force
     
     Write-Host ""
     Write-Host "MPV RETRY FIX COMPONENT READY!" -ForegroundColor Green -BackgroundColor DarkGreen
-    Write-Host "foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component" -ForegroundColor Green
-    Get-ChildItem "foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component"
+    Write-Host "foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component" -ForegroundColor Green
+    Get-ChildItem "foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component"
     Write-Host ""
     Write-Host "CRITICAL FIXES APPLIED:" -ForegroundColor Yellow
     Write-Host "- Fixed infinite retry behavior for tracks without album art (ROOT CAUSE of mpv errors)" -ForegroundColor Green

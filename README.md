@@ -1,14 +1,15 @@
-# Album Art Grid for foobar2000 - Version 10.0.18
+# Album Art Grid for foobar2000 - Version 10.0.19
 
-## 🎉 Latest Release: v10.0.18 WITH LIBRARY VIEWER
+## 🎉 Latest Release: v10.0.19 MPV FINAL FIXED
 
-**Download**: `foo_albumart_grid_v10_0_18_WITH_LIBRARY_VIEWER.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component`
 
-### 🚀 NEW in v10.0.18
-- **✅ Library Viewer Integration** - Component now appears in Media Library preferences dropdown
-- **✅ Shutdown Crash Protection** - Fixed crashes during foobar2000 shutdown
-- **✅ Page Up/Down Navigation** - Navigate through albums by full pages (PgUp/PgDn keys)
-- **✅ Enhanced Stability** - All critical crash fixes from v10.0.17 maintained
+### 🚀 NEW in v10.0.19 MPV FINAL
+- **✅ DEFINITIVE MPV FIX** - Album art requested ONLY ONCE per item - no retries ever
+- **✅ Permanent Blacklist** - Items without art are NEVER retried (eliminates foo_mpv libav errors)  
+- **✅ Smart Timer Logic** - Timer stops when no items need loading (not when all have images)
+- **✅ Zero Console Spam** - Completely eliminates repeated album art requests
+- **✅ Enhanced Stability** - All v10.0.18 shutdown crash fixes and library viewer integration maintained
 
 ## Project Overview
 
@@ -16,7 +17,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_18_WITH_LIBRARY_VIEWER.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_19_MPV_FINAL_FIXED.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -167,12 +168,21 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.18 (Current - September 2025) ✅
+### v10.0.19 MPV FINAL (Current - September 2025) ✅
+- **DEFINITIVE MPV FIX** - Album art requested ONLY ONCE per item - no retries ever
+- **Permanent Blacklist** - Items without art are NEVER retried (eliminates foo_mpv libav errors)
+- **Smart Timer Logic** - Timer stops when no items need loading (not when all have images)
+- **Zero Console Spam** - Completely eliminates repeated album art requests
+- **Library Viewer Integration** - Component appears in Media Library preferences (maintained from v10.0.18)
+- **Shutdown Crash Protection** - All shutdown-related crashes fixed (maintained from v10.0.18)
+- **Page Up/Down Navigation** - Full page navigation with PgUp/PgDn keys (maintained from v10.0.18)
+- **Ready for Production** - Fully stable and tested with definitive foo_mpv compatibility
+
+### v10.0.18 (Previous - September 2025)
 - **Library Viewer Integration** - Component appears in Media Library preferences
 - **Shutdown Crash Protection** - Fixed all shutdown-related crashes
 - **Page Up/Down Navigation** - Full page navigation with PgUp/PgDn keys
 - **Enhanced Stability** - All v10.0.17 fixes maintained
-- **Ready for Production** - Fully stable and tested
 
 ### v10.0.17 (Previous Stable)
 - **Critical Object Validation Fix** - Fixed crash at offset 0x1208Ch
