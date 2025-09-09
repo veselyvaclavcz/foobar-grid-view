@@ -27,6 +27,7 @@ ipch/
 !foo_albumart_grid_v10_0_18_MPV_FINAL_FIX.fb2k-component
 !foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component
 !foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component
+!foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component
 
 # Temporary files
 *.tmp
