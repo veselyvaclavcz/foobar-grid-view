@@ -1,16 +1,17 @@
-# Album Art Grid for foobar2000 - Version 10.0.20
+# Album Art Grid for foobar2000 - Version 10.0.22
 
-## 🎉 Latest Release: v10.0.20 PERSISTENT BLACKLIST FIX
+## 🎉 Latest Release: v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION
 
-**Download**: `foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component`
 
-### 🚀 NEW in v10.0.20 PERSISTENT BLACKLIST FIX
-- **✅ PERSISTENT BLACKLIST** - Blacklist now SURVIVES component refreshes (global static storage)
-- **✅ ZERO RETRIES** - Items without artwork are NEVER retried until manual cache clear
-- **✅ THREAD SAFETY** - Thread-safe blacklist operations with critical_section protection
-- **✅ ENHANCED KEYS** - Enhanced blacklist key generation for better uniqueness
-- **✅ COMPLETE ELIMINATION** - Complete elimination of infinite retry loops
-- **✅ FULL COMPATIBILITY** - Maintains all v10.0.18 shutdown crash fixes and library viewer integration
+### 🚀 NEW in v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION
+- **🎯 PERFORMANCE FIX** - Eliminates UI hangs with large collections (3000+ items)
+- **⚡ CUSTOM SCROLLBAR** - High-performance custom scrollbar replaces Windows scrollbar
+- **🚀 OPTIMIZED SCROLLING** - Eliminated expensive calculate_layout() calls during scrolling
+- **🎨 THEME INTEGRATION** - Proper foobar2000 theme colors with hover effects
+- **📐 SMART POSITIONING** - Scrollbar positioned outside grid area like artist info panel
+- **🖱️ FULL INTERACTION** - Complete mouse support - thumb dragging, page scrolling, wheel
+- **✅ MAINTAINED FIXES** - All v10.0.21 emoji display and v10.0.20 blacklist functionality preserved
 
 ## Project Overview
 
@@ -18,7 +19,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -36,6 +37,12 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 - **Media Library Viewer** - Appears in foobar2000's official Media Library viewers list
 - **Automatic Discovery** - foobar2000 recognizes and lists the component automatically
 - **Seamless Integration** - Works with all foobar2000 library features
+
+### ⚡ Performance & Scrolling (NEW in v10.0.22)
+- **Large Collection Support** - Smooth scrolling with 3000+ albums (no more UI hangs)
+- **Custom Scrollbar** - High-performance implementation with proper theme colors
+- **Optimized Layout** - Eliminated expensive recalculations during scrolling
+- **Smart Hover Effects** - Theme-aware scrollbar with visual feedback
 
 ### 🛡️ Stability & Safety
 - **Zero Shutdown Crashes** - Protected against all known shutdown-related crashes
