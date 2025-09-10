@@ -28,6 +28,7 @@ ipch/
 !foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component
 !foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component
 !foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component
+!foo_albumart_grid_v10_0_23_SCROLLBAR_CRASH_FIX.fb2k-component
 
 # Temporary files
 *.tmp
@@ -61,6 +62,7 @@ build_*.py
 !build_v10_0_18_FINAL.ps1
 !build_v10_0_18_MPV_FINAL_FIX.ps1
 !build_v10_0_18_MPV_RETRY_FIX.ps1
+!build_v10_0_23_SCROLLBAR_CRASH_FIX.ps1
 
 # Temporary source files - keep only main source
 temp_*.cpp

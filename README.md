@@ -1,17 +1,24 @@
-# Album Art Grid for foobar2000 - Version 10.0.22
+# Album Art Grid for foobar2000 - Version 10.0.23
 
-## 🎉 Latest Release: v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION
+## 🎉 Latest Release: v10.0.23 SCROLLBAR CRASH FIX
 
-**Download**: `foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_23_SCROLLBAR_CRASH_FIX.fb2k-component`
 
-### 🚀 NEW in v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION
+### 🚨 CRITICAL FIXES in v10.0.23 SCROLLBAR CRASH FIX
+- **🛠️ CRASH ELIMINATION** - Fixed access violation crashes during component shutdown (offset 15CCCh)
+- **🔒 NULL POINTER FIX** - Fixed NULL pointer dereferences in custom scrollbar mouse handling
+- **⚡ MEMORY MANAGEMENT** - Resolved memory management race conditions in scrollbar brush/pen cleanup
+- **🏷️ VERSION CORRECTION** - Fixed version string corruption (now correctly shows v10.0.23)
+- **🔄 SHUTDOWN SEQUENCE** - Enhanced shutdown sequence with proper resource cleanup order
+- **✅ PRESERVED OPTIMIZATIONS** - All v10.0.22 custom scrollbar performance optimizations maintained
+
+### 🚀 MAINTAINED from v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION
 - **🎯 PERFORMANCE FIX** - Eliminates UI hangs with large collections (3000+ items)
 - **⚡ CUSTOM SCROLLBAR** - High-performance custom scrollbar replaces Windows scrollbar
 - **🚀 OPTIMIZED SCROLLING** - Eliminated expensive calculate_layout() calls during scrolling
 - **🎨 THEME INTEGRATION** - Proper foobar2000 theme colors with hover effects
 - **📐 SMART POSITIONING** - Scrollbar positioned outside grid area like artist info panel
 - **🖱️ FULL INTERACTION** - Complete mouse support - thumb dragging, page scrolling, wheel
-- **✅ MAINTAINED FIXES** - All v10.0.21 emoji display and v10.0.20 blacklist functionality preserved
 
 ## Project Overview
 
@@ -19,7 +26,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_23_SCROLLBAR_CRASH_FIX.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown

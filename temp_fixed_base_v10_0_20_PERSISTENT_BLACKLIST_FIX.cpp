@@ -38,23 +38,30 @@
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "10.0.21 EMOJI DISPLAY FIX",
-    "Album Art Grid v10.0.21 EMOJI DISPLAY FIX - Fixed Corrupted Characters\n"
+    "10.0.23 SCROLLBAR CRASH FIX",
+    "Album Art Grid v10.0.23 SCROLLBAR CRASH FIX - Fixed Memory Management Issues in Custom Scrollbar\n"
     "\n"
-    "FIXED IN v10.0.21 EMOJI DISPLAY FIX:\n"
+    "FIXED IN v10.0.23 SCROLLBAR CRASH FIX:\n"
+    "* FIXED: Access violation crashes during component shutdown (offset 15CCCh)\n"
+    "* FIXED: NULL pointer dereferences in custom scrollbar mouse handling\n"
+    "* FIXED: Memory management race conditions in scrollbar brush/pen cleanup\n"
+    "* FIXED: Version string corruption (now correctly shows v10.0.23)\n"
+    "* IMPROVED: Enhanced shutdown sequence with proper resource cleanup order\n"
+    "* MAINTAINED: All v10.0.22 custom scrollbar performance optimizations preserved\n"
+    "\n"
+    "MAINTAINED FROM v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION:\n"
+    "* FIXED: Scrollbar performance with large collections (3000+ items) - eliminates UI hangs\n"  
+    "* REPLACED: Windows scrollbar with high-performance custom scrollbar\n"
+    "* OPTIMIZED: Eliminated expensive calculate_layout() calls during scrolling\n"
+    "* ENHANCED: Smooth scrollbar with proper theme colors and hover effects\n"
+    "* POSITIONED: Scrollbar now positioned outside grid area like artist info panel\n"
+    "* INTERACTIVE: Full mouse support - thumb dragging, page scrolling, wheel scrolling\n"
+    "\n"
+    "MAINTAINED FROM v10.0.21 EMOJI DISPLAY FIX:\n"
     "* FIXED: Corrupted emoji characters (öY) replaced with standard symbols\n"
-    "* FIXED: Missing artwork now displays ♪ instead of corrupted UTF-8 bytes\n"
+    "* FIXED: Missing artwork displays ♪ instead of corrupted UTF-8 bytes\n"
     "* FIXED: Loading state shows ... instead of broken hourglass emoji\n"
     "* FIXED: Folder view shows [ ] instead of broken folder emoji\n"
-    "\n"
-    "ENHANCED IN v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION:\n"
-    "* FIXED: Scrollbar performance with large collections (3000+ items) - no more UI hangs\n"  
-    "* REPLACED: Windows scrollbar with high-performance custom scrollbar implementation\n"
-    "* OPTIMIZED: Eliminated calculate_layout() calls during scrolling for massive speedup\n"
-    "* ENHANCED: Smooth scrolling with custom thumb dragging and mouse wheel support\n"
-    "* MAINTAINED: All v10.0.21 callback crash fixes and emoji display functionality\n"
-    "* MAINTAINED: All v10.0.20 persistent blacklist functionality fully preserved\n"
-    "* DEFINITIVE: Complete elimination of infinite retry loops for missing artwork\n"
     "\n"
     "MAINTAINED FROM v10.0.19 MPV FINAL:\n"
     "* FIXED: Album art is now requested ONLY ONCE per item - no retries ever\n"
@@ -1021,7 +1028,7 @@ public:
     }
     
     ~album_grid_instance() {
-        // CRITICAL v10.0.17: Invalidate object FIRST
+        // CRITICAL v10.0.23: Invalidate object FIRST
         invalidate();
         
         // Mark this instance as destroying (but DON'T set global shutdown)
@@ -1030,7 +1037,27 @@ public:
         // Unregister this instance only
         shutdown_protection::unregister_instance(this);
         
-        console::print("[Album Art Grid v10.0.17] Closing grid instance");
+        console::print("[Album Art Grid v10.0.23] Closing grid instance");
+        
+        // v10.0.23 SCROLLBAR CRASH FIX: Stop all mouse interactions FIRST
+        if (m_scrollbar.dragging) {
+            m_scrollbar.dragging = false;
+            ReleaseCapture();  // Release mouse capture if we have it
+        }
+        
+        // v10.0.23 SCROLLBAR CRASH FIX: Clean up scrollbar resources BEFORE window destruction
+        // This prevents access to deallocated brushes during window message processing
+        if (m_scrollbar_brush) {
+            DeleteObject(m_scrollbar_brush);
+            m_scrollbar_brush = NULL;
+        }
+        if (m_scrollbar_pen) {
+            DeleteObject(m_scrollbar_pen);
+            m_scrollbar_pen = NULL;
+        }
+        
+        // Reset scrollbar state to prevent stale pointer access
+        memset(&m_scrollbar, 0, sizeof(m_scrollbar));
         
         // CRITICAL: Unregister callbacks FIRST to prevent race conditions
         // This must happen before any cleanup to avoid callbacks during destruction
@@ -1067,16 +1094,6 @@ public:
         // Clear all data after window is destroyed
         m_items.clear();
         thumbnail_cache::clear_all();
-        
-        // v10.0.22 CUSTOM SCROLLBAR: Clean up scrollbar resources
-        if (m_scrollbar_brush) {
-            DeleteObject(m_scrollbar_brush);
-            m_scrollbar_brush = NULL;
-        }
-        if (m_scrollbar_pen) {
-            DeleteObject(m_scrollbar_pen);
-            m_scrollbar_pen = NULL;
-        }
         
         // Release now playing handle
         m_now_playing.release();
@@ -2833,8 +2850,11 @@ public:
     }
     
     LRESULT on_lbuttondown(int x, int y, WPARAM keys) {
+        // v10.0.23 SCROLLBAR CRASH FIX: Check if instance is still valid
+        if (m_is_destroying || !is_valid()) return 0;
+        
         // Check if click is on custom scrollbar
-        if (m_scrollbar.visible) {
+        if (m_scrollbar.visible && m_hwnd && IsWindow(m_hwnd)) {
             POINT pt = {x, y};
             if (PtInRect(&m_scrollbar.rect, pt)) {
                 // Check if click is on thumb
@@ -2843,10 +2863,12 @@ public:
                 thumb_rect.bottom = thumb_rect.top + m_scrollbar.thumb_size;
                 
                 if (PtInRect(&thumb_rect, pt)) {
-                    // Start thumb dragging
-                    m_scrollbar.dragging = true;
-                    m_scrollbar.drag_offset = y - (m_scrollbar.rect.top + m_scrollbar.thumb_pos);
-                    SetCapture(m_hwnd);
+                    // Start thumb dragging - but only if not destroying
+                    if (!m_is_destroying && is_valid()) {
+                        m_scrollbar.dragging = true;
+                        m_scrollbar.drag_offset = y - (m_scrollbar.rect.top + m_scrollbar.thumb_pos);
+                        SetCapture(m_hwnd);
+                    }
                     return 0;
                 } else {
                     // Click in track - page scroll
@@ -2856,8 +2878,10 @@ public:
                                  m_scroll_pos + page_size * 2;
                     
                     m_scroll_pos = min(max(0, new_pos), m_max_scroll);
-                    update_custom_scrollbar();
-                    InvalidateRect(m_hwnd, NULL, FALSE);
+                    if (!m_is_destroying && is_valid()) {
+                        update_custom_scrollbar();
+                        InvalidateRect(m_hwnd, NULL, FALSE);
+                    }
                     return 0;
                 }
             }
@@ -2904,6 +2928,16 @@ public:
     }
     
     LRESULT on_lbuttonup(int x, int y) {
+        // v10.0.23 SCROLLBAR CRASH FIX: Check if instance is still valid
+        if (m_is_destroying || !is_valid()) {
+            // Force release capture if we're destroying to prevent hanging capture
+            if (m_scrollbar.dragging) {
+                m_scrollbar.dragging = false;
+                ReleaseCapture();
+            }
+            return 0;
+        }
+        
         if (m_scrollbar.dragging) {
             m_scrollbar.dragging = false;
             ReleaseCapture();
@@ -3558,12 +3592,15 @@ public:
     }
     
     LRESULT on_mousemove(int x, int y) {
+        // v10.0.23 SCROLLBAR CRASH FIX: Check if instance is still valid
+        if (m_is_destroying || !is_valid()) return 0;
+        
         // Handle scrollbar thumb dragging
-        if (m_scrollbar.dragging) {
+        if (m_scrollbar.dragging && m_hwnd && IsWindow(m_hwnd)) {
             int track_height = (m_scrollbar.rect.bottom - m_scrollbar.rect.top) - m_scrollbar.thumb_size;
             int new_thumb_pos = max(0, min(track_height, y - m_scrollbar.rect.top - m_scrollbar.drag_offset));
             
-            if (track_height > 0) {
+            if (track_height > 0 && !m_is_destroying && is_valid()) {
                 int new_scroll_pos = (new_thumb_pos * m_max_scroll) / track_height;
                 if (new_scroll_pos != m_scroll_pos) {
                     m_scroll_pos = new_scroll_pos;
@@ -3798,6 +3835,9 @@ public:
     
     // v10.0.22 CUSTOM SCROLLBAR: Update theme colors for custom scrollbar
     void update_scrollbar_theme() {
+        // v10.0.23 SCROLLBAR CRASH FIX: Check if instance is still valid
+        if (m_is_destroying || !is_valid()) return;
+        
         // Clean up old brushes
         if (m_scrollbar_brush) {
             DeleteObject(m_scrollbar_brush);
@@ -3877,7 +3917,9 @@ public:
     
     // v10.0.22 CUSTOM SCROLLBAR: Draw custom scrollbar (replaces Windows scrollbar)
     void draw_custom_scrollbar(HDC hdc) {
-        if (!m_scrollbar.visible) return;
+        // v10.0.23 SCROLLBAR CRASH FIX: Check if instance is still valid and resources exist
+        if (!m_scrollbar.visible || m_is_destroying || !is_valid()) return;
+        if (!m_scrollbar_brush || !m_scrollbar_pen) return;
         
         // Get background color and detect dark mode exactly like artist info
         t_ui_color bg = RGB(30, 30, 30);  // Default dark background
@@ -4584,7 +4626,7 @@ public:
             // Try to activate existing UI element instance, or show message to user
             static_api_ptr_t<ui_control> ui_ctrl;
             
-            console::print("[Album Art Grid v10.0.22] Library viewer activated - CUSTOM SCROLLBAR optimization active");
+            console::print("[Album Art Grid v10.0.23] Library viewer activated - CUSTOM SCROLLBAR with crash fixes active");
             console::printf("[Album Art Grid v10.0.20] Persistent blacklist has %zu items from previous sessions", 
                            persistent_blacklist::get_blacklist_size());
             
