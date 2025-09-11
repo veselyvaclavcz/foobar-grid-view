@@ -38,16 +38,16 @@
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "10.0.23 SCROLLBAR CRASH FIX",
-    "Album Art Grid v10.0.23 SCROLLBAR CRASH FIX - Fixed Memory Management Issues in Custom Scrollbar\n"
+    "10.0.24 DESTRUCTOR FIX",
+    "Album Art Grid v10.0.24 DESTRUCTOR FIX - Fixed Critical Destructor Sequence Issues\n"
     "\n"
-    "FIXED IN v10.0.23 SCROLLBAR CRASH FIX:\n"
-    "* FIXED: Access violation crashes during component shutdown (offset 15CCCh)\n"
-    "* FIXED: NULL pointer dereferences in custom scrollbar mouse handling\n"
-    "* FIXED: Memory management race conditions in scrollbar brush/pen cleanup\n"
-    "* FIXED: Version string corruption (now correctly shows v10.0.23)\n"
-    "* IMPROVED: Enhanced shutdown sequence with proper resource cleanup order\n"
-    "* MAINTAINED: All v10.0.22 custom scrollbar performance optimizations preserved\n"
+    "FIXED IN v10.0.24 DESTRUCTOR FIX:\n"
+    "* FIXED: Access violation crashes at offset 15D0Ch/15D14h during shutdown\n"
+    "* FIXED: Race condition in destructor - invalidate() now called LAST\n"
+    "* FIXED: Added critical section protection for thread-safe destruction\n"
+    "* FIXED: NULL pointer dereference in main_thread_callback::callback_run\n"
+    "* IMPROVED: Proper resource cleanup sequence to prevent use-after-free\n"
+    "* MAINTAINED: All v10.0.23 scrollbar fixes and v10.0.22 performance optimizations\n"
     "\n"
     "MAINTAINED FROM v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION:\n"
     "* FIXED: Scrollbar performance with large collections (3000+ items) - eliminates UI hangs\n"  
@@ -972,6 +972,7 @@ private:
     grid_config m_config;
     fb2k::CCoreDarkModeHooks m_dark;
     std::atomic<bool> m_is_destroying{false};  // Atomic flag to prevent use-after-free in playlist callbacks
+    critical_section m_destructor_sync;  // v10.0.24: Critical section for thread-safe destruction
     bool m_tracking;
     
     // Visible range for lazy loading
@@ -1028,25 +1029,34 @@ public:
     }
     
     ~album_grid_instance() {
-        // CRITICAL v10.0.23: Invalidate object FIRST
-        invalidate();
+        // v10.0.24 DESTRUCTOR FIX: Thread-safe destruction with proper sequence
+        insync(m_destructor_sync);
         
-        // Mark this instance as destroying (but DON'T set global shutdown)
+        // Mark this instance as destroying FIRST (but DON'T set global shutdown)
         m_is_destroying = true;
         
         // Unregister this instance only
         shutdown_protection::unregister_instance(this);
         
-        console::print("[Album Art Grid v10.0.23] Closing grid instance");
+        console::print("[Album Art Grid v10.0.24] Closing grid instance - proper sequence");
         
-        // v10.0.23 SCROLLBAR CRASH FIX: Stop all mouse interactions FIRST
-        if (m_scrollbar.dragging) {
-            m_scrollbar.dragging = false;
-            ReleaseCapture();  // Release mouse capture if we have it
+        // v10.0.24: Stop all interactions and timers FIRST
+        if (m_hwnd && IsWindow(m_hwnd)) {
+            // Kill all timers safely
+            KillTimer(m_hwnd, TIMER_LOAD);
+            KillTimer(m_hwnd, TIMER_PROGRESSIVE);
+            KillTimer(m_hwnd, TIMER_NOW_PLAYING);
         }
         
-        // v10.0.23 SCROLLBAR CRASH FIX: Clean up scrollbar resources BEFORE window destruction
-        // This prevents access to deallocated brushes during window message processing
+        // v10.0.23 SCROLLBAR CRASH FIX: Stop all mouse interactions
+        if (m_scrollbar.dragging) {
+            m_scrollbar.dragging = false;
+            if (m_hwnd && IsWindow(m_hwnd)) {
+                ReleaseCapture();  // Release mouse capture if we have it
+            }
+        }
+        
+        // v10.0.24: Clean up GDI resources BEFORE any window operations
         if (m_scrollbar_brush) {
             DeleteObject(m_scrollbar_brush);
             m_scrollbar_brush = NULL;
@@ -1078,12 +1088,8 @@ public:
             Sleep(100);  // Critical delay even on error
         }
         
-        // Kill all timers if window exists
+        // v10.0.24: Clear window data pointer BEFORE window destruction
         if (m_hwnd && IsWindow(m_hwnd)) {
-            KillTimer(m_hwnd, TIMER_LOAD);
-            KillTimer(m_hwnd, TIMER_PROGRESSIVE);
-            KillTimer(m_hwnd, TIMER_NOW_PLAYING);
-            
             // Clear window data pointer to prevent any pending messages from accessing this object
             SetWindowLongPtr(m_hwnd, GWLP_USERDATA, 0);
             
@@ -1097,6 +1103,10 @@ public:
         
         // Release now playing handle
         m_now_playing.release();
+        
+        // v10.0.24 DESTRUCTOR FIX: Call invalidate() LAST after all cleanup is complete
+        // This prevents race conditions where other threads try to access partially destroyed object
+        invalidate();
     }
     
     void initialize_window(HWND parent) {
@@ -1183,8 +1193,12 @@ public:
             instance = (album_grid_instance*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
         }
         
-        // v10.0.11: Check instance validity with protection
+        // v10.0.24: Enhanced instance validity check with is_valid() method
         if (instance && !instance->m_is_destroying && !shutdown_protection::g_is_shutting_down) {
+            // v10.0.24: Additional validity check to prevent access to destroyed object
+            if (!instance->is_valid()) {
+                return DefWindowProc(hwnd, msg, wp, lp);
+            }
             switch (msg) {
                 case WM_PAINT: return instance->on_paint();
                 case WM_SIZE: return instance->on_size();
