@@ -1,10 +1,18 @@
-# Album Art Grid for foobar2000 - Version 10.0.24
+# Album Art Grid for foobar2000 - Version 10.0.26
 
-## 🎉 Latest Release: v10.0.24 DESTRUCTOR FIX
+## 🎉 Latest Release: v10.0.26 DEDICATED PLAYLIST
 
-**Download**: `foo_albumart_grid_v10_0_24_DESTRUCTOR_FIX.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_26_DEDICATED_PLAYLIST.fb2k-component`
 
-### 🚨 CRITICAL FIXES in v10.0.24 DESTRUCTOR FIX
+### 🎯 NEW in v10.0.26 DEDICATED PLAYLIST - Enhanced User Workflow
+- **🎵 DEDICATED PLAYLIST** - Single reusable "Album Grid" playlist prevents playlist multiplication
+- **🖱️ DIRECT MENU ACCESS** - "Play in Album Grid Playlist" option in right-click context menu
+- **⚡ STREAMLINED WORKFLOW** - Grid functions as pure viewer with one-click playlist access
+- **🔄 NO PLAYLIST CLUTTER** - Eliminates creation of multiple playlists with single reusable solution
+- **🎯 DOUBLE ACCESS** - Available both as double-click option AND main menu option
+- **🏃‍♂️ INSTANT PLAYBACK** - Album browsing to playback in single action
+
+### 🚨 MAINTAINED CRITICAL FIXES from v10.0.24 DESTRUCTOR FIX
 - **🛠️ CRASH ELIMINATION** - Fixed access violation crashes at offset 15D0Ch/15D14h during shutdown
 - **🔄 RACE CONDITION FIX** - Fixed destructor race condition - invalidate() now called LAST
 - **🔒 THREAD SAFETY** - Added critical section protection for thread-safe destruction
@@ -26,7 +34,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_24_DESTRUCTOR_FIX.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_26_DEDICATED_PLAYLIST.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -39,6 +47,13 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 - **Letter Jump** - Press A-Z or 0-9 to jump to first album starting with that character
 - **Unicode Support** - Perfect display of Chinese, Japanese, and other Unicode text
 - **Context Menu** - Right-click for "Open in Folder" and other options
+
+### 🎵 Dedicated Playlist (NEW in v10.0.26)
+- **Single Reusable Playlist** - Creates/reuses one "Album Grid" playlist instead of multiplying playlists
+- **Right-Click Access** - "Play in Album Grid Playlist" option directly in context menu  
+- **Double-Click Configuration** - Also available as configurable double-click action
+- **Instant Workflow** - Select albums → Right-click → Play in Album Grid Playlist → Immediate playback
+- **No Playlist Clutter** - Grid functions as pure viewer, not playlist manager
 
 ### 📚 Library Integration
 - **Media Library Viewer** - Appears in foobar2000's official Media Library viewers list
