@@ -1,16 +1,16 @@
-# Album Art Grid for foobar2000 - Version 10.0.23
+# Album Art Grid for foobar2000 - Version 10.0.24
 
-## 🎉 Latest Release: v10.0.23 SCROLLBAR CRASH FIX
+## 🎉 Latest Release: v10.0.24 DESTRUCTOR FIX
 
-**Download**: `foo_albumart_grid_v10_0_23_SCROLLBAR_CRASH_FIX.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_24_DESTRUCTOR_FIX.fb2k-component`
 
-### 🚨 CRITICAL FIXES in v10.0.23 SCROLLBAR CRASH FIX
-- **🛠️ CRASH ELIMINATION** - Fixed access violation crashes during component shutdown (offset 15CCCh)
-- **🔒 NULL POINTER FIX** - Fixed NULL pointer dereferences in custom scrollbar mouse handling
-- **⚡ MEMORY MANAGEMENT** - Resolved memory management race conditions in scrollbar brush/pen cleanup
-- **🏷️ VERSION CORRECTION** - Fixed version string corruption (now correctly shows v10.0.23)
-- **🔄 SHUTDOWN SEQUENCE** - Enhanced shutdown sequence with proper resource cleanup order
-- **✅ PRESERVED OPTIMIZATIONS** - All v10.0.22 custom scrollbar performance optimizations maintained
+### 🚨 CRITICAL FIXES in v10.0.24 DESTRUCTOR FIX
+- **🛠️ CRASH ELIMINATION** - Fixed access violation crashes at offset 15D0Ch/15D14h during shutdown
+- **🔄 RACE CONDITION FIX** - Fixed destructor race condition - invalidate() now called LAST
+- **🔒 THREAD SAFETY** - Added critical section protection for thread-safe destruction
+- **🎯 NULL POINTER FIX** - Fixed NULL pointer dereference in main_thread_callback::callback_run
+- **⚡ CLEANUP SEQUENCE** - Proper resource cleanup sequence to prevent use-after-free
+- **✅ PRESERVED FEATURES** - All v10.0.23 scrollbar fixes and v10.0.22 performance optimizations maintained
 
 ### 🚀 MAINTAINED from v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION
 - **🎯 PERFORMANCE FIX** - Eliminates UI hangs with large collections (3000+ items)
@@ -26,7 +26,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_23_SCROLLBAR_CRASH_FIX.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_24_DESTRUCTOR_FIX.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -183,7 +183,32 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.20 PERSISTENT BLACKLIST FIX (Current - September 2025) ✅
+### v10.0.24 DESTRUCTOR FIX (Current - September 2025) ✅
+- **CRASH ELIMINATION** - Fixed access violation crashes at offset 15D0Ch/15D14h during shutdown
+- **RACE CONDITION FIX** - Fixed destructor race condition - invalidate() now called LAST
+- **THREAD SAFETY** - Added critical section protection for thread-safe destruction
+- **NULL POINTER FIX** - Fixed NULL pointer dereference in main_thread_callback::callback_run
+- **CLEANUP SEQUENCE** - Proper resource cleanup sequence to prevent use-after-free
+- **DEFINITIVE SOLUTION** - This DEFINITIVELY FIXES destructor crashes in fb2.24.6 and fb2.25.1preview
+- **MAINTAINED FEATURES** - All v10.0.23 scrollbar fixes and v10.0.22 performance optimizations preserved
+
+### v10.0.23 SCROLLBAR CRASH FIX (Previous - September 2025)
+- **CRASH ELIMINATION** - Fixed access violation crashes during component shutdown (offset 15CCCh)
+- **NULL POINTER FIX** - Fixed NULL pointer dereferences in custom scrollbar mouse handling
+- **MEMORY MANAGEMENT** - Resolved memory management race conditions in scrollbar brush/pen cleanup
+- **VERSION CORRECTION** - Fixed version string corruption (now correctly shows v10.0.23)
+- **SHUTDOWN SEQUENCE** - Enhanced shutdown sequence with proper resource cleanup order
+- **PRESERVED OPTIMIZATIONS** - All v10.0.22 custom scrollbar performance optimizations maintained
+
+### v10.0.22 CUSTOM SCROLLBAR OPTIMIZATION (Previous - September 2025)
+- **PERFORMANCE FIX** - Eliminates UI hangs with large collections (3000+ items)
+- **CUSTOM SCROLLBAR** - High-performance custom scrollbar replaces Windows scrollbar
+- **OPTIMIZED SCROLLING** - Eliminated expensive calculate_layout() calls during scrolling
+- **THEME INTEGRATION** - Proper foobar2000 theme colors with hover effects
+- **SMART POSITIONING** - Scrollbar positioned outside grid area like artist info panel
+- **FULL INTERACTION** - Complete mouse support - thumb dragging, page scrolling, wheel
+
+### v10.0.20 PERSISTENT BLACKLIST FIX (Previous - September 2025)
 - **PERSISTENT BLACKLIST** - Blacklist now SURVIVES component refreshes using global static storage
 - **ZERO RETRIES** - Items without artwork are NEVER retried until manual blacklist clear
 - **THREAD SAFETY** - Thread-safe blacklist operations with critical_section synchronization
