@@ -1,18 +1,18 @@
-# Album Art Grid for foobar2000 - Version 10.0.26
+# Album Art Grid for foobar2000 - Version 10.0.28
 
-## 🎉 Latest Release: v10.0.26 DEDICATED PLAYLIST
+## 🎉 Latest Release: v10.0.28 FIXED UNSAFE POINTER
 
-**Download**: `foo_albumart_grid_v10_0_26_DEDICATED_PLAYLIST.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_28_FIXED_UNSAFE_POINTER.fb2k-component`
 
-### 🎯 NEW in v10.0.26 DEDICATED PLAYLIST - Enhanced User Workflow
-- **🎵 DEDICATED PLAYLIST** - Single reusable "Album Grid" playlist prevents playlist multiplication
-- **🖱️ DIRECT MENU ACCESS** - "Play in Album Grid Playlist" option in right-click context menu
-- **⚡ STREAMLINED WORKFLOW** - Grid functions as pure viewer with one-click playlist access
-- **🔄 NO PLAYLIST CLUTTER** - Eliminates creation of multiple playlists with single reusable solution
-- **🎯 DOUBLE ACCESS** - Available both as double-click option AND main menu option
-- **🏃‍♂️ INSTANT PLAYBACK** - Album browsing to playback in single action
+### 🚨 CRITICAL FIXES in v10.0.28 FIXED UNSAFE POINTER
+- **🛠️ SHUTDOWN CRASH ELIMINATION** - Fixed foo_ui_std crashes during shutdown (access violation at FFFFFFFFFFFFFFFFh)
+- **🔒 UNSAFE POINTER FIX** - Removed dangerous `*((volatile bool*)inst) = false` operations causing memory corruption  
+- **⚡ SAFE CLEANUP** - Safe instance list cleanup without touching instance memory
+- **🎯 FACTORY PROTECTION** - UI factory refuses to create instances during shutdown
+- **🧠 GDI+ PROTECTION** - Enhanced GDI+ shutdown protection for thumbnail cleanup
+- **✅ SERVICE SAFETY** - Prevents service system access violations during component destruction
 
-### 🚨 MAINTAINED CRITICAL FIXES from v10.0.24 DESTRUCTOR FIX
+### 🚨 MAINTAINED CRITICAL FIXES from v10.0.27 & Earlier
 - **🛠️ CRASH ELIMINATION** - Fixed access violation crashes at offset 15D0Ch/15D14h during shutdown
 - **🔄 RACE CONDITION FIX** - Fixed destructor race condition - invalidate() now called LAST
 - **🔒 THREAD SAFETY** - Added critical section protection for thread-safe destruction
@@ -34,7 +34,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_26_DEDICATED_PLAYLIST.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_28_FIXED_UNSAFE_POINTER.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -198,7 +198,24 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.24 DESTRUCTOR FIX (Current - September 2025) ✅
+### v10.0.28 FIXED UNSAFE POINTER (Current - September 2025) ✅
+- **SHUTDOWN CRASH ELIMINATION** - Fixed foo_ui_std crashes during shutdown (access violation at FFFFFFFFFFFFFFFFh)
+- **UNSAFE POINTER FIX** - Removed dangerous `*((volatile bool*)inst) = false` operations causing memory corruption
+- **SAFE CLEANUP** - Safe instance list cleanup without touching instance memory
+- **FACTORY PROTECTION** - UI factory refuses to create instances during shutdown  
+- **GDI+ PROTECTION** - Enhanced GDI+ shutdown protection for thumbnail cleanup
+- **SERVICE SAFETY** - Prevents service system access violations during component destruction
+- **MAINTAINED FEATURES** - All v10.0.27 zombie callback fixes and previous optimizations preserved
+
+### v10.0.27 ZOMBIE CALLBACK FIX (Previous - September 2025)
+- **ZOMBIE CALLBACK PATTERN** - Callbacks survive object destruction to prevent NULL pointer crashes
+- **AUTOSCROLL PERSISTENCE** - Auto-scroll to Now Playing setting persists after foobar2000 restart
+- **ATOMIC OPERATIONS** - Thread-safe callback handling with atomic operations
+- **MAGIC NUMBER VALIDATION** - Object integrity validation using magic numbers
+- **SHUTDOWN GUARD** - Early shutdown detection and minimal cleanup during unsafe shutdown
+- **DESTRUCTOR PROTECTION** - Enhanced destructor protection with main window validation
+
+### v10.0.24 DESTRUCTOR FIX (Previous - September 2025)
 - **CRASH ELIMINATION** - Fixed access violation crashes at offset 15D0Ch/15D14h during shutdown
 - **RACE CONDITION FIX** - Fixed destructor race condition - invalidate() now called LAST
 - **THREAD SAFETY** - Added critical section protection for thread-safe destruction
