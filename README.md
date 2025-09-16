@@ -1,10 +1,23 @@
-# Album Art Grid for foobar2000 - Version 10.0.28
+# Album Art Grid for foobar2000 - Version 10.0.31
 
-## 🎉 Latest Release: v10.0.28 FIXED UNSAFE POINTER
+## 🎉 Latest Release: v10.0.31 PAGE NAVIGATION RESTORED
 
-**Download**: `foo_albumart_grid_v10_0_28_FIXED_UNSAFE_POINTER.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_31_PAGE_NAVIGATION_RESTORED.fb2k-component`
 
-### 🚨 CRITICAL FIXES in v10.0.28 FIXED UNSAFE POINTER
+### ✨ NEW FEATURES in v10.0.31 PAGE NAVIGATION RESTORED
+- **🔧 RESTORED: Page Up/Down Navigation** - PgUp/PgDn keys work correctly for full page scrolling
+- **✅ CONFIRMED: Letter Jump Navigation** - Press A-Z or 0-9 to jump to first album starting with that character
+- **✅ CONFIRMED: Unicode Support** - Perfect display of Chinese, Japanese, and other international characters
+
+### 🚀 MAINTAINED from v10.0.30 PERFORMANCE OPTIMIZATION
+- **⚡ PERFORMANCE OPTIMIZATIONS** - Confirmed smooth operation with 3500+ item collections
+- **🎯 AUTO-SCROLL FIXED** - Now works correctly (album-level changes only for better UX)
+- **🔇 CONSOLE SPAM ELIMINATED** - Reduced timer frequency to 2s, clean console output
+- **🖼️ ENLARGED ARTWORK CUTOFF RESOLVED** - Smart extra height calculation for items at list end
+- **📐 SPACING ISSUES FIXED** - Scrollbar-respecting positioning eliminates excessive gaps
+- **🎵 SMART UX** - Auto-scroll only on album changes, not every track (prevents browsing interruption)
+
+### 🚨 MAINTAINED CRITICAL FIXES from v10.0.28 & Earlier
 - **🛠️ SHUTDOWN CRASH ELIMINATION** - Fixed foo_ui_std crashes during shutdown (access violation at FFFFFFFFFFFFFFFFh)
 - **🔒 UNSAFE POINTER FIX** - Removed dangerous `*((volatile bool*)inst) = false` operations causing memory corruption  
 - **⚡ SAFE CLEANUP** - Safe instance list cleanup without touching instance memory
@@ -34,7 +47,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_28_FIXED_UNSAFE_POINTER.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_31_PAGE_NAVIGATION_RESTORED.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
