@@ -1,17 +1,20 @@
 # Album Art Grid for foobar2000 - Version 10.0.34
 
-## 🎉 Latest Release: v10.0.34 TEXT OVERLAY THEME FIX
+## 🎉 Latest Release: v10.0.35 PLAYLIST OVERLAY ENHANCED
 
-**Download**: `foo_albumart_grid_v10_0_34_TEXT_OVERLAY_THEME_FIX.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_35_PLAYLIST_OVERLAY_ENHANCED.fb2k-component`
 
-### ✨ NEW FEATURES in v10.0.34 TEXT OVERLAY THEME FIX
-- **🎨 PERFECT: Text Overlay with Theme Colors** - Text now overlays directly on artwork with correct theme-aware backgrounds
-- **🌗 FIXED: Dark Theme Support** - Dark themes use dark backgrounds with light text for perfect readability
-- **☀️ FIXED: Light Theme Support** - Light themes use light backgrounds with dark text for optimal contrast
-- **📐 LAYOUT FIXED** - Enlarged artwork (2x2/3x3) remains perfectly square - no more broken grid layout
-- **🔧 MAINTAINED: Page Up/Down Navigation** - PgUp/PgDn keys work correctly for full page scrolling
-- **✅ MAINTAINED: Letter Jump Navigation** - Press A-Z or 0-9 to jump to first album starting with that character
-- **✅ MAINTAINED: Unicode Support** - Perfect display of Chinese, Japanese, and other international characters
+### ✨ NEW FEATURES in v10.0.35 PLAYLIST OVERLAY ENHANCED
+- **📋 PLAYLIST OVERLAY** - Professional playlist display overlaid on 3x3 enlarged now playing artwork
+- **🎯 REAL METADATA** - Shows actual track titles, artists, and durations from active playlist
+- **📊 COLUMNAR LAYOUT** - Perfect column alignment with headers (#, Title, Artist, Time)
+- **📈 SUMMARY FOOTER** - Shows total track count and playlist duration
+- **🎨 THEME INTEGRATION** - Dark overlay background (85% opacity) with theme-aware text colors
+- **⚡ SMART SCROLLING** - Auto-centers around currently playing track
+- **🎵 NOW PLAYING HIGHLIGHT** - Current track highlighted in blue with play triangle indicator
+- **🔧 MAINTAINED: Text Overlay** - All v10.0.34 text overlay features preserved
+- **📐 MAINTAINED: Layout** - Enlarged artwork remains perfectly square
+- **✅ MAINTAINED: Navigation** - Page Up/Down, Letter Jump, Unicode support all preserved
 
 ### 🚀 MAINTAINED from v10.0.30 PERFORMANCE OPTIMIZATION
 - **⚡ PERFORMANCE OPTIMIZATIONS** - Confirmed smooth operation with 3500+ item collections
@@ -51,7 +54,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_34_TEXT_OVERLAY_THEME_FIX.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_35_PLAYLIST_OVERLAY_ENHANCED.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -215,7 +218,17 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.34 TEXT OVERLAY THEME FIX (Current - September 2025) ✅
+### v10.0.35 PLAYLIST OVERLAY ENHANCED (Current - September 2025) ✅
+- **PLAYLIST OVERLAY IMPLEMENTATION** - Professional playlist display overlaid on 3x3 enlarged now playing artwork
+- **REAL METADATA ACCESS** - Shows actual track titles, artists, and durations using format_title() approach
+- **PERFECT COLUMN ALIGNMENT** - Proportional column widths prevent overlap and ensure proper spacing
+- **SUMMARY INFORMATION** - Footer displays total track count and playlist duration
+- **SMART NAVIGATION** - Auto-centers playlist view around currently playing track
+- **NOW PLAYING HIGHLIGHT** - Current track highlighted with blue text and play triangle indicator
+- **THEME INTEGRATION** - 85% opacity dark overlay with theme-aware text colors for perfect readability
+- **MAINTAINED FEATURES** - All v10.0.34 text overlay, navigation, and performance features preserved
+
+### v10.0.34 TEXT OVERLAY THEME FIX (Previous - September 2025)
 - **TEXT OVERLAY IMPLEMENTATION** - Text now overlays directly on artwork with theme-appropriate semi-transparent backgrounds
 - **THEME COLOR FIX** - Dark themes use dark backgrounds with light text, light themes use light backgrounds with dark text
 - **LAYOUT PROBLEM SOLVED** - Enlarged artwork (2x2/3x3) remains perfectly square - no more broken grid layout
