@@ -1,11 +1,14 @@
-# Album Art Grid for foobar2000 - Version 10.0.32
+# Album Art Grid for foobar2000 - Version 10.0.34
 
-## 🎉 Latest Release: v10.0.32 LABELS DISPLAY FIX
+## 🎉 Latest Release: v10.0.34 TEXT OVERLAY THEME FIX
 
-**Download**: `foo_albumart_grid_v10_0_32_LABELS_DISPLAY_FIX.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_34_TEXT_OVERLAY_THEME_FIX.fb2k-component`
 
-### ✨ NEW FEATURES in v10.0.32 LABELS DISPLAY FIX
-- **🏷️ FIXED: Show Labels Display** - Album/artist text now appears correctly under thumbnails (was broken in v10.0.30)
+### ✨ NEW FEATURES in v10.0.34 TEXT OVERLAY THEME FIX
+- **🎨 PERFECT: Text Overlay with Theme Colors** - Text now overlays directly on artwork with correct theme-aware backgrounds
+- **🌗 FIXED: Dark Theme Support** - Dark themes use dark backgrounds with light text for perfect readability
+- **☀️ FIXED: Light Theme Support** - Light themes use light backgrounds with dark text for optimal contrast
+- **📐 LAYOUT FIXED** - Enlarged artwork (2x2/3x3) remains perfectly square - no more broken grid layout
 - **🔧 MAINTAINED: Page Up/Down Navigation** - PgUp/PgDn keys work correctly for full page scrolling
 - **✅ MAINTAINED: Letter Jump Navigation** - Press A-Z or 0-9 to jump to first album starting with that character
 - **✅ MAINTAINED: Unicode Support** - Perfect display of Chinese, Japanese, and other international characters
@@ -48,7 +51,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_32_LABELS_DISPLAY_FIX.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_34_TEXT_OVERLAY_THEME_FIX.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
@@ -212,14 +215,12 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.28 FIXED UNSAFE POINTER (Current - September 2025) ✅
-- **SHUTDOWN CRASH ELIMINATION** - Fixed foo_ui_std crashes during shutdown (access violation at FFFFFFFFFFFFFFFFh)
-- **UNSAFE POINTER FIX** - Removed dangerous `*((volatile bool*)inst) = false` operations causing memory corruption
-- **SAFE CLEANUP** - Safe instance list cleanup without touching instance memory
-- **FACTORY PROTECTION** - UI factory refuses to create instances during shutdown  
-- **GDI+ PROTECTION** - Enhanced GDI+ shutdown protection for thumbnail cleanup
-- **SERVICE SAFETY** - Prevents service system access violations during component destruction
-- **MAINTAINED FEATURES** - All v10.0.27 zombie callback fixes and previous optimizations preserved
+### v10.0.34 TEXT OVERLAY THEME FIX (Current - September 2025) ✅
+- **TEXT OVERLAY IMPLEMENTATION** - Text now overlays directly on artwork with theme-appropriate semi-transparent backgrounds
+- **THEME COLOR FIX** - Dark themes use dark backgrounds with light text, light themes use light backgrounds with dark text
+- **LAYOUT PROBLEM SOLVED** - Enlarged artwork (2x2/3x3) remains perfectly square - no more broken grid layout
+- **PERFECT READABILITY** - 70% opacity overlay ensures text is always readable regardless of artwork content
+- **MAINTAINED FEATURES** - All navigation, performance optimizations, and crash protection preserved
 
 ### v10.0.27 ZOMBIE CALLBACK FIX (Previous - September 2025)
 - **ZOMBIE CALLBACK PATTERN** - Callbacks survive object destruction to prevent NULL pointer crashes
