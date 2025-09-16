@@ -1,13 +1,14 @@
-# Album Art Grid for foobar2000 - Version 10.0.31
+# Album Art Grid for foobar2000 - Version 10.0.32
 
-## 🎉 Latest Release: v10.0.31 PAGE NAVIGATION RESTORED
+## 🎉 Latest Release: v10.0.32 LABELS DISPLAY FIX
 
-**Download**: `foo_albumart_grid_v10_0_31_PAGE_NAVIGATION_RESTORED.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_32_LABELS_DISPLAY_FIX.fb2k-component`
 
-### ✨ NEW FEATURES in v10.0.31 PAGE NAVIGATION RESTORED
-- **🔧 RESTORED: Page Up/Down Navigation** - PgUp/PgDn keys work correctly for full page scrolling
-- **✅ CONFIRMED: Letter Jump Navigation** - Press A-Z or 0-9 to jump to first album starting with that character
-- **✅ CONFIRMED: Unicode Support** - Perfect display of Chinese, Japanese, and other international characters
+### ✨ NEW FEATURES in v10.0.32 LABELS DISPLAY FIX
+- **🏷️ FIXED: Show Labels Display** - Album/artist text now appears correctly under thumbnails (was broken in v10.0.30)
+- **🔧 MAINTAINED: Page Up/Down Navigation** - PgUp/PgDn keys work correctly for full page scrolling
+- **✅ MAINTAINED: Letter Jump Navigation** - Press A-Z or 0-9 to jump to first album starting with that character
+- **✅ MAINTAINED: Unicode Support** - Perfect display of Chinese, Japanese, and other international characters
 
 ### 🚀 MAINTAINED from v10.0.30 PERFORMANCE OPTIMIZATION
 - **⚡ PERFORMANCE OPTIMIZATIONS** - Confirmed smooth operation with 3500+ item collections
@@ -47,7 +48,7 @@ Stable and feature-complete Album Art Grid component for foobar2000, focusing on
 
 ## 📥 Installation
 
-1. **Download** the latest `foo_albumart_grid_v10_0_31_PAGE_NAVIGATION_RESTORED.fb2k-component`
+1. **Download** the latest `foo_albumart_grid_v10_0_32_LABELS_DISPLAY_FIX.fb2k-component`
 2. **Double-click** the `.fb2k-component` file to install in foobar2000
 3. **Access the component** via:
    - **Library menu** → Select "Album Art Grid" from Media Library viewers dropdown
