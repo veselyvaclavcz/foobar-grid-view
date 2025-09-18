@@ -1,18 +1,18 @@
-# Album Art Grid for foobar2000 - Version 10.0.34
+# Album Art Grid for foobar2000 - Version 10.0.43
 
-## 🎉 Latest Release: v10.0.35 PLAYLIST OVERLAY ENHANCED
+## 🎉 Latest Release: v10.0.43 SMART GRID FLOW
 
-**Download**: `foo_albumart_grid_v10_0_35_PLAYLIST_OVERLAY_ENHANCED.fb2k-component`
+**Download**: `foo_albumart_grid_v10_0_43_SMART_GRID_FLOW_HYBRID.fb2k-component`
 
-### ✨ NEW FEATURES in v10.0.35 PLAYLIST OVERLAY ENHANCED
-- **📋 PLAYLIST OVERLAY** - Professional playlist display overlaid on 3x3 enlarged now playing artwork
-- **🎯 REAL METADATA** - Shows actual track titles, artists, and durations from active playlist
-- **📊 COLUMNAR LAYOUT** - Perfect column alignment with headers (#, Title, Artist, Time)
-- **📈 SUMMARY FOOTER** - Shows total track count and playlist duration
-- **🎨 THEME INTEGRATION** - Dark overlay background (85% opacity) with theme-aware text colors
-- **⚡ SMART SCROLLING** - Auto-centers around currently playing track
-- **🎵 NOW PLAYING HIGHLIGHT** - Current track highlighted in blue with play triangle indicator
-- **🔧 MAINTAINED: Text Overlay** - All v10.0.34 text overlay features preserved
+### ✨ NEW FEATURES in v10.0.43 SMART GRID FLOW
+- **🧠 INTELLIGENT ENLARGED ITEM PLACEMENT** - Automatically finds optimal positions for 3x3 enlarged artwork
+- **🔄 WRAP-AROUND POSITIONING** - Items maintain logical sequence when enlarged artwork blocks natural positions
+- **🎯 ZERO-GAP GRID LAYOUT** - Mathematical precision eliminates visual gaps in grid display
+- **⬅️ BACKWARD POSITIONING PREVENTION** - Smart algorithm prevents gaps at grid end
+- **📋 SEQUENTIAL ORDER PRESERVATION** - Items stay near expected positions rather than jumping to beginning
+- **🧮 LAST ROW LOGIC** - Properly manages forbidden zones in incomplete rows with mathematical precision
+- **⚡ CELL-BASED ALLOCATION** - Revolutionary 2D cell reservation system for perfect grid filling
+- **🔧 MAINTAINED: Playlist Overlay** - All v10.0.35 playlist display features preserved
 - **📐 MAINTAINED: Layout** - Enlarged artwork remains perfectly square
 - **✅ MAINTAINED: Navigation** - Page Up/Down, Letter Jump, Unicode support all preserved
 
@@ -218,7 +218,17 @@ msbuild /p:Configuration=Release /p:Platform=x64
 
 ## 📋 Version History
 
-### v10.0.35 PLAYLIST OVERLAY ENHANCED (Current - September 2025) ✅
+### v10.0.43 SMART GRID FLOW (Current - September 2025) ✅
+- **INTELLIGENT ENLARGED ITEM PLACEMENT** - Automatically finds optimal positions for 3x3 enlarged artwork without creating gaps
+- **WRAP-AROUND POSITIONING LOGIC** - When enlarged artwork can't be placed naturally, items maintain logical sequence through intelligent redistribution
+- **ZERO-GAP GRID MATHEMATICS** - Revolutionary cell-based allocation system with mathematical precision eliminates all visual gaps
+- **LAST USABLE POSITION ALGORITHM** - Smart detection of rightmost valid position for 3x3 enlarged items respecting grid boundaries
+- **FORBIDDEN ZONE MANAGEMENT** - Proper handling of unusable positions in incomplete last rows (e.g., only positions 1-3 usable in 12th row)
+- **SEQUENTIAL ORDER PRESERVATION** - Items stay "někde na konci" instead of jumping to beginning when positioning conflicts occur
+- **TWO-PASS PLACEMENT ENGINE** - First pass handles wrap-around items, second pass places enlarged item at optimal position
+- **MAINTAINED FEATURES** - All v10.0.35 playlist overlay, navigation, and performance features preserved
+
+### v10.0.35 PLAYLIST OVERLAY ENHANCED (Previous - September 2025) ✅
 - **PLAYLIST OVERLAY IMPLEMENTATION** - Professional playlist display overlaid on 3x3 enlarged now playing artwork
 - **REAL METADATA ACCESS** - Shows actual track titles, artists, and durations using format_title() approach
 - **PERFECT COLUMN ALIGNMENT** - Proportional column widths prevent overlap and ensure proper spacing
