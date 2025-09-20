@@ -318,3 +318,22 @@ msbuild /p:Configuration=Release /p:Platform=x64
 ---
 
 **Note**: This is a complete rewrite. No code from previous versions is being reused. The focus is on **stability first**, with all features being reimplemented using safe patterns and proper SDK usage.
+
+## v10.0.44 – Smart Grid Flow (Overlay Navigation + Stability)
+
+- Overlay navigation: Up/Down to move selection inside 3×3 playlist overlay, Enter to play.
+- Subtle selection highlight (semi‑transparent, theme‑aware; no accent stripe).
+- Enlarged placement: 2×2/3×3 keeps one cell at the natural position; no extra rows; compact fill.
+- More responsive (but smooth) scrollbar behavior.
+- Double‑click option: “Play in Album Grid playlist”.
+
+Install: import oo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.fb2k-component into foobar2000.
+Source: oo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.cpp
+
+Keyboard (overlay shown):
+- Up/Down: move selection within overlay
+- Enter: play selected track
+
+Notes:
+- Arrows are handled by the grid window so the playlist panel won’t steal focus.
+- Wheel/scrollbar adjusted for finer movement.
