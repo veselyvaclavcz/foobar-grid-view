@@ -76,3 +76,4 @@ temp_*.cpp
 # Claude AI files
 .claude/
 !foo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.fb2k-component
+!foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.fb2k-component

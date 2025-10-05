@@ -1,28 +1,32 @@
-# Album Art Grid for foobar2000 - Version 10.0.44
+# Album Art Grid for foobar2000 - Version 10.0.45
 
-## v10.0.44 – Smart Grid Flow (Overlay Navigation + Stability)
+## 🎉 Latest Release: v10.0.45 SMART GRID FLOW
 
-- Overlay navigation: Up/Down to move selection inside 3×3 playlist overlay, Enter to play.
-- Subtle selection highlight (semi‑transparent, theme‑aware; no accent stripe).
-- Enlarged placement: 2×2/3×3 keeps one cell at the natural position; no extra rows; compact fill.
+**Download**: `foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.fb2k-component`
+
+### ✨ NEW FEATURES in v10.0.45 SMART GRID FLOW
+- **📅 RELEASE DATE SORTING** - Adds a "By Release Date" sort option using album metadata (ORIGINALDATE, DATE, YEAR).
+- **🖱️ DOUBLE-CLICK PERSISTENCE FIX** - Double-click action selection now survives foobar2000 restarts.
+- **🧠 SMART GRID FLOW CONTINUES** - All v10.0.44 layout and reflow improvements stay active.
+
+### ⭐ Maintained from v10.0.44 – Smart Grid Flow (Overlay Navigation + Stability)
+- Overlay navigation: Up/Down to move selection inside 3x3 playlist overlay, Enter to play.
+- Subtle selection highlight (semi-transparent, theme-aware; no accent stripe).
+- Enlarged placement: 2x2/3x3 keeps one cell at the natural position; no extra rows; compact fill.
 - More responsive (but smooth) scrollbar behavior.
-- Double‑click option: “Play in Album Grid playlist”.
+- Double-click option: "Play in Album Grid playlist".
 
-Install: import `foo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.fb2k-component` into foobar2000.
-Source: `foo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.cpp`
+Install: import `foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.fb2k-component` into foobar2000.
+Source: `foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.cpp`
 
 Keyboard (overlay shown):
 - Up/Down: move selection within overlay
 - Enter: play selected track
 
 Notes:
-- Arrows are handled by the grid window so the playlist panel won’t steal focus.
+- Arrows are handled by the grid window so the playlist panel won't steal focus.
 - Wheel/scrollbar adjusted for finer movement.
-## 🎉 Latest Release: v10.0.44 SMART GRID FLOW
-
-**Download**: `foo_albumart_grid_v10_0_43_SMART_GRID_FLOW_HYBRID.fb2k-component`
-
-### ✨ NEW FEATURES in v10.0.43 SMART GRID FLOW
+### ✨ Highlights from v10.0.43 SMART GRID FLOW
 - **🧠 INTELLIGENT ENLARGED ITEM PLACEMENT** - Automatically finds optimal positions for 3x3 enlarged artwork
 - **🔄 WRAP-AROUND POSITIONING** - Items maintain logical sequence when enlarged artwork blocks natural positions
 - **🎯 ZERO-GAP GRID LAYOUT** - Mathematical precision eliminates visual gaps in grid display
