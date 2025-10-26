@@ -1,4 +1,4 @@
-name: Build foo_albumart_grid component
+name: Build and Commit Component
 
 on:
   workflow_dispatch:
@@ -6,13 +6,15 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_and_commit:
     runs-on: windows-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -25,40 +27,16 @@ jobs:
         run: |
           msbuild "component/foo_albumart_grid.vcxproj" /p:Configuration=Release /p:Platform=x64 /m
 
-      - name: Upload component artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID
-          path: |
-            dist/foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
-            dist/foo_albumart_grid.dll
-
-  commit-artifact:
-    needs: build
-    runs-on: windows-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID
-          path: dist
-
-      - name: Commit component to repo (overwrite root file)
+      - name: Overwrite root component and commit
+        shell: pwsh
         run: |
+          Copy-Item "dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component" "foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component" -Force
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          powershell -NoProfile -Command "Copy-Item 'dist\\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component' 'foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"
-          git add foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update built component v10.0.46 (.fb2k-component)"
+          git add "foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component"
+          if (-not (git diff --cached --quiet)) {
+            git commit -m "Rebuild and update component v10.0.46 (.fb2k-component)"
             git push
-          fi
+          } else {
+            echo "No changes to commit"
+          }
