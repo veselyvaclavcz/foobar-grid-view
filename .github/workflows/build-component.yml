@@ -4,10 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths:
-      - 'foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.cpp'
-      - 'component/**'
-      - 'SDK-2025-03-07/**'
 
 jobs:
   build:
@@ -58,7 +54,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          copy /Y dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
+          powershell -NoProfile -Command "Copy-Item 'dist\\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component' 'foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"
           git add foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
           if git diff --cached --quiet; then
             echo "No changes to commit"
