@@ -54,17 +54,15 @@ jobs:
           name: foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID
           path: dist
 
-      - name: Commit component to repo
+      - name: Commit component to repo (overwrite root file)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          mkdir artifacts 2>$null
-          copy dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component artifacts\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
-          git add artifacts/foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
+          copy /Y dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
+          git add foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Add built component v10.0.46 (.fb2k-component)"
+            git commit -m "Update built component v10.0.46 (.fb2k-component)"
             git push
           fi
-
