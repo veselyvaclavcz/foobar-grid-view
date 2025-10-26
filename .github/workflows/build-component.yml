@@ -1,0 +1,70 @@
+name: Build foo_albumart_grid component
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.cpp'
+      - 'component/**'
+      - 'SDK-2025-03-07/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build SDK libs (Release x64)
+        run: |
+          msbuild "SDK-2025-03-07/BUILD_SDK_LIBS.sln" /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Build component (Release x64)
+        run: |
+          msbuild "component/foo_albumart_grid.vcxproj" /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Upload component artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID
+          path: |
+            dist/foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
+            dist/foo_albumart_grid.dll
+
+  commit-artifact:
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID
+          path: dist
+
+      - name: Commit component to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir artifacts 2>$null
+          copy dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component artifacts\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
+          git add artifacts/foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Add built component v10.0.46 (.fb2k-component)"
+            git push
+          fi
+
