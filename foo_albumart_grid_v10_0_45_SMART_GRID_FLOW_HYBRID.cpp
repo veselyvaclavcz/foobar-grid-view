@@ -1,4 +1,4 @@
-// Album Art Grid v10.0.45 - SMART GRID FLOW (stability + async loads)
+// Album Art Grid v10.0.46 - SMART GRID FLOW (stability + async loads)
 // NEW: Intelligent enlarged item placement with backward positioning
 // NEW: Automatic grid reflow to prevent gaps at end
 // NEW: Smart blockage calculation for seamless item flow
@@ -65,11 +65,14 @@ using std::max;
 // Component version
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "10.0.45",
-    "Album Art Grid v10.0.45 - SMART GRID FLOW\n"
-    "NEW in v10.0.45:\n"
-    "- Sorting: Release Date option for album grouping\n"
-    "- Fix: Double-click action persists across restarts\n"
+    "10.0.46",
+    "Album Art Grid v10.0.46 - SMART GRID FLOW\n"
+    "NEW in v10.0.46:\n"
+    "- Fix: Transparent PNG alpha blending (overlay + grid draw)\n"
+    "- Fix: Playlist overlay now uses UI font metrics; no label overlap\n"
+    "- Fix: Crash on grouping change due to stale thumbnail cache\n"
+    "- Maintains: Release Date sort for album grouping\n"
+    "- Maintains: Double-click action persistence across restarts\n"
     "- Maintains v10.0.44 SMART GRID FLOW and prior improvements\n"
     "Previous fixes from v10.0.41 maintained\n"
     "MAINTAINED from v10.0.34:\n"
@@ -701,6 +704,21 @@ private:
     }
     
 public:
+    // Remove a specific thumbnail from the cache if present
+    static void remove_thumbnail(thumbnail_data* thumb) {
+        if (!thumb) return;
+        insync(cache_sync);
+        for (size_t i = 0; i < all_thumbnails.size(); ++i) {
+            if (all_thumbnails[i] == thumb) {
+                // Adjust memory usage if we had accounted this thumbnail
+                if (thumb->memory_size > 0 && total_memory >= thumb->memory_size) {
+                    total_memory -= thumb->memory_size;
+                }
+                all_thumbnails.erase(all_thumbnails.begin() + i);
+                break;
+            }
+        }
+    }
     static void update_viewport(int first, int last) {
         viewport_first = first;
         viewport_last = last;
@@ -2012,8 +2030,21 @@ public:
     }
     
     void refresh_items() {
-        // Just clear items - cache will handle itself via LRU
+        // Begin a new generation and purge cache entries for old items
         m_items_generation.fetch_add(1);
+
+        // Remove thumbnails for existing items from the global cache to avoid
+        // dangling pointers after the item list is rebuilt (e.g. on grouping change)
+        if (!m_items.empty()) {
+            for (auto& it : m_items) {
+                if (it && it->thumbnail) {
+                    thumbnail_cache::remove_thumbnail(it->thumbnail.get());
+                    // Proactively clear bitmap to release memory sooner
+                    it->thumbnail->clear();
+                }
+            }
+        }
+
         m_items.clear();
         m_selected_indices.clear();
         m_placement_cache_dirty = true;
@@ -3176,6 +3207,8 @@ public:
         graphics.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
         graphics.SetPixelOffsetMode(Gdiplus::PixelOffsetModeHighQuality);
         graphics.SetCompositingQuality(Gdiplus::CompositingQualityHighQuality);
+        // Ensure proper alpha blending for PNGs with transparency
+        graphics.SetCompositingMode(Gdiplus::CompositingModeSourceOver);
         
         // Calculate grid layout
         calculate_layout();  // Update m_item_size based on current width
@@ -3438,23 +3471,13 @@ public:
         // Based on debug output: item_size can reach 600+px, so 500px is good threshold
         bool use_compact_mode = (item_size < 500);
 
-        int font_size, line_spacing;
-        if (use_compact_mode) {
-            font_size = 11;     // Slightly smaller font for compact mode (not too small to avoid overlap)
-            line_spacing = 3;   // Adequate spacing to prevent overlap
-        } else {
-            font_size = 13;     // Larger font for normal mode
-            line_spacing = 5;   // More generous spacing like original version
-        }
+        // Only adjust spacing between rows based on mode; use the actual UI font
+        int line_spacing = use_compact_mode ? 3 : 5;
 
-        // Create playlist font based on determined mode
-        HFONT playlist_font = CreateFont(font_size, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
-            DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-            DEFAULT_QUALITY, DEFAULT_PITCH, TEXT("Segoe UI"));
+        // Use the same UI font as the rest of the element (passed in)
+        HFONT old_font = (HFONT)SelectObject(hdc, font);
 
-        HFONT old_font = (HFONT)SelectObject(hdc, playlist_font);
-
-        // Calculate text metrics with selected font
+        // Calculate text metrics with the selected UI font
         TEXTMETRIC tm;
         GetTextMetrics(hdc, &tm);
         int line_height = tm.tmHeight + tm.tmExternalLeading + line_spacing;
@@ -3554,8 +3577,7 @@ public:
             }
         }
 
-        // Draw header row first
-        SelectObject(hdc, font);
+        // Draw header row first (font already selected)
         SetBkMode(hdc, TRANSPARENT);
         SetTextColor(hdc, RGB(255, 255, 255));
 
@@ -3788,9 +3810,7 @@ public:
                      DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
         }
 
-        // Cleanup playlist font
-        SelectObject(hdc, old_font);
-        DeleteObject(playlist_font);
+        // Font restore handled earlier
     }
 
     void draw_item(HDC hdc, Gdiplus::Graphics& graphics, HFONT font,
@@ -4005,6 +4025,9 @@ public:
 
             draw_playlist_overlay(hdc, graphics, font, x, y, item_size, index, color_text);
         }
+
+        // Restore previous font
+        SelectObject(hdc, old_font);
     }
     
     int hit_test(int mx, int my) {
@@ -4093,32 +4116,23 @@ public:
         // Calculate overlay height - ALWAYS adjust for text labels (same as drawing)
         int overlay_height = item_size - 40; // Base margin
         {
-            // Calculate text overlay height to avoid collision (use same mode logic)
-            HDC temp_hdc = GetDC(m_hwnd);
-
-            // Use same mode logic as playlist - based on grid item size
+            // Calculate text overlay height to avoid collision using the UI font
+            // Spacing depends on compact/normal mode, not font size
             bool use_compact_mode = (item_size < 500);
+            int line_spacing = use_compact_mode ? 3 : 5;
 
-            int font_size, line_spacing;
-            if (use_compact_mode) {
-                font_size = 11;     // Slightly smaller font for compact mode (not too small to avoid overlap)
-                line_spacing = 3;   // Adequate spacing to prevent overlap
-            } else {
-                font_size = 13;     // Larger font for normal mode
-                line_spacing = 5;   // More generous spacing like original version
-            }
+            HDC temp_hdc = GetDC(m_hwnd);
+            // Query foobar's UI font
+            HFONT ui_font = NULL;
+            if (m_callback.is_valid()) ui_font = m_callback->query_font_ex(ui_font_default);
+            if (!ui_font) ui_font = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 
-            HFONT temp_font = CreateFont(font_size, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
-                DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                DEFAULT_QUALITY, DEFAULT_PITCH, TEXT("Segoe UI"));
-
-            HFONT temp_old_font = (HFONT)SelectObject(temp_hdc, temp_font);
+            HFONT temp_old_font = (HFONT)SelectObject(temp_hdc, ui_font);
             TEXTMETRIC temp_tm;
             GetTextMetrics(temp_hdc, &temp_tm);
             int line_height = temp_tm.tmHeight + temp_tm.tmExternalLeading + line_spacing;
 
             SelectObject(temp_hdc, temp_old_font);
-            DeleteObject(temp_font);
             ReleaseDC(m_hwnd, temp_hdc);
 
             int text_overlay_height;
@@ -4137,29 +4151,22 @@ public:
         // Determine playlist display mode based on grid item size, not overlay height (same as drawing function)
         bool use_compact_mode = (item_size < 200);
 
-        int font_size, line_spacing;
-        if (use_compact_mode) {
-            font_size = 11;     // Slightly smaller font for compact mode (not too small to avoid overlap)
-            line_spacing = 3;   // Adequate spacing to prevent overlap
-        } else {
-            font_size = 13;     // Larger font for normal mode
-            line_spacing = 5;   // More generous spacing like original version
-        }
+        // Only adjust spacing; use UI font for height
+        int line_spacing = use_compact_mode ? 3 : 5;
 
-        // Calculate text metrics for line height with correct font
+        // Calculate text metrics for line height with correct UI font
         HDC hdc = GetDC(m_hwnd);
-        HFONT playlist_font = CreateFont(font_size, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
-            DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-            DEFAULT_QUALITY, DEFAULT_PITCH, TEXT("Segoe UI"));
+        HFONT ui_font = NULL;
+        if (m_callback.is_valid()) ui_font = m_callback->query_font_ex(ui_font_default);
+        if (!ui_font) ui_font = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
 
-        HFONT old_font = (HFONT)SelectObject(hdc, playlist_font);
+        HFONT old_font = (HFONT)SelectObject(hdc, ui_font);
         TEXTMETRIC tm;
         GetTextMetrics(hdc, &tm);
         int line_height = tm.tmHeight + tm.tmExternalLeading + line_spacing;
 
         // Cleanup
         SelectObject(hdc, old_font);
-        DeleteObject(playlist_font);
         ReleaseDC(m_hwnd, hdc);
 
         int overlay_x = pos.x + 10;  // Center horizontally with margin
