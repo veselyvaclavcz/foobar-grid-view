@@ -1,6 +1,6 @@
 Album Art Grid (foo_albumart_grid)
 
-Version: 10.0.46
+Version: 10.0.47
 
 - Smart grid flow with enlarged Now Playing (2x2 / 3x3)
 - Text overlay rendered directly on artwork
@@ -8,10 +8,14 @@ Version: 10.0.46
 - Full Unicode label rendering
 - Smooth scrolling and optimized layout
 
-What’s fixed in 10.0.46
-- Playlist overlay respects the selected UI font height. Measuring, drawing, and hit-testing now use the same foobar2000 UI font, eliminating overlap with the artwork text overlay.
-- Transparent PNG alpha blending fixes in overlays and grid draw.
-- Stability fixes around grouping change and cache invalidation.
+What's new/fixed in 10.0.47
+- Stability: safer, versioned config storage (no raw memcpy) with backward-compatible loading.
+- Rendering: persistent back buffer to reduce GDI churn and smooth scrolling.
+- Async loads: stabilized thumbnail loading and fixed thread lifetime (no stray workers).
+- Cache: adaptive, LRU-based thumbnail cache with shared ownership to prevent stale pointers.
+- Status footer: %albumart_grid_info% now includes Group and Sort in addition to album count (works in foobar2000 status bar/footer).
+- UI: removed the in-grid footer overlay; footer info now belongs only in the status bar.
+- Misc: coalesced invalidations to reduce redundant repaints.
 
 Build Requirements
 - Windows, Visual Studio 2019/2022 (x64 toolchain)
@@ -28,7 +32,7 @@ Build Steps (recommended)
   - `pfc`, `libPPUI`, `foobar2000_SDK`, `foobar2000_component_client`, `shared`
   - System: `comctl32`, `gdi32`, `gdiplus`, `user32`, `shlwapi`, `uxtheme`, `Msimg32`
 - Add source file:
-  - `foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.cpp`
+  - `foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.cpp`
 - Define:
   - `_WIN32_WINNT=0x0600`, `FOOBAR2000_TARGET_VERSION=80`
 - Output name:
@@ -38,9 +42,10 @@ Install/Run
 - Build Release x64.
 - Copy `foo_albumart_grid.dll` to foobar2000’s `components` folder.
 - Restart foobar2000, add the element via Layout Editing Mode: Library > Album Art Grid.
-- Features:
-  - Right-click > Enlarged Now Playing to enable 3x3 and “Show Playlist Overlay”.
-  - Change foobar2000’s UI font to see the overlay resize correctly.
+- Status bar footer
+  - Ensure your status bar string contains `%albumart_grid_info%`.
+  - Output example: `Library: 2,134 albums — Group: Album — Sort: Release Date`.
+  - Toggle Library/Playlist view with `P` while the grid has focus.
 
 Notes
 - Source also contains previous reference versions for history.

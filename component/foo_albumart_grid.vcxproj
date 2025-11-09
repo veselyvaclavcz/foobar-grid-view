@@ -17,7 +17,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -25,7 +25,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\..\dist\</OutDir>
+    <OutDir>$(ProjectDir)\..\dist\</OutDir>
     <IntDir>$(ProjectDir)\x64\Release\</IntDir>
     <TargetName>foo_albumart_grid</TargetName>
     <TargetExt>.dll</TargetExt>
@@ -36,9 +36,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;_UNICODE;FOOBAR2000_TARGET_VERSION=80;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\SDK-2025-03-07\foobar2000\SDK;..\SDK-2025-03-07\foobar2000\helpers;..\SDK-2025-03-07\pfc;..\SDK-2025-03-07\libPPUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\SDK-2025-03-07;..\SDK-2025-03-07\foobar2000\SDK;..\SDK-2025-03-07\foobar2000\helpers;..\SDK-2025-03-07\pfc;..\SDK-2025-03-07\libPPUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -47,16 +48,21 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;gdi32.lib;gdiplus.lib;user32.lib;shlwapi.lib;uxtheme.lib;Msimg32.lib;pfc.lib;libPPUI.lib;foobar2000_SDK.lib;foobar2000_component_client.lib;shared.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\SDK-2025-03-07\pfc\x64\Release;..\SDK-2025-03-07\libPPUI\x64\Release;..\SDK-2025-03-07\foobar2000\SDK\x64\Release;..\SDK-2025-03-07\foobar2000\shared\x64\Release;..\SDK-2025-03-07\foobar2000\foobar2000_component_client\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>comctl32.lib;gdi32.lib;gdiplus.lib;user32.lib;shlwapi.lib;uxtheme.lib;Msimg32.lib;..\SDK-2025-03-07\x64\Release\shared.lib;..\SDK-2025-03-07\x64\Release\foobar2000_SDK.lib;..\SDK-2025-03-07\foobar2000\foobar2000_component_client\x64\Release\foobar2000_component_client.lib;..\SDK-2025-03-07\pfc\x64\Release\pfc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+      
     </Link>
     <PostBuildEvent>
-      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force dist | Out-Null; Copy-Item '$(TargetPath)' 'dist\foo_albumart_grid.dll'; Compress-Archive -Path 'dist\foo_albumart_grid.dll' -DestinationPath 'dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"</Command>
+      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force dist | Out-Null; Copy-Item '$(TargetPath)' 'dist\foo_albumart_grid.dll'; Compress-Archive -Path 'dist\foo_albumart_grid.dll' -DestinationPath 'dist\foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.cpp" />
+    <ClCompile Include="..\foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
+
+
+
+
 
