@@ -77,4 +77,6 @@ temp_*.cpp
 .claude/
 !foo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.fb2k-component
 !foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.fb2k-component
+!foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component
 !dist/foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.fb2k-component
+!dist/foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component
