@@ -30,12 +30,12 @@ jobs:
       - name: Overwrite root component and commit
         shell: pwsh
         run: |
-          Copy-Item "dist\foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component" "foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component" -Force
+          Copy-Item "dist\foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component" "foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component" -Force
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "foo_albumart_grid_v10_0_46_SMART_GRID_FLOW_HYBRID.fb2k-component"
+          git add "foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component"
           if (-not (git diff --cached --quiet)) {
-            git commit -m "Rebuild and update component v10.0.46 (.fb2k-component)"
+            git commit -m "Rebuild and update component v10.0.48 (.fb2k-component)"
             git push
           } else {
             echo "No changes to commit"
