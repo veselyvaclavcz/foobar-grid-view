@@ -53,11 +53,11 @@
       
     </Link>
     <PostBuildEvent>
-      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "$outDir='$(TargetDir)'; New-Item -ItemType Directory -Force $outDir | Out-Null; $dll='$(TargetPath)'; $zip=Join-Path $outDir 'foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.zip'; Compress-Archive -Path $dll -DestinationPath $zip -Force; Move-Item -Force $zip (Join-Path $outDir 'foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.fb2k-component')"</Command>
+      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "$outDir='$(TargetDir)'; New-Item -ItemType Directory -Force $outDir | Out-Null; $dll='$(TargetPath)'; $zip=Join-Path $outDir 'foo_albumart_grid_v10_0_51_SMART_GRID_FLOW_HYBRID.zip'; Compress-Archive -Path $dll -DestinationPath $zip -Force; Move-Item -Force $zip (Join-Path $outDir 'foo_albumart_grid_v10_0_51_SMART_GRID_FLOW_HYBRID.fb2k-component')"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.cpp" />
+    <ClCompile Include="..\foo_albumart_grid_v10_0_51_SMART_GRID_FLOW_HYBRID.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
