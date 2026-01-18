@@ -48,12 +48,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;gdi32.lib;gdiplus.lib;user32.lib;shlwapi.lib;uxtheme.lib;Msimg32.lib;..\SDK-2025-03-07\x64\Release\shared.lib;..\SDK-2025-03-07\x64\Release\foobar2000_SDK.lib;..\SDK-2025-03-07\foobar2000\foobar2000_component_client\x64\Release\foobar2000_component_client.lib;..\SDK-2025-03-07\pfc\x64\Release\pfc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;gdi32.lib;gdiplus.lib;user32.lib;shlwapi.lib;uxtheme.lib;Msimg32.lib;..\SDK-2025-03-07\foobar2000\shared\x64\Release\shared.lib;..\SDK-2025-03-07\foobar2000\SDK\x64\Release\foobar2000_SDK.lib;..\SDK-2025-03-07\foobar2000\foobar2000_component_client\x64\Release\foobar2000_component_client.lib;..\SDK-2025-03-07\pfc\x64\Release\pfc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
       
     </Link>
     <PostBuildEvent>
-      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force dist | Out-Null; Copy-Item '$(TargetPath)' 'dist\foo_albumart_grid.dll'; Compress-Archive -Path 'dist\foo_albumart_grid.dll' -DestinationPath 'dist\foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"</Command>
+      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "$outDir='$(TargetDir)'; New-Item -ItemType Directory -Force $outDir | Out-Null; $dll='$(TargetPath)'; $zip=Join-Path $outDir 'foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.zip'; Compress-Archive -Path $dll -DestinationPath $zip -Force; Move-Item -Force $zip (Join-Path $outDir 'foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.fb2k-component')"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

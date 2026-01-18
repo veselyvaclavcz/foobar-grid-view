@@ -28,6 +28,11 @@ $platform = "x64"
 
 Write-Host "Using MSBuild: $msbuild" -ForegroundColor Cyan
 
+Write-Host "`nBuilding SDK libs (pfc, shared, foobar2000_SDK)..." -ForegroundColor Cyan
+& $msbuild "SDK-2025-03-07/pfc/pfc.vcxproj" /p:Configuration=$config /p:Platform=$platform /m
+& $msbuild "SDK-2025-03-07/foobar2000/shared/shared.vcxproj" /p:Configuration=$config /p:Platform=$platform /m
+& $msbuild "SDK-2025-03-07/foobar2000/SDK/foobar2000_SDK.vcxproj" /p:Configuration=$config /p:Platform=$platform /m
+
 Write-Host "`nBuilding foobar2000_component_client.lib..." -ForegroundColor Cyan
 & $msbuild "SDK-2025-03-07/foobar2000/foobar2000_component_client/foobar2000_component_client.vcxproj" /p:Configuration=$config /p:Platform=$platform /m
 
