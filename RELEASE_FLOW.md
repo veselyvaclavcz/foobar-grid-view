@@ -79,8 +79,13 @@ Run:
 .\build_v10_0_YY_SMART_GRID_FLOW_HYBRID.ps1
 ```
 
+Optional (recommended): mirror the built package to your “real” project folder `dist/`:
+
+```powershell
+$env:FOO_ALBUMART_GRID_DIST_MIRROR = "C:\Users\mail\Desktop\Claude Expert Projects\Projects\foo_albumart_grid\dist"
+```
+
 Verify:
 
 - `dist/foo_albumart_grid_v10_0_YY_SMART_GRID_FLOW_HYBRID.fb2k-component` exists
 - (Optional) the build script prints SHA256 for quick sanity checks
-

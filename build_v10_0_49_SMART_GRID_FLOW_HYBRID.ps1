@@ -46,6 +46,19 @@ if (!(Test-Path $distComponent)) {
 
 Copy-Item -Force $distComponent "foo_albumart_grid_v10_0_49_SMART_GRID_FLOW_HYBRID.fb2k-component"
 
+# Optional: mirror output to your "real" project dist folder for local inspection
+# - Set env var FOO_ALBUMART_GRID_DIST_MIRROR to a directory path.
+$mirrorDir = $env:FOO_ALBUMART_GRID_DIST_MIRROR
+if (-not $mirrorDir) {
+    $defaultMirror = "C:\Users\mail\Desktop\Claude Expert Projects\Projects\foo_albumart_grid\dist"
+    if (Test-Path $defaultMirror) { $mirrorDir = $defaultMirror }
+}
+
+if ($mirrorDir) {
+    New-Item -ItemType Directory -Force $mirrorDir | Out-Null
+    Copy-Item -Force $distComponent (Join-Path $mirrorDir (Split-Path $distComponent -Leaf))
+}
+
 $hash = (Get-FileHash $distComponent -Algorithm SHA256).Hash
 $sizeKb = [math]::Round((Get-Item $distComponent).Length / 1KB)
 
