@@ -53,11 +53,11 @@
       
     </Link>
     <PostBuildEvent>
-      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force dist | Out-Null; Copy-Item '$(TargetPath)' 'dist\foo_albumart_grid.dll'; Compress-Archive -Path 'dist\foo_albumart_grid.dll' -DestinationPath 'dist\foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"</Command>
+      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force dist | Out-Null; Copy-Item '$(TargetPath)' 'dist\foo_albumart_grid.dll'; Compress-Archive -Path 'dist\foo_albumart_grid.dll' -DestinationPath 'dist\foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.cpp" />
+    <ClCompile Include="..\foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

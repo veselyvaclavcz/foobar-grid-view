@@ -1,6 +1,6 @@
 Album Art Grid (foo_albumart_grid)
 
-Version: 10.0.48
+Version: 10.0.50
 
 - Smart grid flow with enlarged Now Playing (2x2 / 3x3)
 - Text overlay rendered directly on artwork
@@ -14,6 +14,10 @@ What's new/fixed in 10.0.48
 - Performance: async thumbnail loads use a small thread pool instead of per-item threads.
 - UI: cached placeholder font and label text conversion to reduce per-frame overhead.
 - Status/footer: still provided via %albumart_grid_info% (no in-grid footer).
+
+What's new/fixed in 10.0.50
+- Multi-disc: grid shows one album, with a `2CD`/`3CD` badge when discs are detected.
+- Playlist: disc-aware track ordering (disc -> track / disc -> title).
 
 What's new/fixed in 10.0.47
 - Stability: safer, versioned config storage (no raw memcpy) with backward-compatible loading.
@@ -39,7 +43,7 @@ Build Steps (recommended)
   - `pfc`, `libPPUI`, `foobar2000_SDK`, `foobar2000_component_client`, `shared`
   - System: `comctl32`, `gdi32`, `gdiplus`, `user32`, `shlwapi`, `uxtheme`, `Msimg32`
 - Add source file:
-  - `foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.cpp`
+  - `foo_albumart_grid_v10_0_50_SMART_GRID_FLOW_HYBRID.cpp`
 - Define:
   - `_WIN32_WINNT=0x0600`, `FOOBAR2000_TARGET_VERSION=80`
 - Output name:
