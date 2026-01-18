@@ -1,4 +1,4 @@
-// Album Art Grid v10.0.50 - SMART GRID FLOW (stability + async loads)
+// Album Art Grid v10.0.49 - SMART GRID FLOW (stability + async loads)
 // NEW: Intelligent enlarged item placement with backward positioning
 
 // NEW: Automatic grid reflow to prevent gaps at end
@@ -125,10 +125,9 @@ using std::max;
 
 DECLARE_COMPONENT_VERSION(
     "Album Art Grid",
-    "10.0.50",
-    "Album Art Grid v10.0.50 - SMART GRID FLOW\n"
-    "New: Multi-disc indicator (e.g. 2CD) and disc-aware playlist sorting.\n"
-    "Includes: Artwork scaling (Fit/Crop/Stretch, default Fit).\n"
+    "10.0.49",
+    "Album Art Grid v10.0.49 - SMART GRID FLOW\n"
+    "New: Artwork scaling (Fit/Crop/Stretch, default Fit).\n"
     "Changelog: see README.\n"
 );
 
@@ -1095,10 +1094,6 @@ struct grid_item {
 
     metadb_handle_list tracks;
 
-    // Multi-disc support (grid shows one album; disc count is indicated)
-    uint32_t disc_mask = 0;   // bit 0 = disc 1, ... up to disc 32
-    uint8_t disc_count = 1;   // computed from disc_mask (defaults to 1)
-
     album_art_data_ptr artwork;
 
     std::shared_ptr<thumbnail_data> thumbnail;
@@ -1204,86 +1199,6 @@ struct grid_item {
     grid_item() : thumbnail(std::make_shared<thumbnail_data>()), newest_date(0), rating(0), total_size(0), release_date_key(0) {}
 
 };
-
-
-static int parse_first_int_anywhere(const char* value) {
-    if (!value) return 0;
-
-    const unsigned char* p = reinterpret_cast<const unsigned char*>(value);
-    while (*p && !std::isdigit(*p)) ++p;
-    if (!*p) return 0;
-
-    int out = 0;
-    while (*p && std::isdigit(*p)) {
-        out = out * 10 + (*p - '0');
-        ++p;
-    }
-    return out;
-}
-
-static int infer_disc_number_from_path(const char* path) {
-    if (!path || !path[0]) return 0;
-
-    const char* last_slash = strrchr(path, '\\');
-    if (!last_slash) last_slash = strrchr(path, '/');
-    if (!last_slash || last_slash == path) return 0;
-
-    const char* start = path;
-    const char* prev_slash = last_slash - 1;
-    while (prev_slash > start && *prev_slash != '\\' && *prev_slash != '/') --prev_slash;
-    if (*prev_slash == '\\' || *prev_slash == '/') ++prev_slash;
-    if (prev_slash >= last_slash) return 0;
-
-    std::string folder(prev_slash, last_slash);
-    std::string upper;
-    upper.reserve(folder.size());
-    for (unsigned char c : folder) upper.push_back((char)std::toupper(c));
-
-    // Heuristic: only treat as disc folder if it contains a likely marker.
-    if (upper.find("DISC") == std::string::npos &&
-        upper.find("DISK") == std::string::npos &&
-        upper.find("CD") == std::string::npos) {
-        return 0;
-    }
-
-    return parse_first_int_anywhere(upper.c_str());
-}
-
-static uint8_t popcount_u32(uint32_t v) {
-    uint8_t c = 0;
-    while (v) {
-        v &= (v - 1);
-        ++c;
-    }
-    return c;
-}
-
-static void add_disc_to_item(grid_item& item, metadb_handle_ptr handle) {
-    int disc = 0;
-    try {
-        file_info_impl info;
-        if (handle->get_info(info)) {
-            const char* disc_value = info.meta_get("DISCNUMBER", 0);
-            if (!disc_value || !disc_value[0]) disc_value = info.meta_get("DISC", 0);
-            if (!disc_value || !disc_value[0]) disc_value = info.meta_get("DISC NO", 0);
-            disc = parse_first_int_anywhere(disc_value);
-        }
-    } catch (...) {
-        // ignore
-    }
-
-    if (disc <= 0) {
-        try {
-            disc = infer_disc_number_from_path(handle->get_path());
-        } catch (...) {
-            disc = 0;
-        }
-    }
-
-    if (disc > 0 && disc <= 32) {
-        item.disc_mask |= (1u << (uint32_t)(disc - 1));
-    }
-}
 
 
 
@@ -4437,7 +4352,6 @@ public:
             
 
             item_map[key]->tracks.add_item(handle);
-            add_disc_to_item(*item_map[key], handle);
 
             
 
@@ -4488,10 +4402,6 @@ public:
         // Convert map to vector
 
         for (auto& pair : item_map) {
-            if (pair.second) {
-                uint8_t dc = popcount_u32(pair.second->disc_mask);
-                pair.second->disc_count = (dc == 0 ? 1 : dc);
-            }
 
             m_items.push_back(std::move(pair.second));
 
@@ -6250,52 +6160,6 @@ public:
 
     }
 
-    void draw_disc_count_badge(HDC hdc, int disc_count, int x, int y, bool dark_mode, HFONT app_font) {
-        if (disc_count <= 1) return;
-
-        char text_str[32];
-        sprintf_s(text_str, "%dCD", disc_count);
-
-        HFONT old_font = (HFONT)SelectObject(hdc, app_font);
-
-        SIZE text_size;
-        GetTextExtentPoint32A(hdc, text_str, (int)strlen(text_str), &text_size);
-
-        int padding_x = std::max(10, (int)(text_size.cy / 2));
-        int padding_y = std::max(4, (int)(text_size.cy / 4));
-        int badge_width = text_size.cx + padding_x;
-        int badge_height = text_size.cy + padding_y;
-
-        int badge_x = x + 5;  // Top-left corner
-        int badge_y = y + 5;
-
-        COLORREF badge_bg = dark_mode ? RGB(55, 70, 95) : RGB(35, 130, 230);
-        COLORREF badge_border = dark_mode ? RGB(85, 100, 125) : RGB(20, 95, 175);
-        COLORREF text_color = RGB(255, 255, 255);
-
-        HBRUSH hbrBadge = CreateSolidBrush(badge_bg);
-        HPEN hpenBadge = CreatePen(PS_SOLID, 1, badge_border);
-        HPEN oldPen = (HPEN)SelectObject(hdc, hpenBadge);
-        HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, hbrBadge);
-
-        int corner_radius = std::min(10, badge_height / 2);
-        RoundRect(hdc, badge_x, badge_y, badge_x + badge_width, badge_y + badge_height, corner_radius, corner_radius);
-
-        SelectObject(hdc, oldBrush);
-        SelectObject(hdc, oldPen);
-        DeleteObject(hbrBadge);
-        DeleteObject(hpenBadge);
-
-        RECT text_rc = {badge_x, badge_y, badge_x + badge_width, badge_y + badge_height};
-        SetTextColor(hdc, text_color);
-        SetBkMode(hdc, TRANSPARENT);
-
-        pfc::stringcvt::string_wide_from_utf8 text_w(text_str);
-        DrawTextW(hdc, text_w.get_ptr(), -1, &text_rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-        SelectObject(hdc, old_font);
-    }
-
 
 
     // v10.0.30: Draw floating label near mouse cursor
@@ -7398,12 +7262,6 @@ public:
 
             draw_track_count_badge(hdc, item->tracks.get_count(), x + item_size, y, dark_mode, font);
 
-        }
-
-        // Multi-disc indicator (grid stays single item per album)
-        if (item->disc_count > 1) {
-            bool dark_mode = m_dark ? true : false;
-            draw_disc_count_badge(hdc, (int)item->disc_count, x, y, dark_mode, font);
         }
 
         
@@ -10049,17 +9907,13 @@ public:
 
             case grid_config::TRACK_SORT_BY_NUMBER:
 
-                // Disc-aware: keep multi-disc albums grouped and ordered by disc -> track
-                tracks.sort_by_format(titleformat_compiler::get()->compile(
-                    "$num(%discnumber%,2)$num(%tracknumber%,3)"), nullptr);
+                tracks.sort_by_format(titleformat_compiler::get()->compile("%tracknumber%"), nullptr);
 
                 break;
 
             case grid_config::TRACK_SORT_BY_NAME:
 
-                // Disc-aware: group discs, then sort by title within disc
-                tracks.sort_by_format(titleformat_compiler::get()->compile(
-                    "$num(%discnumber%,2)%title%"), nullptr);
+                tracks.sort_by_format(titleformat_compiler::get()->compile("%title%"), nullptr);
 
                 break;
 
