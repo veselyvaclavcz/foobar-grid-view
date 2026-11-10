@@ -5,6 +5,10 @@
 // Used by resource.rc
 //
 
+#ifndef IDC_STATIC
+#define IDC_STATIC                     (-1)
+#endif
+
 #define IDD_CONFIG                      1000
 #define IDC_GROUPING_COMBO             1001
 #define IDC_SIZE_COMBO                 1002

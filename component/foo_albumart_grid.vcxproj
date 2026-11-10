@@ -12,6 +12,17 @@
     <RootNamespace>foo_albumart_grid</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
+  <PropertyGroup Label="Component">
+    <!-- Single source of truth for the packaged version (keep in sync with DECLARE_COMPONENT_VERSION and resources/resource.rc) -->
+    <ComponentVersion>10.0.51</ComponentVersion>
+    <ComponentVersionTag>10_0_51</ComponentVersionTag>
+    <ComponentSource>foo_albumart_grid_v10_0_51_SMART_GRID_FLOW_HYBRID.cpp</ComponentSource>
+    <RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
+    <SdkDir>$(RepoRoot)SDK-2025-03-07\</SdkDir>
+    <SdkLibDir>$(SdkDir)x64\Release\</SdkLibDir>
+    <BuildRoot>$(RepoRoot)build\</BuildRoot>
+    <ComponentPackage>$(BuildRoot)foo_albumart_grid_v$(ComponentVersionTag).fb2k-component</ComponentPackage>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -25,8 +36,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)\..\dist\</OutDir>
-    <IntDir>$(ProjectDir)\x64\Release\</IntDir>
+    <OutDir>$(BuildRoot)x64\Release\</OutDir>
+    <IntDir>$(BuildRoot)obj\x64\Release\</IntDir>
+    <!-- The DLL name is validated at load time by VALIDATE_COMPONENT_FILENAME -->
     <TargetName>foo_albumart_grid</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
@@ -39,30 +51,35 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UNICODE;_UNICODE;FOOBAR2000_TARGET_VERSION=80;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\SDK-2025-03-07;..\SDK-2025-03-07\foobar2000\SDK;..\SDK-2025-03-07\foobar2000\helpers;..\SDK-2025-03-07\pfc;..\SDK-2025-03-07\libPPUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RepoRoot);$(SdkDir);$(SdkDir)foobar2000\SDK;$(SdkDir)foobar2000\helpers;$(SdkDir)pfc;$(SdkDir)libPPUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(RepoRoot)resources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;gdi32.lib;gdiplus.lib;user32.lib;shlwapi.lib;uxtheme.lib;Msimg32.lib;..\SDK-2025-03-07\x64\Release\shared.lib;..\SDK-2025-03-07\x64\Release\foobar2000_SDK.lib;..\SDK-2025-03-07\foobar2000\foobar2000_component_client\x64\Release\foobar2000_component_client.lib;..\SDK-2025-03-07\pfc\x64\Release\pfc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      
+      <!-- SDK libraries are produced by SDK-2025-03-07\BUILD_SDK_LIBS.sln (Release|x64) -->
+      <AdditionalDependencies>comctl32.lib;gdi32.lib;gdiplus.lib;user32.lib;shlwapi.lib;uxtheme.lib;Msimg32.lib;$(SdkLibDir)shared.lib;$(SdkLibDir)foobar2000_SDK.lib;$(SdkLibDir)foobar2000_component_client.lib;$(SdkLibDir)pfc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType Directory -Force dist | Out-Null; Copy-Item '$(TargetPath)' 'dist\foo_albumart_grid.dll'; Compress-Archive -Path 'dist\foo_albumart_grid.dll' -DestinationPath 'dist\foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.fb2k-component' -Force"</Command>
+      <Message>Packaging $(ComponentPackage)</Message>
+      <!-- A .fb2k-component is a zip archive; Compress-Archive only accepts a .zip extension, so zip first and rename -->
+      <Command>powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference = 'Stop'; Compress-Archive -Path '$(TargetPath)' -DestinationPath '$(ComponentPackage).zip' -Force; Move-Item -Path '$(ComponentPackage).zip' -Destination '$(ComponentPackage)' -Force"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.cpp" />
+    <ClCompile Include="$(RepoRoot)$(ComponentSource)" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="$(RepoRoot)resources\resource.rc" />
+  </ItemGroup>
+  <Target Name="CheckSdkLibs" BeforeTargets="ClCompile">
+    <Error Condition="!Exists('$(SdkLibDir)foobar2000_component_client.lib')" Text="SDK libraries not found in $(SdkLibDir). Build SDK-2025-03-07\BUILD_SDK_LIBS.sln (Release|x64) first." />
+  </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
-
-
-
-
-

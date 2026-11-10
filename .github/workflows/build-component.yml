@@ -1,42 +1,50 @@
-name: Build and Commit Component
+name: Build component
 
 on:
-  workflow_dispatch:
   push:
     branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build_and_commit:
-    runs-on: windows-latest
-    permissions:
-      contents: write
+  build:
+    # windows-2022 ships Visual Studio 2022 with the v143 toolset used by the projects
+    runs-on: windows-2022
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@30375c66a4eea26614e0d39710365f22f8b0af57 # v3.0.0
 
-      - name: Build SDK libs (Release x64)
-        run: |
-          msbuild "SDK-2025-03-07/BUILD_SDK_LIBS.sln" /p:Configuration=Release /p:Platform=x64 /m
+      - name: Build SDK libraries (pfc, foobar2000_SDK, shared, foobar2000_component_client)
+        run: msbuild SDK-2025-03-07\BUILD_SDK_LIBS.sln -p:Configuration=Release -p:Platform=x64 -m -nologo
 
-      - name: Build component (Release x64)
-        run: |
-          msbuild "component/foo_albumart_grid.vcxproj" /p:Configuration=Release /p:Platform=x64 /m
+      - name: Build component
+        run: msbuild component\foo_albumart_grid.vcxproj -p:Configuration=Release -p:Platform=x64 -m -nologo
 
-      - name: Overwrite root component and commit
+      - name: Check component version
         shell: pwsh
         run: |
-          Copy-Item "dist\foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component" "foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component" -Force
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component"
-          if (-not (git diff --cached --quiet)) {
-            git commit -m "Rebuild and update component v10.0.48 (.fb2k-component)"
-            git push
-          } else {
-            echo "No changes to commit"
-          }
+          [xml]$proj = Get-Content component\foo_albumart_grid.vcxproj
+          $expected = ($proj.Project.PropertyGroup | Where-Object { $_.ComponentVersion }).ComponentVersion
+          $actual = (Get-Item build\x64\Release\foo_albumart_grid.dll).VersionInfo.ProductVersion
+          Write-Host "Expected $expected, DLL ProductVersion $actual"
+          if ($actual -ne $expected) { throw "Version mismatch" }
+          if (-not (Select-String -Path foo_albumart_grid_v*.cpp -SimpleMatch "`"$expected`"" -Quiet)) { throw "DECLARE_COMPONENT_VERSION does not match $expected" }
+
+      - name: Upload component
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: foo_albumart_grid-fb2k-component
+          path: build/*.fb2k-component
+          if-no-files-found: error

@@ -1,35 +1,45 @@
-# Build outputs
+# Build output (component and SDK libraries)
 build/
+[Xx]64/
+[Ww]in32/
+[Aa][Rr][Mm]64/
+[Dd]ebug/
+[Rr]elease/
 *.obj
+*.o
 *.pdb
+*.idb
 *.ilk
 *.exe
 *.dll
 *.lib
 *.exp
 *.res
+*.pch
+*.ipch
+*.iobj
+*.ipdb
+*.tlog
+*.lastbuildstate
+*.recipe
+*.unsuccessfulbuild
+*.FileListAbsolute.txt
+*.log
 
 # Visual Studio
 .vs/
+ipch/
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-*.vcxproj.filters
 *.vcxproj.user
 *.VC.db
 *.VC.opendb
-ipch/
 
-# Component builds - keep only FINAL version
+# Packaged components: only the published release in dist/ is tracked
 *.fb2k-component
-!foo_albumart_grid_v10_0_18_FINAL.fb2k-component
-!foo_albumart_grid_v10_0_18_MPV_FINAL_FIX.fb2k-component
-!foo_albumart_grid_v10_0_18_MPV_RETRY_FIX.fb2k-component
-!foo_albumart_grid_v10_0_20_PERSISTENT_BLACKLIST_FIX.fb2k-component
-!foo_albumart_grid_v10_0_22_CUSTOM_SCROLLBAR.fb2k-component
-!foo_albumart_grid_v10_0_23_SCROLLBAR_CRASH_FIX.fb2k-component
-!foo_albumart_grid_v10_0_24_DESTRUCTOR_FIX.fb2k-component
+!dist/foo_albumart_grid_v10_0_51_SMART_GRID_FLOW_HYBRID.fb2k-component
 
 # Temporary files
 *.tmp
@@ -37,46 +47,15 @@ ipch/
 *.zip
 ~*
 
-# Logs
-*.log
-
-# Archive directory (contains all old versions and build scripts)
-archive/
-
-# OS files
+# OS and editor files
 Thumbs.db
 .DS_Store
 desktop.ini
-
-# Editor files
 *.swp
 *.swo
 *~
 .idea/
 *.code-workspace
 
-# Build scripts - keep only FINAL version
-build_*.ps1
-build_*.py
-*.bat
-*.cmd
-!build_v10_0_18_FINAL.ps1
-!build_v10_0_18_MPV_FINAL_FIX.ps1
-!build_v10_0_18_MPV_RETRY_FIX.ps1
-!build_v10_0_23_SCROLLBAR_CRASH_FIX.ps1
-!build_v10_0_24_DESTRUCTOR_FIX.ps1
-
-# Temporary source files - keep only main source
-temp_*.cpp
-!temp_fixed_base_v10_0_18.cpp
-!temp_fixed_base_v10_0_18_MPV_FINAL_FIX.cpp
-!temp_fixed_base_v10_0_18_MPV_RETRY_FIX.cpp
-!temp_fixed_base_v10_0_20_PERSISTENT_BLACKLIST_FIX.cpp
-
-# Claude AI files
+# Local AI tooling
 .claude/
-!foo_albumart_grid_v10_0_44_SMART_GRID_FLOW_HYBRID.fb2k-component
-!foo_albumart_grid_v10_0_45_SMART_GRID_FLOW_HYBRID.fb2k-component
-!foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component
-!dist/foo_albumart_grid_v10_0_47_SMART_GRID_FLOW_HYBRID.fb2k-component
-!dist/foo_albumart_grid_v10_0_48_SMART_GRID_FLOW_HYBRID.fb2k-component
